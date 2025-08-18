@@ -4,7 +4,6 @@ A minimal tracker for your dailies in MapleStory.
 
 ## Features
 - Editable character names and daily tasks
-- Character images automatically pulled from maplestory.gg when name is entered
 - Add new characters (up to 20 total)
 - Delete characters with a clear "X" button (with tooltip "Delete Character")
 - Each character starts with 2 daily task lines by default
@@ -14,5 +13,5 @@ A minimal tracker for your dailies in MapleStory.
 - Automatic reset at UTC 00:00 every day
 - Live UTC time display in MM/DD/YYYY format
 - Three presets stored locally in your browser (via dropdown selector)
-- Theme selector with Light, Dark, Cloud, Lavender, Matcha, and Evergreen color schemes
-- Responsive, minimal, and pastel-inspired design
+- Theme selector with Light Mode, Cloud (Light), Lavender (Light), Matcha (Light), Dark Mode, and Evergreen (Dark)
+- Transparent dropdowns and theme-tuned card backgrounds for cohesion
