@@ -7,25 +7,22 @@
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: #f4f0fa;
-      color: #4b3b60;
       margin: 0;
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background 0.3s, color 0.3s;
     }
     h1 {
-      color: #7c5db0;
       margin-bottom: 5px;
     }
     #utc-time {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-size: 14px;
-      color: #666;
     }
-    #save-slots {
-      margin-bottom: 20px;
+    #save-slots, #theme-selector {
+      margin-bottom: 15px;
     }
     button {
       background: #cbb7f0;
@@ -48,7 +45,6 @@
       max-width: 1200px;
     }
     .character {
-      background: #fff;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       padding: 15px 20px;
@@ -60,11 +56,10 @@
       font-weight: bold;
       border: none;
       background: transparent;
-      border-bottom: 2px solid #e0d4f5;
+      border-bottom: 2px solid #ccc;
       margin-bottom: 10px;
       width: 100%;
       text-align: center;
-      color: #7c5db0;
     }
     .task {
       display: flex;
@@ -73,20 +68,55 @@
     }
     .task input[type="checkbox"] {
       margin-right: 8px;
-      accent-color: #7c5db0;
     }
     .task input[type="text"] {
       border: none;
-      border-bottom: 1px solid #e0d4f5;
+      border-bottom: 1px solid #ccc;
       flex: 1;
       background: transparent;
-      color: #4b3b60;
     }
+    #theme {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+    /* Light Mode */
+    body.light { background: #f9f9f9; color: #333; }
+    body.light .character { background: #fff; }
+    body.light h1 { color: #444; }
+    /* Dark Mode */
+    body.dark { background: #1e1e2e; color: #e5e5e5; }
+    body.dark .character { background: #2b2b3c; }
+    body.dark h1 { color: #cbb7f0; }
+    /* Cloud Mode */
+    body.cloud { background: #f0f8ff; color: #3a4a5a; }
+    body.cloud .character { background: #ffffff; border: 1px solid #dce6f0; }
+    body.cloud h1 { color: #5a86b5; }
+    /* Lavender Mode */
+    body.lavender { background: #f4f0fa; color: #4b3b60; }
+    body.lavender .character { background: #fff; }
+    body.lavender h1 { color: #7c5db0; }
+    /* Accent checkbox colors per theme */
+    body.light .task input[type="checkbox"] { accent-color: #666; }
+    body.dark .task input[type="checkbox"] { accent-color: #cbb7f0; }
+    body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
+    body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
   </style>
 </head>
 <body>
   <h1>MapleStory Dailies</h1>
   <div id="utc-time">Loading UTC time...</div>
+
+  <div id="theme-selector">
+    <label for="theme">Theme:</label>
+    <select id="theme">
+      <option value="light">Light Mode</option>
+      <option value="dark">Dark Mode</option>
+      <option value="cloud">Cloud</option>
+      <option value="lavender">Lavender</option>
+    </select>
+  </div>
 
   <div id="save-slots">
     <span>Save Slot:</span>
@@ -103,68 +133,43 @@
     const numTasks = 5;
 
     function getStorageKey() {
-      const today = new Date().toISOString().split('T')[0]; // UTC YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0]; 
       return `mapleDailies_slot${currentSlot}_${today}`;
     }
-
-    function getDataKey() {
-      return `mapleData_slot${currentSlot}`;
-    }
-
-    function loadData() {
-      const data = JSON.parse(localStorage.getItem(getDataKey())) || {};
-      return data;
-    }
-
-    function saveData(data) {
-      localStorage.setItem(getDataKey(), JSON.stringify(data));
-    }
+    function getDataKey() { return `mapleData_slot${currentSlot}`; }
+    function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || {}; }
+    function saveData(data) { localStorage.setItem(getDataKey(), JSON.stringify(data)); }
 
     function buildChecklists() {
       const checklistContainer = document.getElementById('checklists');
       checklistContainer.innerHTML = '';
       const data = loadData();
-
       for (let c = 0; c < numCharacters; c++) {
         const charBox = document.createElement('div');
         charBox.className = "character";
-
         const charName = document.createElement('input');
         charName.className = "char-name";
         charName.placeholder = "Character Name";
         charName.value = data[`char_${c}_name`] || "";
         charName.addEventListener("input", () => {
-          data[`char_${c}_name`] = charName.value;
-          saveData(data);
+          data[`char_${c}_name`] = charName.value; saveData(data);
         });
         charBox.appendChild(charName);
-
         for (let t = 0; t < numTasks; t++) {
-          const wrapper = document.createElement('div');
-          wrapper.className = "task";
-
+          const wrapper = document.createElement('div'); wrapper.className = "task";
           const id = `slot${currentSlot}_char${c}_task${t}`;
           const storageKey = getStorageKey() + "_" + id;
           const savedChecked = localStorage.getItem(storageKey) === "true";
-
           const checkbox = document.createElement('input');
-          checkbox.type = "checkbox";
-          checkbox.checked = savedChecked;
-          checkbox.addEventListener("change", () => {
-            localStorage.setItem(storageKey, checkbox.checked);
-          });
-
+          checkbox.type = "checkbox"; checkbox.checked = savedChecked;
+          checkbox.addEventListener("change", () => { localStorage.setItem(storageKey, checkbox.checked); });
           const taskInput = document.createElement('input');
-          taskInput.type = "text";
-          taskInput.placeholder = "Daily Task";
+          taskInput.type = "text"; taskInput.placeholder = "Daily Task";
           taskInput.value = data[`char_${c}_task_${t}`] || "";
           taskInput.addEventListener("input", () => {
-            data[`char_${c}_task_${t}`] = taskInput.value;
-            saveData(data);
+            data[`char_${c}_task_${t}`] = taskInput.value; saveData(data);
           });
-
-          wrapper.appendChild(checkbox);
-          wrapper.appendChild(taskInput);
+          wrapper.appendChild(checkbox); wrapper.appendChild(taskInput);
           charBox.appendChild(wrapper);
         }
         checklistContainer.appendChild(charBox);
@@ -200,7 +205,20 @@
     setInterval(updateUTCTime, 1000);
     updateUTCTime();
 
+    // Theme handling
+    function loadTheme() {
+      const savedTheme = localStorage.getItem("mapleTheme") || "lavender";
+      document.body.className = savedTheme;
+      document.getElementById("theme").value = savedTheme;
+    }
+    document.getElementById("theme").addEventListener("change", function() {
+      const theme = this.value;
+      document.body.className = theme;
+      localStorage.setItem("mapleTheme", theme);
+    });
+
     switchSlot(1);
+    loadTheme();
   </script>
 </body>
 </html>
