@@ -14,94 +14,56 @@
       align-items: center;
       transition: background 0.3s, color 0.3s;
     }
-    h1 {
-      margin-bottom: 5px;
-    }
-    #utc-time {
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    #save-slots, #theme-selector {
-      margin-bottom: 15px;
-    }
+    h1 { margin-bottom: 5px; }
+    #utc-time { margin-bottom: 10px; font-size: 14px; }
+    #save-slots, #theme-selector { margin-bottom: 15px; }
     button {
-      background: #cbb7f0;
-      border: none;
-      border-radius: 6px;
-      padding: 6px 12px;
-      margin: 0 4px;
-      cursor: pointer;
-      font-weight: 600;
+      background: #cbb7f0; border: none; border-radius: 6px;
+      padding: 6px 12px; margin: 4px; cursor: pointer; font-weight: 600;
     }
-    button:hover {
-      background: #b7a1e1;
-    }
+    button:hover { background: #b7a1e1; }
     #checklists {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      width: 100%;
-      max-width: 1200px;
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 20px; width: 100%; max-width: 1200px;
     }
     .character {
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      padding: 15px 20px;
-      width: 220px;
-      flex-shrink: 0;
+      border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 15px 20px; width: 220px; flex-shrink: 0; position: relative;
+      background: #fff;
     }
     .character input.char-name {
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      background: transparent;
-      border-bottom: 2px solid #ccc;
-      margin-bottom: 10px;
-      width: 100%;
-      text-align: center;
+      font-size: 16px; font-weight: bold; border: none; background: transparent;
+      border-bottom: 2px solid #ccc; margin-bottom: 10px; width: 100%; text-align: center;
     }
-    .task {
-      display: flex;
-      align-items: center;
-      margin: 6px 0;
-    }
-    .task input[type="checkbox"] {
-      margin-right: 8px;
-    }
+    .task { display: flex; align-items: center; margin: 6px 0; }
+    .task input[type="checkbox"] { margin-right: 8px; }
     .task input[type="text"] {
-      border: none;
-      border-bottom: 1px solid #ccc;
-      flex: 1;
-      background: transparent;
+      border: none; border-bottom: 1px solid #ccc; flex: 1; background: transparent;
     }
-    #theme {
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-family: inherit;
+    .delete-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: #f8cdd1; color: #333; border: none; border-radius: 6px;
+      padding: 2px 6px; cursor: pointer; font-size: 12px;
     }
-    /* Light Mode */
+    .delete-btn:hover { background: #f59ca4; }
+    /* Floating Add Character Button */
+    #add-character-btn {
+      position: fixed; bottom: 25px; right: 25px;
+      width: 50px; height: 50px; border-radius: 50%;
+      background: #cbb7f0; color: white; font-size: 28px;
+      border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    #add-character-btn:hover { background: #b7a1e1; }
+    #theme { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; }
+    /* Themes */
     body.light { background: #f9f9f9; color: #333; }
-    body.light .character { background: #fff; }
     body.light h1 { color: #444; }
-    /* Dark Mode */
     body.dark { background: #1e1e2e; color: #e5e5e5; }
-    body.dark .character { background: #2b2b3c; }
     body.dark h1 { color: #cbb7f0; }
-    /* Cloud Mode */
     body.cloud { background: #f0f8ff; color: #3a4a5a; }
-    body.cloud .character { background: #ffffff; border: 1px solid #dce6f0; }
     body.cloud h1 { color: #5a86b5; }
-    /* Lavender Mode */
     body.lavender { background: #f4f0fa; color: #4b3b60; }
-    body.lavender .character { background: #fff; }
     body.lavender h1 { color: #7c5db0; }
-    /* Accent checkbox colors per theme */
-    body.light .task input[type="checkbox"] { accent-color: #666; }
-    body.dark .task input[type="checkbox"] { accent-color: #cbb7f0; }
-    body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
-    body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
   </style>
 </head>
 <body>
@@ -127,26 +89,36 @@
 
   <div id="checklists"></div>
 
+  <!-- Floating Add Character Button -->
+  <button id="add-character-btn" onclick="addCharacter()">+</button>
+
   <script>
     let currentSlot = 1;
-    const numCharacters = 5;
+    const maxCharacters = 20;
     const numTasks = 5;
 
     function getStorageKey() {
-      const today = new Date().toISOString().split('T')[0]; 
+      const today = new Date().toISOString().split('T')[0];
       return `mapleDailies_slot${currentSlot}_${today}`;
     }
     function getDataKey() { return `mapleData_slot${currentSlot}`; }
-    function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || {}; }
+    function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || { charCount: 5 }; }
     function saveData(data) { localStorage.setItem(getDataKey(), JSON.stringify(data)); }
 
     function buildChecklists() {
       const checklistContainer = document.getElementById('checklists');
       checklistContainer.innerHTML = '';
       const data = loadData();
-      for (let c = 0; c < numCharacters; c++) {
+      for (let c = 0; c < (data.charCount || 5); c++) {
         const charBox = document.createElement('div');
         charBox.className = "character";
+
+        const delBtn = document.createElement('button');
+        delBtn.className = "delete-btn";
+        delBtn.textContent = "✕";
+        delBtn.onclick = () => { deleteCharacter(c); };
+        charBox.appendChild(delBtn);
+
         const charName = document.createElement('input');
         charName.className = "char-name";
         charName.placeholder = "Character Name";
@@ -155,6 +127,7 @@
           data[`char_${c}_name`] = charName.value; saveData(data);
         });
         charBox.appendChild(charName);
+
         for (let t = 0; t < numTasks; t++) {
           const wrapper = document.createElement('div'); wrapper.className = "task";
           const id = `slot${currentSlot}_char${c}_task${t}`;
@@ -176,16 +149,33 @@
       }
     }
 
+    function addCharacter() {
+      const data = loadData();
+      if (data.charCount >= maxCharacters) { alert("Maximum of 20 characters reached."); return; }
+      data.charCount = (data.charCount || 5) + 1;
+      saveData(data); buildChecklists();
+    }
+
+    function deleteCharacter(index) {
+      const data = loadData();
+      for (let i = index; i < data.charCount - 1; i++) {
+        data[`char_${i}_name`] = data[`char_${i+1}_name`] || "";
+        for (let t = 0; t < numTasks; t++) {
+          data[`char_${i}_task_${t}`] = data[`char_${i+1}_task_${t}`] || "";
+        }
+      }
+      delete data[`char_${data.charCount-1}_name`];
+      for (let t = 0; t < numTasks; t++) {
+        delete data[`char_${data.charCount-1}_task_${t}`];
+      }
+      data.charCount = data.charCount - 1;
+      saveData(data); buildChecklists();
+    }
+
     function switchSlot(slot) {
       currentSlot = slot;
       const today = new Date().toISOString().split('T')[0];
       if (!localStorage.getItem(getStorageKey())) {
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith(`mapleDailies_slot${slot}`)) {
-            localStorage.removeItem(key);
-          }
-        }
         localStorage.setItem(getStorageKey(), "started");
       }
       buildChecklists();
@@ -203,22 +193,20 @@
         `UTC Time: ${utcMonth}/${utcDay}/${utcYear} ${utcHours}:${utcMinutes}:${utcSeconds}`;
     }
     setInterval(updateUTCTime, 1000);
-    updateUTCTime();
 
-    // Theme handling
     function loadTheme() {
       const savedTheme = localStorage.getItem("mapleTheme") || "lavender";
       document.body.className = savedTheme;
       document.getElementById("theme").value = savedTheme;
     }
     document.getElementById("theme").addEventListener("change", function() {
-      const theme = this.value;
-      document.body.className = theme;
+      const theme = this.value; document.body.className = theme;
       localStorage.setItem("mapleTheme", theme);
     });
 
     switchSlot(1);
     loadTheme();
+    updateUTCTime();
   </script>
 </body>
 </html>
