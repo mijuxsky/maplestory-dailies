@@ -7,8 +7,8 @@
   <style>
     body {
       font-family: 'Nunito', sans-serif;
-      background: #f9f7fc;
-      color: #444;
+      background: #f4f0fa;
+      color: #4b3b60;
       margin: 0;
       padding: 20px;
       display: flex;
@@ -16,7 +16,7 @@
       align-items: center;
     }
     h1 {
-      color: #6a5acd;
+      color: #7c5db0;
       margin-bottom: 5px;
     }
     #utc-time {
@@ -24,27 +24,63 @@
       font-size: 14px;
       color: #666;
     }
+    #save-slots {
+      margin-bottom: 20px;
+    }
+    button {
+      background: #cbb7f0;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      margin: 0 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover {
+      background: #b7a1e1;
+    }
+    #checklists {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+    }
     .character {
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       padding: 15px 20px;
-      margin: 15px 0;
-      width: 300px;
+      width: 220px;
+      flex-shrink: 0;
     }
-    .character h2 {
-      font-size: 18px;
-      color: #ff8fa3;
+    .character input.char-name {
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      background: transparent;
+      border-bottom: 2px solid #e0d4f5;
       margin-bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: #7c5db0;
     }
     .task {
       display: flex;
       align-items: center;
       margin: 6px 0;
     }
-    .task input {
-      margin-right: 10px;
-      accent-color: #6a5acd;
+    .task input[type="checkbox"] {
+      margin-right: 8px;
+      accent-color: #7c5db0;
+    }
+    .task input[type="text"] {
+      border: none;
+      border-bottom: 1px solid #e0d4f5;
+      flex: 1;
+      background: transparent;
+      color: #4b3b60;
     }
   </style>
 </head>
@@ -52,50 +88,119 @@
   <h1>MapleStory Dailies</h1>
   <div id="utc-time">Loading UTC time...</div>
 
+  <div id="save-slots">
+    <span>Save Slot:</span>
+    <button onclick="switchSlot(1)">1</button>
+    <button onclick="switchSlot(2)">2</button>
+    <button onclick="switchSlot(3)">3</button>
+  </div>
+
   <div id="checklists"></div>
 
   <script>
-    const characters = ["Character 1", "Character 2", "Character 3", "Character 4", "Character 5"];
-    const tasks = ["Daily Bosses", "Vanishing Journey", "Chu Chu Island", "Arcana", "Esfera"];
+    let currentSlot = 1;
+    const numCharacters = 5;
+    const numTasks = 5;
 
-    const checklistContainer = document.getElementById('checklists');
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD in UTC
-    const storageKey = "mapleDailies_" + today;
-
-    // Reset automatically if new UTC day
-    if (!localStorage.getItem(storageKey)) {
-      localStorage.clear();
-      localStorage.setItem(storageKey, "started");
+    function getStorageKey() {
+      const today = new Date().toISOString().split('T')[0]; // UTC YYYY-MM-DD
+      return `mapleDailies_slot${currentSlot}_${today}`;
     }
 
-    characters.forEach((char, cIndex) => {
-      const box = document.createElement('div');
-      box.className = "character";
-      box.innerHTML = `<h2>${char}</h2>`;
-      tasks.forEach((task, tIndex) => {
-        const id = `${char}_${task}`;
-        const saved = localStorage.getItem(id) === "true";
-        const wrapper = document.createElement('div');
-        wrapper.className = "task";
-        wrapper.innerHTML = `<input type="checkbox" id="${id}" ${saved ? "checked" : ""}> <label for="${id}">${task}</label>`;
-        box.appendChild(wrapper);
+    function getDataKey() {
+      return `mapleData_slot${currentSlot}`;
+    }
 
-        // save state
-        wrapper.querySelector("input").addEventListener("change", (e) => {
-          localStorage.setItem(id, e.target.checked);
+    function loadData() {
+      const data = JSON.parse(localStorage.getItem(getDataKey())) || {};
+      return data;
+    }
+
+    function saveData(data) {
+      localStorage.setItem(getDataKey(), JSON.stringify(data));
+    }
+
+    function buildChecklists() {
+      const checklistContainer = document.getElementById('checklists');
+      checklistContainer.innerHTML = '';
+      const data = loadData();
+
+      for (let c = 0; c < numCharacters; c++) {
+        const charBox = document.createElement('div');
+        charBox.className = "character";
+
+        const charName = document.createElement('input');
+        charName.className = "char-name";
+        charName.placeholder = "Character Name";
+        charName.value = data[`char_${c}_name`] || "";
+        charName.addEventListener("input", () => {
+          data[`char_${c}_name`] = charName.value;
+          saveData(data);
         });
-      });
-      checklistContainer.appendChild(box);
-    });
+        charBox.appendChild(charName);
 
-    // Update UTC time live
+        for (let t = 0; t < numTasks; t++) {
+          const wrapper = document.createElement('div');
+          wrapper.className = "task";
+
+          const id = `slot${currentSlot}_char${c}_task${t}`;
+          const storageKey = getStorageKey() + "_" + id;
+          const savedChecked = localStorage.getItem(storageKey) === "true";
+
+          const checkbox = document.createElement('input');
+          checkbox.type = "checkbox";
+          checkbox.checked = savedChecked;
+          checkbox.addEventListener("change", () => {
+            localStorage.setItem(storageKey, checkbox.checked);
+          });
+
+          const taskInput = document.createElement('input');
+          taskInput.type = "text";
+          taskInput.placeholder = "Daily Task";
+          taskInput.value = data[`char_${c}_task_${t}`] || "";
+          taskInput.addEventListener("input", () => {
+            data[`char_${c}_task_${t}`] = taskInput.value;
+            saveData(data);
+          });
+
+          wrapper.appendChild(checkbox);
+          wrapper.appendChild(taskInput);
+          charBox.appendChild(wrapper);
+        }
+        checklistContainer.appendChild(charBox);
+      }
+    }
+
+    function switchSlot(slot) {
+      currentSlot = slot;
+      const today = new Date().toISOString().split('T')[0];
+      if (!localStorage.getItem(getStorageKey())) {
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith(`mapleDailies_slot${slot}`)) {
+            localStorage.removeItem(key);
+          }
+        }
+        localStorage.setItem(getStorageKey(), "started");
+      }
+      buildChecklists();
+    }
+
     function updateUTCTime() {
       const now = new Date();
+      const utcYear = now.getUTCFullYear();
+      const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0');
+      const utcDay = String(now.getUTCDate()).padStart(2, '0');
+      const utcHours = String(now.getUTCHours()).padStart(2, '0');
+      const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
+      const utcSeconds = String(now.getUTCSeconds()).padStart(2, '0');
       document.getElementById('utc-time').innerText =
-        "UTC Time: " + now.toISOString().replace("T", " ").split(".")[0];
+        `UTC Time: ${utcMonth}/${utcDay}/${utcYear} ${utcHours}:${utcMinutes}:${utcSeconds}`;
     }
     setInterval(updateUTCTime, 1000);
     updateUTCTime();
+
+    switchSlot(1);
   </script>
 </body>
 </html>
