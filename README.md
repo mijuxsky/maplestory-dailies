@@ -6,8 +6,8 @@ A minimal tracker for your dailies in MapleStory.
 - Editable character names and daily tasks
 - Minimum of one task per character (cannot delete the last task)
 - Add new characters (up to 20 total)
-- Copy and paste a character's dailies across characters
-- Delete characters with a clear "X" button (with tooltip "Delete Character")
+- Duplicate a character via the copy icon (top-left) to create a new card with the same name and tasks
+- Delete characters with a clear "X" button (top-left, tooltip "Delete Character")
 - Each character starts with 2 daily task lines by default
 - Press Enter in a task to add a new line (up to 10 tasks per character)
 - Clearing all text in a task line removes that line (last line is preserved)

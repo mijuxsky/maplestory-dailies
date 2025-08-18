@@ -52,11 +52,17 @@
     .character {
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 15px 20px; width: 260px; flex-shrink: 0; position: relative;
+      padding: 18px 20px 16px 20px; width: 260px; flex-shrink: 0; position: relative;
     }
-    .char-actions {
-      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+    /* Top-left action bar: Delete (X) + Copy (duplicate) */
+    .action-bar {
+      position: absolute; top: 6px; left: 6px; display: flex; gap: 6px; align-items: center;
     }
+    .icon-btn {
+      width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; padding: 0; margin: 0; cursor: pointer;
+    }
+    .icon-btn svg { width: 14px; height: 14px; }
     .character input.char-name {
       font-size: 14px; font-weight: 600; border: none; background: transparent;
       border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
@@ -75,24 +81,14 @@
       font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6; color: inherit;
     }
     .task .task-delete:hover { opacity: 1; transform: scale(1.05); }
-    /* Character delete button (top-right) */
-    .delete-btn {
-      position: absolute; top: 6px; right: 6px;
-      border: none; border-radius: 50%;
-      width: 24px; height: 24px; cursor: pointer; font-size: 16px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .delete-btn[title] { position: absolute; }
-    /* Copy/Paste buttons wrapper */
-    .copy-paste { display: flex; gap: 6px; }
     /* Theme surfaces, accents, controls */
     body.light { background: #f7f7f8; color: #333; }
     body.light #instructions { background: #ffffff; border: 1px solid #e9e9ee; }
     body.light .character { background: #ffffff; }
     body.light select { border-color: #bbb; color: #333; background-color: rgba(255,255,255,0.6); }
     body.light option { background: #ffffff; color: #333; }
-    body.light button, body.light .delete-btn { background: #d9d9dd; color: #222; }
-    body.light button:hover, body.light .delete-btn:hover { background: #c6c6cb; }
+    body.light button, body.light .icon-btn { background: #d9d9dd; color: #222; }
+    body.light button:hover, body.light .icon-btn:hover { background: #c6c6cb; }
     body.light .task input[type="checkbox"] { accent-color: #666; }
     body.light .task .task-delete { color: #555; }
     /* Cloud (Light) */
@@ -101,8 +97,8 @@
     body.cloud .character { background: #ffffff; border: 1px solid #d6e7f7; }
     body.cloud select { border-color: #a9c8e7; color: #2f4152; background-color: rgba(255,255,255,0.5); }
     body.cloud option { background: #f3f9ff; color: #2f4152; }
-    body.cloud button, body.cloud .delete-btn { background: #b7d7f5; color: #223244; }
-    body.cloud button:hover, body.cloud .delete-btn:hover { background: #a0c7ef; }
+    body.cloud button, body.cloud .icon-btn { background: #b7d7f5; color: #223244; }
+    body.cloud button:hover, body.cloud .icon-btn:hover { background: #a0c7ef; }
     body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
     body.cloud .task .task-delete { color: #3a5e82; }
     /* Lavender (Light) */
@@ -111,8 +107,8 @@
     body.lavender .character { background: #ffffff; }
     body.lavender select { border-color: #cbb7f0; color: #4b3b60; background-color: rgba(255,255,255,0.5); }
     body.lavender option { background: #fbf8ff; color: #4b3b60; }
-    body.lavender button, body.lavender .delete-btn { background: #f3d6f0; color: #4b3b60; }
-    body.lavender button:hover, body.lavender .delete-btn:hover { background: #e9c0e6; }
+    body.lavender button, body.lavender .icon-btn { background: #f3d6f0; color: #4b3b60; }
+    body.lavender button:hover, body.lavender .icon-btn:hover { background: #e9c0e6; }
     body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
     body.lavender .task .task-delete { color: #6a5aa0; }
     /* Matcha (Light) */
@@ -121,8 +117,8 @@
     body.matcha .character { background: #e8f7ea; }
     body.matcha select { border-color: #a7d8a7; color: #2f3b2f; background-color: rgba(255,255,255,0.5); }
     body.matcha option { background: #f3fbf4; color: #2f3b2f; }
-    body.matcha button, body.matcha .delete-btn { background: #bfe8bf; color: #2f3b2f; }
-    body.matcha button:hover, body.matcha .delete-btn:hover { background: #a8dda8; }
+    body.matcha button, body.matcha .icon-btn { background: #bfe8bf; color: #2f3b2f; }
+    body.matcha button:hover, body.matcha .icon-btn:hover { background: #a8dda8; }
     body.matcha .task input[type="checkbox"] { accent-color: #4a8c4a; }
     body.matcha .task .task-delete { color: #3b6d3b; }
     /* Dark Mode */
@@ -131,8 +127,8 @@
     body.dark .character { background: #1f2230; }
     body.dark select { border-color: #4b4f63; color: #e6e7eb; background-color: #2a2f3f; }
     body.dark option { background: #2a2f3f; color: #e6e7eb; }
-    body.dark button, body.dark .delete-btn { background: #3a3f54; color: #f0f1f5; }
-    body.dark button:hover, body.dark .delete-btn:hover { background: #4a5068; }
+    body.dark button, body.dark .icon-btn { background: #3a3f54; color: #f0f1f5; }
+    body.dark button:hover, body.dark .icon-btn:hover { background: #4a5068; }
     body.dark .task input[type="checkbox"] { accent-color: #cfd3df; }
     body.dark .task .task-delete { color: #cfd3df; }
     body.dark input::placeholder { color: #b9bfcc; opacity: 0.75; }
@@ -142,8 +138,8 @@
     body.evergreen .character { background: #1a2b1f; }
     body.evergreen select { border-color: #3c5c45; color: #d9f2de; background-color: #1a2b1f; }
     body.evergreen option { background: #1a2b1f; color: #d9f2de; }
-    body.evergreen button, body.evergreen .delete-btn { background: #2a4a34; color: #d9f2de; }
-    body.evergreen button:hover, body.evergreen .delete-btn:hover { background: #386546; }
+    body.evergreen button, body.evergreen .icon-btn { background: #2a4a34; color: #d9f2de; }
+    body.evergreen button:hover, body.evergreen .icon-btn:hover { background: #386546; }
     body.evergreen .task input[type="checkbox"] { accent-color: #8bcf9b; }
     body.evergreen .task .task-delete { color: #b6e4c2; }
     body.evergreen input::placeholder { color: #b6e4c2; opacity: 0.75; }
@@ -160,7 +156,7 @@
       <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
       <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10).</li>
       <li>Clear a task’s text or click the “×” beside it to remove that line. At least one task is always kept.</li>
-      <li>Use <em>Copy</em> on a character to copy its task list, then <em>Paste</em> on another to duplicate the dailies.</li>
+      <li>Click the copy icon on a character to duplicate that character (name and tasks) as a new card.</li>
       <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
       <li>Change the <em>Theme</em> to match your vibe. Dropdown colors adapt to the current theme.</li>
     </ul>
@@ -199,7 +195,6 @@
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
-    let clipboardTasks = null;
 
     function getStorageKey() {
       const today = new Date().toISOString().split('T')[0];
@@ -217,29 +212,26 @@
         const charBox = document.createElement('div');
         charBox.className = "character";
 
-        // top row: copy/paste + delete
-        const actions = document.createElement('div');
-        actions.className = "char-actions";
-        const cp = document.createElement('div');
-        cp.className = "copy-paste";
-        const copyBtn = document.createElement('button');
-        copyBtn.textContent = "Copy";
-        copyBtn.title = "Copy this character's tasks";
-        copyBtn.onclick = () => copyTasks(c);
-        const pasteBtn = document.createElement('button');
-        pasteBtn.textContent = "Paste";
-        pasteBtn.title = "Paste copied tasks onto this character";
-        pasteBtn.onclick = () => pasteTasks(c);
-        cp.appendChild(copyBtn); cp.appendChild(pasteBtn);
-        actions.appendChild(cp);
+        // action bar (top-left): Delete + Copy
+        const bar = document.createElement('div');
+        bar.className = "action-bar";
 
         const delBtn = document.createElement('button');
-        delBtn.className = "delete-btn";
-        delBtn.textContent = "×";
+        delBtn.className = "icon-btn";
         delBtn.title = "Delete Character";
+        delBtn.innerHTML = "&#215;"; // ×
         delBtn.onclick = () => { deleteCharacter(c); };
-        actions.appendChild(delBtn);
-        charBox.appendChild(actions);
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = "icon-btn";
+        copyBtn.title = "Duplicate Character";
+        // simple two-squares SVG icon
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
+        copyBtn.onclick = () => { duplicateCharacter(c); };
+
+        bar.appendChild(delBtn);
+        bar.appendChild(copyBtn);
+        charBox.appendChild(bar);
 
         const charName = document.createElement('input');
         charName.className = "char-name";
@@ -320,7 +312,6 @@
           data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
           saveData(data);
         } else {
-          // If it's the last task, just clear the text
           const input = wrapper.querySelector('input[type="text"]');
           input.value = "";
           delete data[`char_${c}_task_${t}`];
@@ -341,6 +332,26 @@
       saveData(data); buildChecklists();
     }
 
+    function duplicateCharacter(index) {
+      const data = loadData();
+      if (data.charCount >= maxCharacters) { alert("Maximum of 20 characters reached."); return; }
+      const src = index;
+      const dst = data.charCount;
+      data.charCount = dst + 1;
+      // Copy name
+      data[`char_${dst}_name`] = data[`char_${src}_name`] || "";
+      // Copy tasks
+      const count = Math.max(1, data[`char_${src}_taskCount`] || 1);
+      data[`char_${dst}_taskCount`] = count;
+      for (let t = 0; t < count; t++) {
+        data[`char_${dst}_task_${t}`] = data[`char_${src}_task_${t}`] || "";
+      }
+      saveData(data);
+      buildChecklists();
+      const clip = document.getElementById('clipboard');
+      if (clip) clip.textContent = "Character duplicated.";
+    }
+
     function deleteCharacter(index) {
       const data = loadData();
       for (let i = index; i < data.charCount - 1; i++) {
@@ -355,36 +366,6 @@
       delete data[`char_${data.charCount-1}_taskCount`];
       data.charCount = data.charCount - 1;
       saveData(data); buildChecklists();
-    }
-
-    function copyTasks(c) {
-      const data = loadData();
-      const count = Math.max(1, data[`char_${c}_taskCount`] || 1);
-      const tasks = [];
-      for (let t = 0; t < count; t++) {
-        const val = data[`char_${c}_task_${t}`] || "";
-        tasks.push(val);
-      }
-      clipboardTasks = tasks;
-      document.getElementById('clipboard').textContent = `Copied ${tasks.filter(x => x.trim() !== '').length} tasks from Character ${c+1}.`;
-    }
-
-    function pasteTasks(c) {
-      if (!clipboardTasks) { alert("No tasks copied yet. Click Copy on a character first."); return; }
-      const data = loadData();
-      const useTasks = clipboardTasks.slice(0, maxTasks);
-      // Overwrite tasks
-      for (let t = 0; t < maxTasks; t++) {
-        if (t < useTasks.length) {
-          data[`char_${c}_task_${t}`] = useTasks[t];
-        } else {
-          delete data[`char_${c}_task_${t}`];
-        }
-      }
-      data[`char_${c}_taskCount`] = Math.max(1, useTasks.length);
-      saveData(data);
-      buildChecklists();
-      document.getElementById('clipboard').textContent = `Pasted ${useTasks.filter(x => x.trim() !== '').length} tasks to Character ${c+1}.`;
     }
 
     function switchPreset(preset) {
