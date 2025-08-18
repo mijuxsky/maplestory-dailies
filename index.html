@@ -18,7 +18,17 @@
     }
     h1 { margin-bottom: 5px; font-size: 20px; }
     #utc-time, #theme-selector, #preset-selector { margin-bottom: 10px; font-size: 13px; }
-    /* Transparent dropdowns */
+    #instructions {
+      margin: 10px 0 14px 0;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      max-width: 900px;
+      box-shadow: var(--shadow);
+      line-height: 1.5;
+    }
+    #instructions ul { margin: 8px 0 0 16px; padding: 0; }
+    #instructions li { margin: 4px 0; }
+    /* Transparent dropdowns styled per theme */
     select {
       padding: 4px 8px;
       border-radius: 8px;
@@ -28,6 +38,9 @@
       font-size: 13px;
       outline: none;
     }
+    select:focus { outline: none; }
+    /* Also style the dropdown menu options for better contrast */
+    option { background: inherit; color: inherit; }
     button {
       border: none; border-radius: 8px; padding: 6px 12px; margin: 4px; cursor: pointer; font-weight: 600;
       transition: background 0.2s, color 0.2s, border-color 0.2s;
@@ -45,17 +58,19 @@
     .character input.char-name {
       font-size: 14px; font-weight: 600; border: none; background: transparent;
       border-bottom: 2px solid currentColor; margin-bottom: 12px; width: 100%; text-align: center;
-      opacity: 0.9;
+      opacity: 0.95; color: inherit;
     }
     .task { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 0; }
     .task input[type="checkbox"] { width: 16px; height: 16px; }
     .task input[type="text"] {
       border: none; border-bottom: 1px dashed currentColor; background: transparent; font-size: 13px; padding: 4px 2px;
+      color: inherit;
     }
+    .task input[type="text"]::placeholder { color: inherit; opacity: 0.6; }
     /* New minimal inline delete for tasks */
     .task .task-delete {
       background: transparent; border: none; padding: 0 4px; margin: 0;
-      font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6;
+      font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6; color: inherit;
     }
     .task .task-delete:hover { opacity: 1; transform: scale(1.05); }
     /* Character delete button (top-right) */
@@ -68,70 +83,83 @@
     .delete-btn[title] { position: absolute; }
     /* Theme surfaces, accents, controls */
     body.light { background: #f7f7f8; color: #333; }
+    body.light #instructions { background: #ffffff; border: 1px solid #e9e9ee; }
     body.light .character { background: #ffffff; }
-    body.light select { border-color: #bbb; color: #333; }
+    body.light select { border-color: #bbb; color: #333; background-color: rgba(255,255,255,0.6); }
+    body.light option { background: #ffffff; color: #333; }
     body.light button, body.light .delete-btn { background: #d9d9dd; color: #222; }
     body.light button:hover, body.light .delete-btn:hover { background: #c6c6cb; }
     body.light .task input[type="checkbox"] { accent-color: #666; }
     body.light .task .task-delete { color: #555; }
     /* Cloud (Light) */
     body.cloud { background: #eaf4ff; color: #2f4152; }
+    body.cloud #instructions { background: #ffffff; border: 1px solid #d6e7f7; }
     body.cloud .character { background: #ffffff; border: 1px solid #d6e7f7; }
-    body.cloud select { border-color: #a9c8e7; color: #2f4152; }
+    body.cloud select { border-color: #a9c8e7; color: #2f4152; background-color: rgba(255,255,255,0.5); }
+    body.cloud option { background: #f3f9ff; color: #2f4152; }
     body.cloud button, body.cloud .delete-btn { background: #b7d7f5; color: #223244; }
     body.cloud button:hover, body.cloud .delete-btn:hover { background: #a0c7ef; }
     body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
     body.cloud .task .task-delete { color: #3a5e82; }
     /* Lavender (Light) */
     body.lavender { background: #f4f0fa; color: #4b3b60; }
+    body.lavender #instructions { background: #ffffff; border: 1px solid #e6d9f8; }
     body.lavender .character { background: #ffffff; }
-    body.lavender select { border-color: #cbb7f0; color: #4b3b60; }
+    body.lavender select { border-color: #cbb7f0; color: #4b3b60; background-color: rgba(255,255,255,0.5); }
+    body.lavender option { background: #fbf8ff; color: #4b3b60; }
     body.lavender button, body.lavender .delete-btn { background: #f3d6f0; color: #4b3b60; }
     body.lavender button:hover, body.lavender .delete-btn:hover { background: #e9c0e6; }
     body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
     body.lavender .task .task-delete { color: #6a5aa0; }
     /* Matcha (Light) */
     body.matcha { background: #f0faf2; color: #2f3b2f; }
+    body.matcha #instructions { background: #ffffff; border: 1px solid #cfead0; }
     body.matcha .character { background: #e8f7ea; }
-    body.matcha select { border-color: #a7d8a7; color: #2f3b2f; }
+    body.matcha select { border-color: #a7d8a7; color: #2f3b2f; background-color: rgba(255,255,255,0.5); }
+    body.matcha option { background: #f3fbf4; color: #2f3b2f; }
     body.matcha button, body.matcha .delete-btn { background: #bfe8bf; color: #2f3b2f; }
     body.matcha button:hover, body.matcha .delete-btn:hover { background: #a8dda8; }
     body.matcha .task input[type="checkbox"] { accent-color: #4a8c4a; }
     body.matcha .task .task-delete { color: #3b6d3b; }
     /* Dark Mode */
     body.dark { background: #12131a; color: #e6e7eb; }
+    body.dark #instructions { background: #1b1d28; border: 1px solid #3a3f54; }
     body.dark .character { background: #1f2230; }
-    body.dark select { border-color: #4b4f63; color: #e6e7eb; }
+    body.dark select { border-color: #4b4f63; color: #e6e7eb; background-color: #2a2f3f; }
+    body.dark option { background: #2a2f3f; color: #e6e7eb; }
     body.dark button, body.dark .delete-btn { background: #3a3f54; color: #f0f1f5; }
     body.dark button:hover, body.dark .delete-btn:hover { background: #4a5068; }
     body.dark .task input[type="checkbox"] { accent-color: #cfd3df; }
     body.dark .task .task-delete { color: #cfd3df; }
+    body.dark input::placeholder { color: #b9bfcc; opacity: 0.75; }
     /* Evergreen (Dark) */
     body.evergreen { background: #0e1a11; color: #d9f2de; }
+    body.evergreen #instructions { background: #15251c; border: 1px solid #2a4a34; }
     body.evergreen .character { background: #1a2b1f; }
-    body.evergreen select { border-color: #3c5c45; color: #d9f2de; }
+    body.evergreen select { border-color: #3c5c45; color: #d9f2de; background-color: #1a2b1f; }
+    body.evergreen option { background: #1a2b1f; color: #d9f2de; }
     body.evergreen button, body.evergreen .delete-btn { background: #2a4a34; color: #d9f2de; }
     body.evergreen button:hover, body.evergreen .delete-btn:hover { background: #386546; }
     body.evergreen .task input[type="checkbox"] { accent-color: #8bcf9b; }
     body.evergreen .task .task-delete { color: #b6e4c2; }
-    /* Tooltip for the task input */
-    .task input[type="text"][data-tip]:hover::after {
-      content: attr(data-tip);
-      position: absolute;
-      background: rgba(0,0,0,0.75);
-      color: #fff;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 12px;
-      transform: translateY(-140%);
-      white-space: nowrap;
-      pointer-events: none;
-    }
+    body.evergreen input::placeholder { color: #b6e4c2; opacity: 0.75; }
   </style>
 </head>
 <body class="lavender">
   <h1>MapleStory Dailies</h1>
   <div id="utc-time">Loading UTC time...</div>
+
+  <div id="instructions">
+    <strong>How to use:</strong>
+    <ul>
+      <li>Use <em>Preset</em> to switch between three saved sets of characters and tasks.</li>
+      <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
+      <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10).</li>
+      <li>Clear a task’s text or click the “×” beside it to remove that line.</li>
+      <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
+      <li>Change the <em>Theme</em> to match your vibe. Dropdown colors adapt to the current theme.</li>
+    </ul>
+  </div>
 
   <div id="theme-selector">
     <label for="theme">Theme:</label>
@@ -271,12 +299,12 @@
       for (let i = index; i < data.charCount - 1; i++) {
         data[`char_${i}_name`] = data[`char_${i+1}_name`] || "";
         data[`char_${i}_taskCount`] = data[`char_${i+1}_taskCount`] || 2;
-        for (let t = 0; t < maxTasks; t++) {
+        for (let t = 0; t < 10; t++) {
           data[`char_${i}_task_${t}`] = data[`char_${i+1}_task_${t}`] || "";
         }
       }
       delete data[`char_${data.charCount-1}_name`];
-      for (let t = 0; t < maxTasks; t++) delete data[`char_${data.charCount-1}_task_${t}`];
+      for (let t = 0; t < 10; t++) delete data[`char_${data.charCount-1}_task_${t}`];
       delete data[`char_${data.charCount-1}_taskCount`];
       data.charCount = data.charCount - 1;
       saveData(data); buildChecklists();

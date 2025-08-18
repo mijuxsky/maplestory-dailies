@@ -14,4 +14,5 @@ A minimal tracker for your dailies in MapleStory.
 - Live UTC time display in MM/DD/YYYY format
 - Three presets stored locally in your browser (via dropdown selector)
 - Theme selector with Light Mode, Cloud (Light), Lavender (Light), Matcha (Light), Dark Mode, and Evergreen (Dark)
-- Transparent dropdowns and theme-tuned card backgrounds for cohesion
+- Transparent dropdowns with legible, theme-appropriate colors
+- Theme-tuned card backgrounds and improved contrast in dark themes
