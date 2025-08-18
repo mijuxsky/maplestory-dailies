@@ -45,24 +45,40 @@
       transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
     }
     #checklists {
-      display: flex; flex-wrap: wrap; justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 20px; width: 100%; max-width: 1200px;
+      align-items: start;
     }
     #add-character { align-self: flex-end; margin: 10px 0; }
-    .character {
+    .character, .drop-placeholder {
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 18px 20px 16px 20px; width: 260px; flex-shrink: 0; position: relative;
+      min-height: 120px;
+      position: relative;
+      user-select: none;
     }
-    /* Top-left action bar: Delete (X) + Copy (duplicate) */
-    .action-bar {
-      position: absolute; top: 6px; left: 6px; display: flex; gap: 6px; align-items: center;
+    .character { padding: 36px 20px 16px 20px; }
+    .drop-placeholder {
+      display: block;
+      padding: 36px 20px 16px 20px;
+      outline: 2px dashed var(--ph-outline);
+      outline-offset: -6px;
+      background: var(--ph-bg);
+      animation: phPulse 0.6s ease-in-out infinite alternate;
+    }
+    @keyframes phPulse { from { opacity: 0.7; } to { opacity: 1; } }
+    .character.dragging { opacity: 0.6; }
+    /* Top-right window-style controls: Duplicate then X */
+    .window-controls {
+      position: absolute; top: 6px; right: 8px; display: flex; gap: 6px; align-items: center;
     }
     .icon-btn {
-      width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       font-size: 14px; padding: 0; margin: 0; cursor: pointer;
     }
     .icon-btn svg { width: 14px; height: 14px; }
+    .character input.char-name, .character input[type="text"] { -webkit-user-drag: none; }
     .character input.char-name {
       font-size: 14px; font-weight: 600; border: none; background: transparent;
       border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
@@ -75,14 +91,13 @@
       color: inherit;
     }
     .task input[type="text"]::placeholder { color: inherit; opacity: 0.6; }
-    /* Minimal inline delete for tasks */
     .task .task-delete {
       background: transparent; border: none; padding: 0 4px; margin: 0;
       font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6; color: inherit;
     }
     .task .task-delete:hover { opacity: 1; transform: scale(1.05); }
-    /* Theme surfaces, accents, controls */
-    body.light { background: #f7f7f8; color: #333; }
+    /* THEME VARIABLES & STYLES */
+    body.light { --ph-outline: #9aa0a6; --ph-bg: rgba(0,0,0,0.04); background: #f7f7f8; color: #333; }
     body.light #instructions { background: #ffffff; border: 1px solid #e9e9ee; }
     body.light .character { background: #ffffff; }
     body.light select { border-color: #bbb; color: #333; background-color: rgba(255,255,255,0.6); }
@@ -92,7 +107,7 @@
     body.light .task input[type="checkbox"] { accent-color: #666; }
     body.light .task .task-delete { color: #555; }
     /* Cloud (Light) */
-    body.cloud { background: #eaf4ff; color: #2f4152; }
+    body.cloud { --ph-outline: #5a86b5; --ph-bg: rgba(90,134,181,0.10); background: #eaf4ff; color: #2f4152; }
     body.cloud #instructions { background: #ffffff; border: 1px solid #d6e7f7; }
     body.cloud .character { background: #ffffff; border: 1px solid #d6e7f7; }
     body.cloud select { border-color: #a9c8e7; color: #2f4152; background-color: rgba(255,255,255,0.5); }
@@ -102,7 +117,7 @@
     body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
     body.cloud .task .task-delete { color: #3a5e82; }
     /* Lavender (Light) */
-    body.lavender { background: #f4f0fa; color: #4b3b60; }
+    body.lavender { --ph-outline: #7c5db0; --ph-bg: rgba(124,93,176,0.10); background: #f4f0fa; color: #4b3b60; }
     body.lavender #instructions { background: #ffffff; border: 1px solid #e6d9f8; }
     body.lavender .character { background: #ffffff; }
     body.lavender select { border-color: #cbb7f0; color: #4b3b60; background-color: rgba(255,255,255,0.5); }
@@ -112,7 +127,7 @@
     body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
     body.lavender .task .task-delete { color: #6a5aa0; }
     /* Matcha (Light) */
-    body.matcha { background: #f0faf2; color: #2f3b2f; }
+    body.matcha { --ph-outline: #4a8c4a; --ph-bg: rgba(74,140,74,0.10); background: #f0faf2; color: #2f3b2f; }
     body.matcha #instructions { background: #ffffff; border: 1px solid #cfead0; }
     body.matcha .character { background: #e8f7ea; }
     body.matcha select { border-color: #a7d8a7; color: #2f3b2f; background-color: rgba(255,255,255,0.5); }
@@ -122,7 +137,7 @@
     body.matcha .task input[type="checkbox"] { accent-color: #4a8c4a; }
     body.matcha .task .task-delete { color: #3b6d3b; }
     /* Dark Mode */
-    body.dark { background: #12131a; color: #e6e7eb; }
+    body.dark { --ph-outline: #cfd3df; --ph-bg: rgba(207,211,223,0.14); background: #12131a; color: #e6e7eb; }
     body.dark #instructions { background: #1b1d28; border: 1px solid #3a3f54; }
     body.dark .character { background: #1f2230; }
     body.dark select { border-color: #4b4f63; color: #e6e7eb; background-color: #2a2f3f; }
@@ -133,7 +148,7 @@
     body.dark .task .task-delete { color: #cfd3df; }
     body.dark input::placeholder { color: #b9bfcc; opacity: 0.75; }
     /* Evergreen (Dark) */
-    body.evergreen { background: #0e1a11; color: #d9f2de; }
+    body.evergreen { --ph-outline: #8bcf9b; --ph-bg: rgba(139,207,155,0.16); background: #0e1a11; color: #d9f2de; }
     body.evergreen #instructions { background: #15251c; border: 1px solid #2a4a34; }
     body.evergreen .character { background: #1a2b1f; }
     body.evergreen select { border-color: #3c5c45; color: #d9f2de; background-color: #1a2b1f; }
@@ -156,9 +171,9 @@
       <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
       <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10).</li>
       <li>Clear a task’s text or click the “×” beside it to remove that line. At least one task is always kept.</li>
-      <li>Click the copy icon on a character to duplicate that character (name and tasks) as a new card.</li>
+      <li>Use the duplicate icon to clone a character; use the “×” to delete one.</li>
+      <li>Drag and drop cards to reorder them; a tinted dashed placeholder shows where the card will land.</li>
       <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
-      <li>Change the <em>Theme</em> to match your vibe. Dropdown colors adapt to the current theme.</li>
     </ul>
   </div>
 
@@ -195,48 +210,141 @@
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
+    let dragFrom = null;
+    let dropPlaceholder = null;
 
-    function getStorageKey() {
-      const today = new Date().toISOString().split('T')[0];
-      return `mapleDailies_preset${currentPreset}_${today}`;
-    }
     function getDataKey() { return `mapleData_preset${currentPreset}`; }
     function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || { charCount: 0 }; }
     function saveData(data) { localStorage.setItem(getDataKey(), JSON.stringify(data)); }
 
+    function dailyKey(c, t) {
+      const today = new Date().toISOString().split('T')[0];
+      return `mapleCheck_${today}_preset${currentPreset}_c${c}_t${t}`;
+    }
+
+    function exportCharacters(data) {
+      const list = [];
+      const n = data.charCount || 0;
+      for (let i = 0; i < n; i++) {
+        const taskCount = Math.max(1, data[`char_${i}_taskCount`] || 1);
+        const tasks = [];
+        for (let t = 0; t < taskCount; t++) tasks.push(data[`char_${i}_task_${t}`] || "");
+        list.push({ name: data[`char_${i}_name`] || "", tasks });
+      }
+      return list;
+    }
+    function importCharacters(chars) {
+      const data = {};
+      data.charCount = chars.length;
+      for (let i = 0; i < chars.length; i++) {
+        data[`char_${i}_name`] = chars[i].name || "";
+        data[`char_${i}_taskCount`] = Math.max(1, Math.min(maxTasks, chars[i].tasks.length || 1));
+        for (let t = 0; t < data[`char_${i}_taskCount`]; t++) {
+          data[`char_${i}_task_${t}`] = chars[i].tasks[t] || "";
+        }
+      }
+      saveData(data);
+    }
+    function moveCharacter(from, to) {
+      const data = loadData();
+      const arr = exportCharacters(data);
+      if (from === null || to === null || from === to) return;
+      const item = arr.splice(from, 1)[0];
+      arr.splice(to, 0, item);
+      importCharacters(arr);
+      buildChecklists();
+    }
+
+    function ensurePlaceholder() {
+      if (!dropPlaceholder) {
+        dropPlaceholder = document.createElement('div');
+        dropPlaceholder.className = 'drop-placeholder';
+        dropPlaceholder.setAttribute('draggable', 'false');
+      }
+      return dropPlaceholder;
+    }
+
+    function removePlaceholder() {
+      if (dropPlaceholder && dropPlaceholder.parentElement) {
+        dropPlaceholder.parentElement.removeChild(dropPlaceholder);
+      }
+    }
+
     function buildChecklists() {
-      const checklistContainer = document.getElementById('checklists');
-      checklistContainer.innerHTML = '';
+      const container = document.getElementById('checklists');
+      container.innerHTML = '';
+      removePlaceholder();
       const data = loadData();
       for (let c = 0; c < (data.charCount || 0); c++) {
         const charBox = document.createElement('div');
         charBox.className = "character";
+        charBox.setAttribute('draggable', 'true');
+        charBox.dataset.index = c;
 
-        // action bar (top-left): Delete + Copy
-        const bar = document.createElement('div');
-        bar.className = "action-bar";
+        // DnD events
+        charBox.addEventListener('dragstart', (e) => {
+          dragFrom = c;
+          charBox.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        charBox.addEventListener('dragend', () => {
+          dragFrom = null;
+          charBox.classList.remove('dragging');
+          removePlaceholder();
+        });
+        charBox.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          const rect = charBox.getBoundingClientRect();
+          const before = (e.clientY - rect.top) < rect.height / 2;
+          const placeholder = ensurePlaceholder();
+          if (before) {
+            if (placeholder.nextSibling !== charBox) {
+              container.insertBefore(placeholder, charBox);
+            }
+          } else {
+            if (charBox.nextSibling !== placeholder) {
+              container.insertBefore(placeholder, charBox.nextSibling);
+            }
+          }
+        });
+        charBox.addEventListener('drop', (e) => {
+          e.preventDefault();
+          // Determine target index from placeholder position
+          const children = Array.from(container.children);
+          let targetIndex = 0;
+          for (let node of children) {
+            if (node === dropPlaceholder) break;
+            if (node.classList.contains('character')) targetIndex++;
+          }
+          removePlaceholder();
+          moveCharacter(dragFrom, targetIndex);
+        });
+
+        // controls top-right: duplicate then X
+        const controls = document.createElement('div');
+        controls.className = "window-controls";
+
+        const dupBtn = document.createElement('button');
+        dupBtn.className = "icon-btn";
+        dupBtn.title = "Duplicate Character";
+        dupBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
+        dupBtn.onclick = (ev) => { ev.stopPropagation(); duplicateCharacter(c); };
 
         const delBtn = document.createElement('button');
         delBtn.className = "icon-btn";
         delBtn.title = "Delete Character";
-        delBtn.innerHTML = "&#215;"; // ×
-        delBtn.onclick = () => { deleteCharacter(c); };
+        delBtn.innerHTML = "&#215;";
+        delBtn.onclick = (ev) => { ev.stopPropagation(); deleteCharacter(c); };
 
-        const copyBtn = document.createElement('button');
-        copyBtn.className = "icon-btn";
-        copyBtn.title = "Duplicate Character";
-        // simple two-squares SVG icon
-        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
-        copyBtn.onclick = () => { duplicateCharacter(c); };
-
-        bar.appendChild(delBtn);
-        bar.appendChild(copyBtn);
-        charBox.appendChild(bar);
+        controls.appendChild(dupBtn);
+        controls.appendChild(delBtn);
+        charBox.appendChild(controls);
 
         const charName = document.createElement('input');
         charName.className = "char-name";
         charName.placeholder = "Character Name";
         charName.value = data[`char_${c}_name`] || "";
+        charName.setAttribute('draggable','false');
         charName.addEventListener("input", () => {
           data[`char_${c}_name`] = charName.value; saveData(data);
         });
@@ -244,35 +352,39 @@
 
         let taskCount = data[`char_${c}_taskCount`];
         if (taskCount == null) taskCount = 2;
-        if (taskCount < 1) taskCount = 1; // ensure minimum 1
+        if (taskCount < 1) taskCount = 1;
         data[`char_${c}_taskCount`] = taskCount;
 
         for (let t = 0; t < taskCount; t++) {
           createTaskLine(charBox, data, c, t);
         }
         saveData(data);
-        checklistContainer.appendChild(charBox);
+        container.appendChild(charBox);
       }
     }
 
     function createTaskLine(charBox, data, c, t) {
       const wrapper = document.createElement('div');
       wrapper.className = "task";
-      const id = `preset${currentPreset}_char${c}_task${t}`;
-      const storageKey = getStorageKey() + "_" + id;
-      const savedChecked = localStorage.getItem(storageKey) === "true";
+      wrapper.setAttribute('draggable','false');
 
       const checkbox = document.createElement('input');
-      checkbox.type = "checkbox"; checkbox.checked = savedChecked;
-      checkbox.addEventListener("change", () => { localStorage.setItem(storageKey, checkbox.checked); });
+      checkbox.type = "checkbox";
+      checkbox.setAttribute('draggable','false');
+      const key = dailyKey(c, t);
+      const saved = localStorage.getItem(key);
+      checkbox.checked = (saved === 'true');
+      checkbox.addEventListener("change", () => {
+        localStorage.setItem(key, checkbox.checked ? 'true' : 'false');
+      });
 
       const taskInput = document.createElement('input');
       taskInput.type = "text"; taskInput.placeholder = "Daily Task";
       taskInput.setAttribute("data-tip", "Press Enter to add a new task (max 10)");
       taskInput.value = data[`char_${c}_task_${t}`] || "";
+      taskInput.setAttribute('draggable','false');
       taskInput.addEventListener("input", () => {
         if (taskInput.value === "") {
-          // Only remove if more than 1 task remains
           const currentCount = data[`char_${c}_taskCount`] || 1;
           if (currentCount > 1) {
             wrapper.remove();
@@ -280,7 +392,6 @@
             data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
             saveData(data);
           } else {
-            // keep one empty line
             delete data[`char_${c}_task_${t}`];
             saveData(data);
           }
@@ -292,7 +403,7 @@
         if (e.key === "Enter") {
           e.preventDefault();
           let taskCount = data[`char_${c}_taskCount`] || 1;
-          if (taskCount < maxTasks) {
+          if (taskCount < 10) {
             data[`char_${c}_taskCount`] = taskCount + 1;
             saveData(data);
             createTaskLine(charBox, data, c, taskCount);
@@ -304,6 +415,7 @@
       taskDelete.className = "task-delete";
       taskDelete.textContent = "×";
       taskDelete.title = "Delete Task";
+      taskDelete.setAttribute('draggable','false');
       taskDelete.onclick = () => {
         const currentCount = data[`char_${c}_taskCount`] || 1;
         if (currentCount > 1) {
@@ -311,11 +423,12 @@
           delete data[`char_${c}_task_${t}`];
           data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
           saveData(data);
+          localStorage.removeItem(key);
         } else {
-          const input = wrapper.querySelector('input[type="text"]');
-          input.value = "";
+          taskInput.value = "";
           delete data[`char_${c}_task_${t}`];
           saveData(data);
+          localStorage.removeItem(key);
         }
       };
 
@@ -335,18 +448,10 @@
     function duplicateCharacter(index) {
       const data = loadData();
       if (data.charCount >= maxCharacters) { alert("Maximum of 20 characters reached."); return; }
-      const src = index;
-      const dst = data.charCount;
-      data.charCount = dst + 1;
-      // Copy name
-      data[`char_${dst}_name`] = data[`char_${src}_name`] || "";
-      // Copy tasks
-      const count = Math.max(1, data[`char_${src}_taskCount`] || 1);
-      data[`char_${dst}_taskCount`] = count;
-      for (let t = 0; t < count; t++) {
-        data[`char_${dst}_task_${t}`] = data[`char_${src}_task_${t}`] || "";
-      }
-      saveData(data);
+      const arr = exportCharacters(data);
+      const clone = JSON.parse(JSON.stringify(arr[index]));
+      arr.splice(index + 1, 0, clone);
+      importCharacters(arr);
       buildChecklists();
       const clip = document.getElementById('clipboard');
       if (clip) clip.textContent = "Character duplicated.";
@@ -354,18 +459,10 @@
 
     function deleteCharacter(index) {
       const data = loadData();
-      for (let i = index; i < data.charCount - 1; i++) {
-        data[`char_${i}_name`] = data[`char_${i+1}_name`] || "";
-        data[`char_${i}_taskCount`] = Math.max(1, data[`char_${i+1}_taskCount`] || 2);
-        for (let t = 0; t < maxTasks; t++) {
-          data[`char_${i}_task_${t}`] = data[`char_${i+1}_task_${t}`] || "";
-        }
-      }
-      delete data[`char_${data.charCount-1}_name`];
-      for (let t = 0; t < maxTasks; t++) delete data[`char_${data.charCount-1}_task_${t}`];
-      delete data[`char_${data.charCount-1}_taskCount`];
-      data.charCount = data.charCount - 1;
-      saveData(data); buildChecklists();
+      const arr = exportCharacters(data);
+      arr.splice(index, 1);
+      importCharacters(arr);
+      buildChecklists();
     }
 
     function switchPreset(preset) {
