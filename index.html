@@ -17,7 +17,7 @@
       font-size: 14px;
     }
     h1 { margin-bottom: 5px; font-size: 20px; }
-    #utc-time, #theme-selector, #preset-selector { margin-bottom: 10px; font-size: 13px; }
+    #utc-time, #theme-selector, #preset-selector, #clipboard { margin-bottom: 10px; font-size: 13px; }
     #instructions {
       margin: 10px 0 14px 0;
       padding: 12px 14px;
@@ -28,7 +28,7 @@
     }
     #instructions ul { margin: 8px 0 0 16px; padding: 0; }
     #instructions li { margin: 4px 0; }
-    /* Transparent dropdowns styled per theme */
+    /* Transparent dropdowns */
     select {
       padding: 4px 8px;
       border-radius: 8px;
@@ -39,11 +39,10 @@
       outline: none;
     }
     select:focus { outline: none; }
-    /* Also style the dropdown menu options for better contrast */
     option { background: inherit; color: inherit; }
     button {
-      border: none; border-radius: 8px; padding: 6px 12px; margin: 4px; cursor: pointer; font-weight: 600;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      border: none; border-radius: 8px; padding: 6px 10px; margin: 4px; cursor: pointer; font-weight: 600;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
     }
     #checklists {
       display: flex; flex-wrap: wrap; justify-content: center;
@@ -53,11 +52,14 @@
     .character {
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 15px 20px; width: 240px; flex-shrink: 0; position: relative;
+      padding: 15px 20px; width: 260px; flex-shrink: 0; position: relative;
+    }
+    .char-actions {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
     }
     .character input.char-name {
       font-size: 14px; font-weight: 600; border: none; background: transparent;
-      border-bottom: 2px solid currentColor; margin-bottom: 12px; width: 100%; text-align: center;
+      border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
       opacity: 0.95; color: inherit;
     }
     .task { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 0; }
@@ -67,7 +69,7 @@
       color: inherit;
     }
     .task input[type="text"]::placeholder { color: inherit; opacity: 0.6; }
-    /* New minimal inline delete for tasks */
+    /* Minimal inline delete for tasks */
     .task .task-delete {
       background: transparent; border: none; padding: 0 4px; margin: 0;
       font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6; color: inherit;
@@ -81,6 +83,8 @@
       display: flex; align-items: center; justify-content: center;
     }
     .delete-btn[title] { position: absolute; }
+    /* Copy/Paste buttons wrapper */
+    .copy-paste { display: flex; gap: 6px; }
     /* Theme surfaces, accents, controls */
     body.light { background: #f7f7f8; color: #333; }
     body.light #instructions { background: #ffffff; border: 1px solid #e9e9ee; }
@@ -155,7 +159,8 @@
       <li>Use <em>Preset</em> to switch between three saved sets of characters and tasks.</li>
       <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
       <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10).</li>
-      <li>Clear a task’s text or click the “×” beside it to remove that line.</li>
+      <li>Clear a task’s text or click the “×” beside it to remove that line. At least one task is always kept.</li>
+      <li>Use <em>Copy</em> on a character to copy its task list, then <em>Paste</em> on another to duplicate the dailies.</li>
       <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
       <li>Change the <em>Theme</em> to match your vibe. Dropdown colors adapt to the current theme.</li>
     </ul>
@@ -182,6 +187,8 @@
     </select>
   </div>
 
+  <div id="clipboard" aria-live="polite"></div>
+
   <div id="add-character">
     <button id="add-character-btn" title="Add Character">+ Add Character</button>
   </div>
@@ -192,6 +199,7 @@
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
+    let clipboardTasks = null;
 
     function getStorageKey() {
       const today = new Date().toISOString().split('T')[0];
@@ -209,12 +217,29 @@
         const charBox = document.createElement('div');
         charBox.className = "character";
 
+        // top row: copy/paste + delete
+        const actions = document.createElement('div');
+        actions.className = "char-actions";
+        const cp = document.createElement('div');
+        cp.className = "copy-paste";
+        const copyBtn = document.createElement('button');
+        copyBtn.textContent = "Copy";
+        copyBtn.title = "Copy this character's tasks";
+        copyBtn.onclick = () => copyTasks(c);
+        const pasteBtn = document.createElement('button');
+        pasteBtn.textContent = "Paste";
+        pasteBtn.title = "Paste copied tasks onto this character";
+        pasteBtn.onclick = () => pasteTasks(c);
+        cp.appendChild(copyBtn); cp.appendChild(pasteBtn);
+        actions.appendChild(cp);
+
         const delBtn = document.createElement('button');
         delBtn.className = "delete-btn";
         delBtn.textContent = "×";
         delBtn.title = "Delete Character";
         delBtn.onclick = () => { deleteCharacter(c); };
-        charBox.appendChild(delBtn);
+        actions.appendChild(delBtn);
+        charBox.appendChild(actions);
 
         const charName = document.createElement('input');
         charName.className = "char-name";
@@ -225,10 +250,15 @@
         });
         charBox.appendChild(charName);
 
-        const taskCount = data[`char_${c}_taskCount`] || 2;
+        let taskCount = data[`char_${c}_taskCount`];
+        if (taskCount == null) taskCount = 2;
+        if (taskCount < 1) taskCount = 1; // ensure minimum 1
+        data[`char_${c}_taskCount`] = taskCount;
+
         for (let t = 0; t < taskCount; t++) {
           createTaskLine(charBox, data, c, t);
         }
+        saveData(data);
         checklistContainer.appendChild(charBox);
       }
     }
@@ -250,10 +280,18 @@
       taskInput.value = data[`char_${c}_task_${t}`] || "";
       taskInput.addEventListener("input", () => {
         if (taskInput.value === "") {
-          wrapper.remove();
-          delete data[`char_${c}_task_${t}`];
-          data[`char_${c}_taskCount`] = Math.max(0, (data[`char_${c}_taskCount`] || 2) - 1);
-          saveData(data);
+          // Only remove if more than 1 task remains
+          const currentCount = data[`char_${c}_taskCount`] || 1;
+          if (currentCount > 1) {
+            wrapper.remove();
+            delete data[`char_${c}_task_${t}`];
+            data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
+            saveData(data);
+          } else {
+            // keep one empty line
+            delete data[`char_${c}_task_${t}`];
+            saveData(data);
+          }
         } else {
           data[`char_${c}_task_${t}`] = taskInput.value; saveData(data);
         }
@@ -261,7 +299,7 @@
       taskInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          let taskCount = data[`char_${c}_taskCount`] || 2;
+          let taskCount = data[`char_${c}_taskCount`] || 1;
           if (taskCount < maxTasks) {
             data[`char_${c}_taskCount`] = taskCount + 1;
             saveData(data);
@@ -275,10 +313,19 @@
       taskDelete.textContent = "×";
       taskDelete.title = "Delete Task";
       taskDelete.onclick = () => {
-        wrapper.remove();
-        delete data[`char_${c}_task_${t}`];
-        data[`char_${c}_taskCount`] = Math.max(0, (data[`char_${c}_taskCount`] || 2) - 1);
-        saveData(data);
+        const currentCount = data[`char_${c}_taskCount`] || 1;
+        if (currentCount > 1) {
+          wrapper.remove();
+          delete data[`char_${c}_task_${t}`];
+          data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
+          saveData(data);
+        } else {
+          // If it's the last task, just clear the text
+          const input = wrapper.querySelector('input[type="text"]');
+          input.value = "";
+          delete data[`char_${c}_task_${t}`];
+          saveData(data);
+        }
       };
 
       wrapper.appendChild(checkbox); wrapper.appendChild(taskInput); wrapper.appendChild(taskDelete);
@@ -298,16 +345,46 @@
       const data = loadData();
       for (let i = index; i < data.charCount - 1; i++) {
         data[`char_${i}_name`] = data[`char_${i+1}_name`] || "";
-        data[`char_${i}_taskCount`] = data[`char_${i+1}_taskCount`] || 2;
-        for (let t = 0; t < 10; t++) {
+        data[`char_${i}_taskCount`] = Math.max(1, data[`char_${i+1}_taskCount`] || 2);
+        for (let t = 0; t < maxTasks; t++) {
           data[`char_${i}_task_${t}`] = data[`char_${i+1}_task_${t}`] || "";
         }
       }
       delete data[`char_${data.charCount-1}_name`];
-      for (let t = 0; t < 10; t++) delete data[`char_${data.charCount-1}_task_${t}`];
+      for (let t = 0; t < maxTasks; t++) delete data[`char_${data.charCount-1}_task_${t}`];
       delete data[`char_${data.charCount-1}_taskCount`];
       data.charCount = data.charCount - 1;
       saveData(data); buildChecklists();
+    }
+
+    function copyTasks(c) {
+      const data = loadData();
+      const count = Math.max(1, data[`char_${c}_taskCount`] || 1);
+      const tasks = [];
+      for (let t = 0; t < count; t++) {
+        const val = data[`char_${c}_task_${t}`] || "";
+        tasks.push(val);
+      }
+      clipboardTasks = tasks;
+      document.getElementById('clipboard').textContent = `Copied ${tasks.filter(x => x.trim() !== '').length} tasks from Character ${c+1}.`;
+    }
+
+    function pasteTasks(c) {
+      if (!clipboardTasks) { alert("No tasks copied yet. Click Copy on a character first."); return; }
+      const data = loadData();
+      const useTasks = clipboardTasks.slice(0, maxTasks);
+      // Overwrite tasks
+      for (let t = 0; t < maxTasks; t++) {
+        if (t < useTasks.length) {
+          data[`char_${c}_task_${t}`] = useTasks[t];
+        } else {
+          delete data[`char_${c}_task_${t}`];
+        }
+      }
+      data[`char_${c}_taskCount`] = Math.max(1, useTasks.length);
+      saveData(data);
+      buildChecklists();
+      document.getElementById('clipboard').textContent = `Pasted ${useTasks.filter(x => x.trim() !== '').length} tasks to Character ${c+1}.`;
     }
 
     function switchPreset(preset) {
