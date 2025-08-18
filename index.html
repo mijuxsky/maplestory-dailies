@@ -16,7 +16,7 @@
     }
     h1 { margin-bottom: 5px; }
     #utc-time { margin-bottom: 10px; font-size: 14px; }
-    #save-slots, #theme-selector { margin-bottom: 15px; }
+    #theme-selector, #preset-selector { margin-bottom: 15px; }
     button {
       background: #cbb7f0; border: none; border-radius: 6px;
       padding: 6px 12px; margin: 4px; cursor: pointer; font-weight: 600;
@@ -25,6 +25,9 @@
     #checklists {
       display: flex; flex-wrap: wrap; justify-content: center;
       gap: 20px; width: 100%; max-width: 1200px;
+    }
+    #add-character {
+      align-self: flex-end; margin: 10px 0;
     }
     .character {
       border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -35,35 +38,41 @@
       font-size: 16px; font-weight: bold; border: none; background: transparent;
       border-bottom: 2px solid #ccc; margin-bottom: 10px; width: 100%; text-align: center;
     }
+    .char-img {
+      display: block; margin: 0 auto 10px auto; max-height: 100px;
+    }
     .task { display: flex; align-items: center; margin: 6px 0; }
     .task input[type="checkbox"] { margin-right: 8px; }
     .task input[type="text"] {
       border: none; border-bottom: 1px solid #ccc; flex: 1; background: transparent;
     }
     .delete-btn {
-      position: absolute; top: 10px; right: 10px;
-      background: #f8cdd1; color: #333; border: none; border-radius: 6px;
-      padding: 2px 6px; cursor: pointer; font-size: 12px;
+      position: absolute; top: 5px; right: 5px;
+      background: #f8cdd1; color: #333; border: none; border-radius: 50%;
+      width: 22px; height: 22px; cursor: pointer; font-size: 14px; line-height: 18px; text-align: center;
     }
     .delete-btn:hover { background: #f59ca4; }
-    /* Floating Add Character Button */
-    #add-character-btn {
-      position: fixed; bottom: 25px; right: 25px;
-      width: 50px; height: 50px; border-radius: 50%;
-      background: #cbb7f0; color: white; font-size: 28px;
-      border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    .delete-btn[title] {
+      position: relative;
     }
-    #add-character-btn:hover { background: #b7a1e1; }
-    #theme { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; }
+    #theme, #preset {
+      padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit;
+    }
     /* Themes */
     body.light { background: #f9f9f9; color: #333; }
     body.light h1 { color: #444; }
+    body.light .task input[type="checkbox"] { accent-color: #777; }
     body.dark { background: #1e1e2e; color: #e5e5e5; }
-    body.dark h1 { color: #cbb7f0; }
+    body.dark h1 { color: #ddd; }
+    body.dark .character { background: #2b2b3c; }
+    body.dark .task input[type="checkbox"] { accent-color: #bbb; }
     body.cloud { background: #f0f8ff; color: #3a4a5a; }
     body.cloud h1 { color: #5a86b5; }
+    body.cloud .character { background: #ffffff; border: 1px solid #dce6f0; }
+    body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
     body.lavender { background: #f4f0fa; color: #4b3b60; }
     body.lavender h1 { color: #7c5db0; }
+    body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
   </style>
 </head>
 <body>
@@ -80,42 +89,46 @@
     </select>
   </div>
 
-  <div id="save-slots">
-    <span>Save Slot:</span>
-    <button onclick="switchSlot(1)">1</button>
-    <button onclick="switchSlot(2)">2</button>
-    <button onclick="switchSlot(3)">3</button>
+  <div id="preset-selector">
+    <label for="preset">Preset:</label>
+    <select id="preset" onchange="switchPreset(this.value)">
+      <option value="1">Preset 1</option>
+      <option value="2">Preset 2</option>
+      <option value="3">Preset 3</option>
+    </select>
+  </div>
+
+  <div id="add-character">
+    <button onclick="addCharacter()">+ Add Character</button>
   </div>
 
   <div id="checklists"></div>
 
-  <!-- Floating Add Character Button -->
-  <button id="add-character-btn" onclick="addCharacter()">+</button>
-
   <script>
-    let currentSlot = 1;
+    let currentPreset = 1;
     const maxCharacters = 20;
-    const numTasks = 5;
+    const maxTasks = 10;
 
     function getStorageKey() {
       const today = new Date().toISOString().split('T')[0];
-      return `mapleDailies_slot${currentSlot}_${today}`;
+      return `mapleDailies_preset${currentPreset}_${today}`;
     }
-    function getDataKey() { return `mapleData_slot${currentSlot}`; }
-    function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || { charCount: 5 }; }
+    function getDataKey() { return `mapleData_preset${currentPreset}`; }
+    function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || { charCount: 0 }; }
     function saveData(data) { localStorage.setItem(getDataKey(), JSON.stringify(data)); }
 
     function buildChecklists() {
       const checklistContainer = document.getElementById('checklists');
       checklistContainer.innerHTML = '';
       const data = loadData();
-      for (let c = 0; c < (data.charCount || 5); c++) {
+      for (let c = 0; c < (data.charCount || 0); c++) {
         const charBox = document.createElement('div');
         charBox.className = "character";
 
         const delBtn = document.createElement('button');
         delBtn.className = "delete-btn";
-        delBtn.textContent = "✕";
+        delBtn.textContent = "×";
+        delBtn.title = "Delete Character";
         delBtn.onclick = () => { deleteCharacter(c); };
         charBox.appendChild(delBtn);
 
@@ -123,36 +136,72 @@
         charName.className = "char-name";
         charName.placeholder = "Character Name";
         charName.value = data[`char_${c}_name`] || "";
-        charName.addEventListener("input", () => {
+        charName.addEventListener("blur", () => {
           data[`char_${c}_name`] = charName.value; saveData(data);
+          loadCharacterImage(charBox, c, charName.value);
         });
         charBox.appendChild(charName);
 
-        for (let t = 0; t < numTasks; t++) {
-          const wrapper = document.createElement('div'); wrapper.className = "task";
-          const id = `slot${currentSlot}_char${c}_task${t}`;
-          const storageKey = getStorageKey() + "_" + id;
-          const savedChecked = localStorage.getItem(storageKey) === "true";
-          const checkbox = document.createElement('input');
-          checkbox.type = "checkbox"; checkbox.checked = savedChecked;
-          checkbox.addEventListener("change", () => { localStorage.setItem(storageKey, checkbox.checked); });
-          const taskInput = document.createElement('input');
-          taskInput.type = "text"; taskInput.placeholder = "Daily Task";
-          taskInput.value = data[`char_${c}_task_${t}`] || "";
-          taskInput.addEventListener("input", () => {
-            data[`char_${c}_task_${t}`] = taskInput.value; saveData(data);
-          });
-          wrapper.appendChild(checkbox); wrapper.appendChild(taskInput);
-          charBox.appendChild(wrapper);
+        const charImg = document.createElement('img');
+        charImg.className = "char-img";
+        charImg.id = `charimg_${c}`;
+        if (data[`char_${c}_img`]) charImg.src = data[`char_${c}_img`];
+        charBox.appendChild(charImg);
+
+        const taskCount = data[`char_${c}_taskCount`] || 2;
+        for (let t = 0; t < taskCount; t++) {
+          createTaskLine(charBox, data, c, t);
         }
         checklistContainer.appendChild(charBox);
       }
     }
 
+    function createTaskLine(charBox, data, c, t) {
+      const wrapper = document.createElement('div');
+      wrapper.className = "task";
+      const id = `preset${currentPreset}_char${c}_task${t}`;
+      const storageKey = getStorageKey() + "_" + id;
+      const savedChecked = localStorage.getItem(storageKey) === "true";
+
+      const checkbox = document.createElement('input');
+      checkbox.type = "checkbox"; checkbox.checked = savedChecked;
+      checkbox.addEventListener("change", () => { localStorage.setItem(storageKey, checkbox.checked); });
+
+      const taskInput = document.createElement('input');
+      taskInput.type = "text"; taskInput.placeholder = "Daily Task";
+      taskInput.value = data[`char_${c}_task_${t}`] || "";
+      taskInput.addEventListener("input", () => {
+        if (taskInput.value === "") {
+          wrapper.remove();
+          delete data[`char_${c}_task_${t}`];
+          data[`char_${c}_taskCount`] = (data[`char_${c}_taskCount`] || 2) - 1;
+          saveData(data);
+        } else {
+          data[`char_${c}_task_${t}`] = taskInput.value; saveData(data);
+        }
+      });
+      taskInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          let taskCount = data[`char_${c}_taskCount`] || 2;
+          if (taskCount < maxTasks) {
+            data[`char_${c}_taskCount`] = taskCount + 1;
+            saveData(data);
+            createTaskLine(charBox, data, c, taskCount);
+          }
+        }
+      });
+
+      wrapper.appendChild(checkbox); wrapper.appendChild(taskInput);
+      charBox.appendChild(wrapper);
+    }
+
     function addCharacter() {
       const data = loadData();
       if (data.charCount >= maxCharacters) { alert("Maximum of 20 characters reached."); return; }
-      data.charCount = (data.charCount || 5) + 1;
+      const c = data.charCount;
+      data.charCount = (data.charCount || 0) + 1;
+      data[`char_${c}_taskCount`] = 2;
       saveData(data); buildChecklists();
     }
 
@@ -160,24 +209,31 @@
       const data = loadData();
       for (let i = index; i < data.charCount - 1; i++) {
         data[`char_${i}_name`] = data[`char_${i+1}_name`] || "";
-        for (let t = 0; t < numTasks; t++) {
+        data[`char_${i}_taskCount`] = data[`char_${i+1}_taskCount`] || 2;
+        for (let t = 0; t < maxTasks; t++) {
           data[`char_${i}_task_${t}`] = data[`char_${i+1}_task_${t}`] || "";
         }
       }
       delete data[`char_${data.charCount-1}_name`];
-      for (let t = 0; t < numTasks; t++) {
-        delete data[`char_${data.charCount-1}_task_${t}`];
-      }
+      for (let t = 0; t < maxTasks; t++) delete data[`char_${data.charCount-1}_task_${t}`];
+      delete data[`char_${data.charCount-1}_taskCount`];
       data.charCount = data.charCount - 1;
       saveData(data); buildChecklists();
     }
 
-    function switchSlot(slot) {
-      currentSlot = slot;
-      const today = new Date().toISOString().split('T')[0];
-      if (!localStorage.getItem(getStorageKey())) {
-        localStorage.setItem(getStorageKey(), "started");
-      }
+    function loadCharacterImage(charBox, c, name) {
+      const img = charBox.querySelector(`#charimg_${c}`);
+      if (!name) { img.src = ""; return; }
+      const url = `https://maplestory.io/api/character/gms/${encodeURIComponent(name)}/stand/0`;
+      img.src = url;
+      img.onerror = () => { img.src = ""; };
+      const data = loadData();
+      data[`char_${c}_img`] = url;
+      saveData(data);
+    }
+
+    function switchPreset(preset) {
+      currentPreset = preset;
       buildChecklists();
     }
 
@@ -204,7 +260,7 @@
       localStorage.setItem("mapleTheme", theme);
     });
 
-    switchSlot(1);
+    switchPreset(1);
     loadTheme();
     updateUTCTime();
   </script>
