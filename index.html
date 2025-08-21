@@ -109,7 +109,7 @@
       background:var(--control-bg); color:var(--control-fg); outline:none;
       font-family:inherit; font-size:var(--ui);
     }
-    select:focus{ box-shadow:0 0 0 2px rgba(0,0,0,.06); border-color:var(--icon); }
+    select:focus{ box-shadow:none; outline:none; } /* remove black border/glow */
     option{ background:var(--control-bg); color:var(--control-fg); }
 
     #add-character-btn{
@@ -131,9 +131,9 @@
       min-height:120px; position:relative; user-select:none; font-size:var(--ui);
       background:var(--card-bg); border:1px solid var(--card-border);
     }
-    .character{ padding:56px 16px 12px; } /* tighter spacing */
+    .character{ padding:48px 16px 12px; } /* tighter space under buttons */
     .drop-placeholder{
-      padding:56px 16px 12px; outline:2px dashed var(--ph-outline);
+      padding:48px 16px 12px; outline:2px dashed var(--ph-outline);
       outline-offset:-6px; background:var(--ph-bg); animation:ph .6s ease-in-out infinite alternate;
     }
     @keyframes ph{ from{opacity:.72} to{opacity:1} }
@@ -154,17 +154,18 @@
     .icon-btn:active{ transform:translateY(1px); }
     .icon-btn svg{ width:16px; height:16px; }
 
-    /* Character image (compact, less gap) */
-    .char-image-wrap{ text-align:center; margin:4px auto 2px; min-height:24px; }
+    /* Character image (compact; zero top gap) */
+    .char-image-wrap{ text-align:center; margin:0 auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
 
     /* Character name */
     .char-name{
       width:100%; border:none; background:transparent;
       border-bottom:var(--name-underline);
-      text-align:center; font-weight:600; margin:2px 0 4px; /* less space */
+      text-align:center; font-weight:600; margin:2px 0 4px;
       font-size:var(--ui); color:var(--fg); font-family:inherit;
     }
+    .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); } /* remove black border */
 
     /* Tasks */
     .task{ display:grid; grid-template-columns:18px 1fr auto; gap:8px; align-items:center; margin:6px 0; }
@@ -172,6 +173,7 @@
       border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px;
       font-size:var(--ui); color:var(--fg); font-family:inherit;
     }
+    .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); } /* remove black border */
     .task .task-delete{
       background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon);
       width:22px; height:22px; display:flex; align-items:center; justify-content:center;
@@ -391,8 +393,15 @@
         const cachedImg=(d[`char_${c}_image`]||"").trim(); showCharImage(card, cachedImg || BASE_MODEL_URL);
 
         const name=document.createElement('input'); name.className='char-name'; name.placeholder='Character Name'; name.value=d[`char_${c}_name`]||"";
-        name.addEventListener('input',()=>{ const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd); });
-        name.addEventListener('keydown',e=>{ const atStart=name.selectionStart===0&&name.selectionEnd===0; const atEnd=name.selectionStart===name.value.length&&name.selectionEnd===name.value.length;
+        name.addEventListener('input',()=>{
+          const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd);
+          // If modal is open for this card, sync into modal
+          if(document.getElementById('avatar-modal-overlay').classList.contains('show') && avatarTargetIndex===c){
+            document.getElementById('avatar-name').value = name.value;
+          }
+        });
+        name.addEventListener('keydown',e=>{
+          const atStart=name.selectionStart===0&&name.selectionEnd===0; const atEnd=name.selectionStart===name.value.length&&name.selectionEnd===name.value.length;
           if(e.key==='Enter'){ e.preventDefault(); (card.querySelector('.task input[type="text"]')||{}).focus?.(); }
           else if(e.key==='ArrowRight'&&atEnd){ e.preventDefault(); focusCardByOffset(card,+1); }
           else if(e.key==='ArrowLeft'&&atStart){ e.preventDefault(); focusCardByOffset(card,-1); }
@@ -432,17 +441,30 @@
     toggle.onclick=()=>setInstr(!instr.classList.contains('minimized'));
     setInstr(localStorage.getItem('mapleInstrMin')==='1');
 
-    // Modal logic
+    // Modal logic + sync name both ways
     const overlay=document.getElementById('avatar-modal-overlay');
     const nameInput=document.getElementById('avatar-name');
     const errBox=document.getElementById('avatar-error');
-    function openAvatarModal(cardIndex,prefill){ avatarTargetIndex=cardIndex; errBox.textContent=""; nameInput.value=pfefillOr(prefill); overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); nameInput.focus(); nameInput.select(); }
-    function pfefillOr(val){ return (val||"").trim(); }
+    function openAvatarModal(cardIndex,prefill){
+      avatarTargetIndex=cardIndex; errBox.textContent="";
+      const inputVal = (prefill||"").trim();
+      nameInput.value = inputVal;
+      overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); nameInput.focus(); nameInput.select();
+    }
     function closeAvatarModal(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); avatarTargetIndex=null; }
     document.getElementById('avatar-cancel').onclick=closeAvatarModal;
     document.getElementById('avatar-search').onclick=()=>doAvatarSearch();
     document.getElementById('avatar-delete').onclick=()=>doAvatarDelete();
     nameInput.addEventListener('keydown',e=>{ if(e.key==='Enter') { e.preventDefault(); doAvatarSearch(); } });
+    nameInput.addEventListener('input',()=>{
+      if(avatarTargetIndex==null) return;
+      const cards=$$('.character'); const card=cards[avatarTargetIndex];
+      if(!card) return;
+      const nm = nameInput.value;
+      const nameField = card.querySelector('.char-name');
+      if(nameField){ nameField.value = nm; }
+      const d=loadData(); d[`char_${avatarTargetIndex}_name`] = nm; saveData(d);
+    });
 
     async function doAvatarSearch(){
       errBox.textContent=""; const nm=nameInput.value.trim();
@@ -450,7 +472,10 @@
       try{
         const url=await fetchAvatar(nm);
         const cards=$$('.character'); const card=cards[avatarTargetIndex]; if(!card) throw new Error('Card not found');
-        const d=loadData(); d[`char_${avatarTargetIndex}_image`]=url; saveData(d); showCharImage(card,url); closeAvatarModal();
+        const d=loadData(); d[`char_${avatarTargetIndex}_image`]=url; d[`char_${avatarTargetIndex}_name`]=nm; saveData(d);
+        // ensure card shows updated name + avatar
+        const nameField = card.querySelector('.char-name'); if(nameField) nameField.value = nm;
+        showCharImage(card,url); closeAvatarModal();
       }catch(e){
         // If not found, revert to base model and inform user
         const cards=$$('.character'); const card=cards[avatarTargetIndex];
