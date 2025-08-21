@@ -19,6 +19,17 @@ A minimal tracker for your dailies in MapleStory.
   - Light: **Light Mode**, **Cloud (Light)**, **Lavender (Light)**, **Matcha (Light)**
   - Dark: **Dark Mode**, **Evergreen (Dark)**
   - Transparent, theme-matching dropdown menus and legible contrast in dark modes
-- **Character images**:
-  - Per-card **Region** (NA/EU) selector and a **Search for Character Image** button
-  - Searches Nexon rankings with `world_type=both` and `search_type=character-name`
+- **Character avatars**:
+  - Each card shows a **base model** image (from MapleStory.io) above the name
+  - Click the camera icon to open a popup → choose **Region (NA/EU)** and enter **Character Name**, then search
+  - If found, the avatar replaces the base model; if not, a simple error prompts you to retry
+
+## Configuration
+- Already set to use your Cloudflare Worker:
+  ```js
+  const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
+  ```
+  The Worker queries Nexon rankings with `world_type=both` and `search_type=character-name`.
+
+## Hosting
+- Open `index.html` directly, or host on **GitHub Pages** (commit to your repo and enable Pages).
