@@ -139,14 +139,14 @@
       min-height:120px; position:relative; user-select:none; font-size:var(--ui);
       background:var(--card-bg); border:1px solid var(--card-border);
     }
-    .character{ padding:48px 16px 12px; } /* tighter space under buttons */
+    .character{ padding:48px 16px 12px; }
     .drop-placeholder{
       padding:48px 16px 12px; outline:2px dashed var(--ph-outline);
       outline-offset:-6px; background:var(--ph-bg); animation:ph .6s ease-in-out infinite alternate;
     }
     @keyframes ph{ from{opacity:.72} to{opacity:1} }
 
-    /* Window controls (more aesthetic & themed) */
+    /* Window controls */
     .window-controls-right{
       position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center;
     }
@@ -174,7 +174,7 @@
       text-align:center; font-weight:600; margin:2px 0 4px;
       font-size:var(--ui); color:var(--fg); font-family:inherit;
     }
-    .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); } /* remove black border */
+    .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
 
     /* Tasks */
     .task{ display:grid; grid-template-columns:18px 1fr auto; gap:8px; align-items:center; margin:6px 0; }
@@ -182,7 +182,7 @@
       border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px;
       font-size:var(--ui); color:var(--fg); font-family:inherit;
     }
-    .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); } /* remove black border */
+    .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
     .task .task-delete{
       background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon);
       width:22px; height:22px; display:flex; align-items:center; justify-content:center;
@@ -219,10 +219,10 @@
       <li>Use <em>Theme</em> & <em>Preset</em> to style and switch between three saved sets.</li>
       <li>Click <strong>+ Add Character</strong> (max 20). Each starts with two task lines (min 1, max 10).</li>
       <li>Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
-      <li>Reorder cards by dragging—cards snap in grid order.</li>
-      <li>Click the camera on a card → <strong>Set Avatar</strong> popup: type the name and press <kbd>Enter</kbd> or click <strong>Set Avatar</strong> to fetch from MapleRanks.</li>
+      <li><strong>Reorder cards</strong> by dragging—drop anywhere in the grid; positions snap by row then column.</li>
+      <li>Click the camera → <strong>Set Avatar</strong> popup: type the name and press <kbd>Enter</kbd> or click <strong>Set Avatar</strong> to pull the character model from <strong>MapleRanks</strong>.</li>
       <li>In the popup you can also <strong>Upload Image</strong> (auto-resizes to 150×110) or <strong>Delete Avatar</strong> to revert to the base model.</li>
-      <li>Under the avatar, the page shows <em>Lv. N Job</em> (e.g., <strong>Lv. 287 Adele</strong>) when available.</li>
+      <li>Under the avatar, the page shows <em>Lv. N Job</em> (e.g., <strong>Lv. 287 Adele</strong>). Level & Job also auto-update when you fill the <em>Character Name</em>.</li>
       <li>Checkboxes reset at 00:00 UTC. All data is saved locally per preset.</li>
     </ul>
   </div>
@@ -289,7 +289,8 @@
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
-    let dragFrom = null, dropPlaceholder = null, avatarTargetIndex = null, uploadTargetIndex = null;
+    let dragFrom = null, avatarTargetIndex = null, uploadTargetIndex = null;
+    let nameFetchTimers = {};
 
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
@@ -333,8 +334,6 @@
       arr.splice(to,0,it);
       importCharacters(arr); buildChecklists();
     }
-    function ensurePlaceholder() { if(!dropPlaceholder){dropPlaceholder=document.createElement('div');dropPlaceholder.className='drop-placeholder';} return dropPlaceholder; }
-    function removePlaceholder() { if(dropPlaceholder&&dropPlaceholder.parentElement) dropPlaceholder.parentElement.removeChild(dropPlaceholder); }
 
     function addTaskLine(card,d,c) {
       let count=d[`char_${c}_taskCount`]||1;
@@ -361,8 +360,7 @@
       const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
       if(!resp.ok) throw new Error('Avatar fetch failed');
       const data = await resp.json();
-      // Expecting: { imageUrl, level, job }
-      return data;
+      return data; // { imageUrl, level, job }
     }
 
     function createTaskLine(card,d,c,t){
@@ -403,8 +401,9 @@
     }
 
     function buildChecklists(){
-      const container=document.getElementById('checklists'); container.innerHTML=''; removePlaceholder();
+      const container=document.getElementById('checklists'); container.innerHTML='';
       const d=loadData();
+      // Build cards
       for(let c=0;c<(d.charCount||0);c++){
         const card=document.createElement('div'); card.className='character'; card.setAttribute('draggable','true'); card.dataset.index=c;
         card.addEventListener('dragstart',e=>{ dragFrom=c; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
@@ -428,8 +427,29 @@
         const name=document.createElement('input'); name.className='char-name'; name.placeholder='Character Name'; name.value=d[`char_${c}_name`]||"";
         name.addEventListener('input',()=>{
           const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd);
+          // sync into modal if open on same card
           if(document.getElementById('avatar-modal-overlay').classList.contains('show') && avatarTargetIndex===c){
             document.getElementById('avatar-name').value = name.value;
+          }
+          // debounce auto meta fetch (do not change custom images)
+          clearTimeout(nameFetchTimers[c]);
+          const nm = name.value.trim();
+          if(nm.length >= 3){
+            nameFetchTimers[c] = setTimeout(async ()=>{
+              try{
+                const data = await fetchAvatarAndStats(nm);
+                const d2 = loadData();
+                d2[`char_${c}_level`] = data.level || "";
+                d2[`char_${c}_job`] = data.job || "";
+                // Only set image if none/custom not set
+                if(!d2[`char_${c}_image`] || d2[`char_${c}_image`]===BASE_MODEL_URL){
+                  if(data.imageUrl) d2[`char_${c}_image`] = data.imageUrl;
+                }
+                saveData(d2);
+                showCharMeta(card, d2[`char_${c}_level`], d2[`char_${c}_job`]);
+                if(d2[`char_${c}_image`]) showCharImage(card, d2[`char_${c}_image`]);
+              }catch(_){ /* ignore */ }
+            }, 800);
           }
         });
         name.addEventListener('keydown',e=>{
@@ -446,73 +466,77 @@
         container.appendChild(card);
       }
 
-      // Container-level DnD: robust placement index
-      container.addEventListener('dragover', onContainerDragOver);
-      container.addEventListener('drop', onContainerDrop);
+      // Add container-level DnD for free placement
+      attachGridDnD(container);
     }
 
-    function onContainerDragOver(e){
-      e.preventDefault();
-      const container = document.getElementById('checklists');
-      const y = e.clientY;
-      const cards = Array.from(container.querySelectorAll('.character:not(.dragging)'));
-      const ph = ensurePlaceholder();
+    function attachGridDnD(container){
+      const ph = document.createElement('div');
+      ph.className = 'drop-placeholder';
 
-      // Find the first card whose midpoint is below the cursor; insert before it
-      let insertBefore = null;
-      for(const card of cards){
-        const rect = card.getBoundingClientRect();
-        const mid = rect.top + rect.height/2;
-        if(y < mid){ insertBefore = card; break; }
+      function getCards(){ return Array.from(container.querySelectorAll('.character:not(.dragging)')); }
+
+      function computeInsertIndex(x,y){
+        const cards = getCards();
+        if(cards.length===0) return 0;
+        // Build rects cache
+        const rects = cards.map(el=>({el, rect: el.getBoundingClientRect()}));
+        // Find nearest by center point
+        let best = 0, bestDist = Infinity;
+        for(let i=0;i<rects.length;i++){
+          const r = rects[i].rect;
+          const cx = r.left + r.width/2;
+          const cy = r.top + r.height/2;
+          const dx = cx - x, dy = cy - y;
+          const dist = dx*dx + dy*dy;
+          if(dist < bestDist){ bestDist = dist; best = i; }
+        }
+        const r = rects[best].rect;
+        const before = x < (r.left + r.width/2);
+        return before ? best : best + 1;
       }
-      if(insertBefore){ if(ph !== insertBefore) container.insertBefore(ph, insertBefore); }
-      else { if(ph !== container.lastElementChild) container.appendChild(ph); }
-    }
 
-    function onContainerDrop(e){
-      e.preventDefault();
-      const container = document.getElementById('checklists');
-      if(dropPlaceholder && dropPlaceholder.parentElement === container){
-        // compute target index = number of character cards before placeholder
+      function placePlaceholderAt(index){
+        const cards = getCards();
+        if(index <= 0){
+          if(container.firstElementChild !== ph) container.insertBefore(ph, container.firstElementChild);
+          return;
+        }
+        if(index >= cards.length){
+          container.appendChild(ph);
+          return;
+        }
+        const ref = cards[index];
+        if(ref && ref !== ph) container.insertBefore(ph, ref);
+      }
+
+      function onOver(e){
+        e.preventDefault();
+        const idx = computeInsertIndex(e.clientX, e.clientY);
+        placePlaceholderAt(idx);
+      }
+      function onDrop(e){
+        e.preventDefault();
+        if(!ph.parentElement) return;
+        // Compute target index as number of character cards before placeholder
         let to = 0;
         for(const node of Array.from(container.children)){
-          if(node === dropPlaceholder) break;
+          if(node===ph) break;
           if(node.classList.contains('character')) to++;
         }
-        // Adjust when moving downwards so position is intuitive
+        // If moving downward in list, account for removal of the dragged element
         if(dragFrom !== null && dragFrom < to) to--;
         moveCharacter(dragFrom, to);
+        ph.remove();
       }
-      removePlaceholder();
-      const dragging=$('.character.dragging'); dragging?.classList.remove('dragging');
-      dragFrom = null;
-    }
+      function onLeave(e){
+        // Optional: keep placeholder while dragging over page
+      }
 
-    function addCharacter(){
-      const d=loadData(); if((d.charCount||0)>=20) return alert('Maximum of 20 characters reached.');
-      const c=d.charCount||0; d.charCount=c+1; d[`char_${c}_taskCount`]=2; saveData(d); buildChecklists();
+      container.addEventListener('dragover', onOver);
+      container.addEventListener('drop', onDrop);
+      container.addEventListener('dragleave', onLeave);
     }
-    function duplicateCharacter(i){
-      const d=loadData(); if((d.charCount||0)>=20) return alert('Maximum of 20 characters reached.');
-      const arr=exportCharacters(d); const clone=JSON.parse(JSON.stringify(arr[i])); arr.splice(i+1,0,clone); importCharacters(arr); buildChecklists(); document.getElementById('clipboard').textContent='Character duplicated.';
-    }
-    function deleteCharacter(i){ const d=loadData(); const arr=exportCharacters(d); arr.splice(i,1); importCharacters(arr); buildChecklists(); }
-    function switchPreset(p){ currentPreset=p; buildChecklists(); }
-
-    function updateUTCTime(){
-      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
-      document.getElementById('utc-time').textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
-    }
-    setInterval(updateUTCTime,1000);
-
-    function loadTheme(){ const t=localStorage.getItem('mapleTheme')||'lavender'; document.body.className=t; document.getElementById('theme').value=t; }
-    document.getElementById('theme').addEventListener('change',function(){ document.body.className=this.value; localStorage.setItem('mapleTheme',this.value); });
-
-    // Instructions toggle
-    const instr=document.getElementById('instructions'); const toggle=document.getElementById('instr-toggle');
-    function setInstr(min){ instr.classList.toggle('minimized',min); toggle.textContent=min?'Unhide':'Hide'; localStorage.setItem('mapleInstrMin',min?'1':'0'); }
-    toggle.onclick=()=>setInstr(!instr.classList.contains('minimized'));
-    setInstr(localStorage.getItem('mapleInstrMin')==='1');
 
     // Modal logic + sync name both ways
     const overlay=document.getElementById('avatar-modal-overlay');

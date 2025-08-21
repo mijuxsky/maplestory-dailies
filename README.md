@@ -3,23 +3,22 @@
 A minimal tracker for your dailies in MapleStory.
 
 ## Features
-- Manage up to **20 characters**, each with a name and checklist
-- **Duplicate** or **Delete** a character card from its top toolbar
-- **Drag & drop** cards to reorder (snap-like placeholder during drag)
-- Tasks per character: **min 1**, **max 10**; start with **2** lines by default
-- **Keyboard navigation**:
-  - **Enter / Tab / ↓** → go to next task (auto-adds a new line at the end)
-  - **↑ / Shift+Tab** → previous task (jumps to name if above first)
-  - **← / →** at edges → move to previous/next character card
-- **Presets** dropdown to switch between three saved configurations (stored locally in your browser)
-- **Auto-reset** of checkboxes at **00:00 UTC** daily
-- **UTC clock** at the top in **MM/DD/YYYY** format
-- **Instructions panel** with **Hide/Unhide** toggle
-- **Themes**:
-  - Light: **Light Mode**, **Cloud (Light)**, **Lavender (Light)**, **Matcha (Light)**
-  - Dark: **Dark Mode**, **Evergreen (Dark)**
-  - Transparent, theme-matching dropdown menus and legible contrast in dark modes
-- **Character avatars**:
-  - Each card shows a **base model** image (from MapleStory.io) above the name
-  - Click the camera icon to open a popup → choose **Region (NA/EU)** and enter **Character Name**, then search
-  - If found, the avatar replaces the base model; if not, a simple error prompts you to retry
+- Pastel, light, dark, cloud, matcha, and evergreen themes (theme-aware controls and buttons).
+- Three **Presets** saved locally (per browser) so different users can keep their own data.
+- Add up to **20** characters; each starts with two checklist lines (min 1, max 10).
+- **Keyboard flow:** Enter/Tab/↓ to next task (auto-adds a new line if needed); ↑/Shift+Tab up; ←/→ to move between cards.
+- **Drag & drop** reordering anywhere in the grid (snaps by row then column).
+- **Character models** pulled from **MapleRanks** via a proxy; or **Upload** your own (auto-resized to 150×110).
+- Under the avatar, shows **“Lv. N Job”** when available (fetched from MapleRanks).
+- **Set Avatar** popup: Set from MapleRanks, Upload, or Delete Avatar.
+- **UTC clock** and daily reset at **00:00 UTC** for checkboxes.
+- All data (including avatars, level/job text, and checkbox states) is stored in **localStorage**.
+
+## How it works
+- The site calls a Cloudflare Worker proxy with `?name=<CharacterName>` to fetch avatar, level, and job from MapleRanks.
+- If the worker returns these fields, the card updates automatically; if not found, the card reverts to a base model.
+- When you type a Character Name on a card, the **Level & Job auto-update** after a short pause (without changing a custom avatar).
+- Uploads are resized in-browser to 150×110 PNG using a canvas and saved locally.
+
+## Hosting
+- Designed for GitHub Pages (static `index.html`).
