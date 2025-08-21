@@ -18,6 +18,8 @@
       --task-underline:1px dotted currentColor;
       --name-underline:1px solid currentColor;
       --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10);
+      --meta-fg:#6b7280;
+      --meta-fg-dark:#cbd5e1;
     }
     /* THEME TOKENS */
     body.light{
@@ -27,6 +29,7 @@
       --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc;
       --icon:#555; --icon-bg:transparent; --icon-hover:rgba(0,0,0,.07);
       --ph-outline:#9aa0a6; --ph-bg:rgba(0,0,0,.04);
+      --meta-fg:#6b7280;
     }
     body.cloud{
       --bg:#eaf4ff; --fg:#2f4152;
@@ -35,6 +38,7 @@
       --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5;
       --icon:#5a86b5; --icon-bg:transparent; --icon-hover:rgba(90,134,181,.14);
       --ph-outline:#5a86b5; --ph-bg:rgba(90,134,181,.10);
+      --meta-fg:#6b7280;
     }
     body.lavender{
       --bg:#f4f0fa; --fg:#4b3b60;
@@ -43,6 +47,7 @@
       --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea;
       --icon:#7c5db0; --icon-bg:transparent; --icon-hover:rgba(124,93,176,.14);
       --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10);
+      --meta-fg:#6b7280;
     }
     body.matcha{
       --bg:#f0faf2; --fg:#2f3b2f;
@@ -51,6 +56,7 @@
       --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc;
       --icon:#4a8c4a; --icon-bg:transparent; --icon-hover:rgba(74,140,74,.14);
       --ph-outline:#4a8c4a; --ph-bg:rgba(74,140,74,.10);
+      --meta-fg:#64748b;
     }
     body.dark{
       --bg:#12131a; --fg:#e6e7eb;
@@ -59,6 +65,7 @@
       --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161;
       --icon:#cfd3df; --icon-bg:transparent; --icon-hover:rgba(255,255,255,.09);
       --ph-outline:#cfd3df; --ph-bg:rgba(207,211,223,.14);
+      --meta-fg:#cbd5e1;
     }
     body.evergreen{
       --bg:#0e1a11; --fg:#d9f2de;
@@ -67,6 +74,7 @@
       --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640;
       --icon:#8bcf9b; --icon-bg:transparent; --icon-hover:rgba(139,207,155,.15);
       --ph-outline:#8bcf9b; --ph-bg:rgba(139,207,155,.16);
+      --meta-fg:#d1d5db;
     }
 
     *{ box-sizing:border-box; }
@@ -154,9 +162,10 @@
     .icon-btn:active{ transform:translateY(1px); }
     .icon-btn svg{ width:16px; height:16px; }
 
-    /* Character image (compact; zero top gap) */
+    /* Character image & meta */
     .char-image-wrap{ text-align:center; margin:0 auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
+    .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 4px; font-family:inherit; }
 
     /* Character name */
     .char-name{
@@ -209,7 +218,7 @@
       <li>Presets switch between three saved sets of characters and tasks.</li>
       <li>+ Add Character (max 20). Each starts with two task lines (min 1, max 10).</li>
       <li>Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
-      <li>Click the camera icon on a card → enter <em>Character Name</em> → <em>Set Avatar</em>. The avatar (from MapleRanks) replaces the base model above the name.</li>
+      <li>Camera = fetch avatar from MapleRanks. **Upload** = add your image (auto-fits to 150×110). Below image shows <em>Lv. N Job</em> if found.</li>
       <li>Checkboxes reset at 00:00 UTC. Data is saved locally per preset.</li>
     </ul>
   </div>
@@ -263,14 +272,19 @@
     </div>
   </div>
 
+  <!-- Hidden file input for uploads -->
+  <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
+
   <script>
     const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
     const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
 
+    const MAX_W = 150, MAX_H = 110; // constrain uploads to model area
+
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
-    let dragFrom = null, dropPlaceholder = null, avatarTargetIndex = null;
+    let dragFrom = null, dropPlaceholder = null, avatarTargetIndex = null, uploadTargetIndex = null;
 
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
@@ -285,7 +299,13 @@
       for (let i=0;i<n;i++) {
         const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
         const tasks=[]; for (let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-        list.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", tasks });
+        list.push({
+          name:d[`char_${i}_name`]||"",
+          image:d[`char_${i}_image`]||"",
+          level:d[`char_${i}_level`]||"",
+          job:d[`char_${i}_job`]||"",
+          tasks
+        });
       }
       return list;
     }
@@ -294,6 +314,8 @@
       for (let i=0;i<chars.length;i++) {
         d[`char_${i}_name`]=chars[i].name||"";
         d[`char_${i}_image`]=chars[i].image||"";
+        d[`char_${i}_level`]=chars[i].level||"";
+        d[`char_${i}_job`]=chars[i].job||"";
         d[`char_${i}_taskCount`]=Math.max(1, Math.min(maxTasks,(chars[i].tasks||[]).length||1));
         for (let t=0;t<d[`char_${i}_taskCount`];t++) d[`char_${i}_task_${t}`]=chars[i].tasks[t]||"";
       }
@@ -329,12 +351,12 @@
       return focusFirstTaskInCard(cards[nx]);
     }
 
-    async function fetchAvatar(name) {
+    async function fetchAvatarAndStats(name) {
       const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
       if(!resp.ok) throw new Error('Avatar fetch failed');
       const data = await resp.json();
-      if(!data.imageUrl) throw new Error('No image in response');
-      return data.imageUrl;
+      // Expecting: { imageUrl, level, job } — unknown fields may be undefined
+      return data;
     }
 
     function createTaskLine(card,d,c,t){
@@ -368,6 +390,11 @@
     }
 
     function showCharImage(card,src){ const img=card.querySelector('.char-image-wrap img'); img.src=src||BASE_MODEL_URL; }
+    function showCharMeta(card,level,job){
+      const meta = card.querySelector('.char-meta');
+      const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job);
+      meta.textContent = parts.join(' ');
+    }
 
     function buildChecklists(){
       const container=document.getElementById('checklists'); container.innerHTML=''; removePlaceholder();
@@ -382,20 +409,23 @@
         const topRight=document.createElement('div'); topRight.className='window-controls-right';
         const cam=document.createElement('button'); cam.className='icon-btn'; cam.title='Set Avatar'; cam.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>';
         cam.onclick=()=>openAvatarModal(c,(loadData()[`char_${c}_name`]||""));
+        const upload=document.createElement('button'); upload.className='icon-btn'; upload.title='Upload Avatar'; upload.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 2l5 5h-3v6h-4V7H7l5-5z"/></svg>';
+        upload.onclick=()=>beginUpload(c);
         const dup=document.createElement('button'); dup.className='icon-btn'; dup.title='Duplicate'; dup.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
         dup.onclick=()=>duplicateCharacter(c);
         const close=document.createElement('button'); close.className='icon-btn'; close.title='Delete'; close.innerHTML='&times;';
         close.onclick=()=>deleteCharacter(c);
-        topRight.append(cam,dup,close);
+        topRight.append(cam,upload,dup,close);
         card.appendChild(topRight);
 
         const imgWrap=document.createElement('div'); imgWrap.className='char-image-wrap'; imgWrap.innerHTML='<img alt="Character image" />'; card.appendChild(imgWrap);
+        const meta=document.createElement('div'); meta.className='char-meta'; card.appendChild(meta);
         const cachedImg=(d[`char_${c}_image`]||"").trim(); showCharImage(card, cachedImg || BASE_MODEL_URL);
+        showCharMeta(card, d[`char_${c}_level`]||"", d[`char_${c}_job`]||"");
 
         const name=document.createElement('input'); name.className='char-name'; name.placeholder='Character Name'; name.value=d[`char_${c}_name`]||"";
         name.addEventListener('input',()=>{
           const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd);
-          // If modal is open for this card, sync into modal
           if(document.getElementById('avatar-modal-overlay').classList.contains('show') && avatarTargetIndex===c){
             document.getElementById('avatar-name').value = name.value;
           }
@@ -470,28 +500,107 @@
       errBox.textContent=""; const nm=nameInput.value.trim();
       if(!nm){ errBox.textContent='Please enter a character name.'; return; }
       try{
-        const url=await fetchAvatar(nm);
+        const data=await fetchAvatarAndStats(nm);
+        const url=data.imageUrl;
+        const level=data.level||"";
+        const job=data.job||"";
         const cards=$$('.character'); const card=cards[avatarTargetIndex]; if(!card) throw new Error('Card not found');
-        const d=loadData(); d[`char_${avatarTargetIndex}_image`]=url; d[`char_${avatarTargetIndex}_name`]=nm; saveData(d);
-        // ensure card shows updated name + avatar
+        const d=loadData();
+        d[`char_${avatarTargetIndex}_image`]=url||"";
+        d[`char_${avatarTargetIndex}_name`]=nm;
+        d[`char_${avatarTargetIndex}_level`]=level;
+        d[`char_${avatarTargetIndex}_job`]=job;
+        saveData(d);
         const nameField = card.querySelector('.char-name'); if(nameField) nameField.value = nm;
-        showCharImage(card,url); closeAvatarModal();
+        showCharImage(card,url||"");
+        showCharMeta(card, level, job);
+        closeAvatarModal();
       }catch(e){
         // If not found, revert to base model and inform user
         const cards=$$('.character'); const card=cards[avatarTargetIndex];
-        if(card){ const d=loadData(); d[`char_${avatarTargetIndex}_image`]=""; saveData(d); showCharImage(card, ""); }
+        if(card){
+          const d=loadData();
+          d[`char_${avatarTargetIndex}_image`]="";
+          d[`char_${avatarTargetIndex}_level`]="";
+          d[`char_${avatarTargetIndex}_job`]="";
+          saveData(d);
+          showCharImage(card, "");
+          showCharMeta(card, "", "");
+        }
         errBox.textContent='Character image not found. Reverted to base model. Please verify the name and try again.';
       }
     }
     function doAvatarDelete(){
       const cards=$$('.character'); const card=cards[avatarTargetIndex];
-      if(card){ const d=loadData(); d[`char_${avatarTargetIndex}_image`]=""; saveData(d); showCharImage(card,""); }
+      if(card){ const d=loadData(); d[`char_${avatarTargetIndex}_image`]=""; saveData(d); showCharImage(card,""); showCharMeta(card,"",""); }
       closeAvatarModal();
+    }
+
+    // Upload flow: constrain to MAX_W x MAX_H via canvas
+    const hiddenUpload = document.getElementById('hidden-upload');
+    hiddenUpload.addEventListener('change', async (e)=>{
+      const file = e.target.files && e.target.files[0];
+      if(!file || uploadTargetIndex==null) return;
+      try{
+        const dataUrl = await resizeImageFile(file, MAX_W, MAX_H);
+        const d=loadData();
+        d[`char_${uploadTargetIndex}_image`] = dataUrl;
+        saveData(d);
+        const cards=$$('.character'); const card=cards[uploadTargetIndex];
+        if(card) showCharImage(card, dataUrl);
+      }catch(err){
+        alert('Could not load that image. Please try a different file.');
+      }finally{
+        e.target.value = ''; // reset
+        uploadTargetIndex = null;
+      }
+    });
+    function beginUpload(idx){
+      uploadTargetIndex = idx;
+      hiddenUpload.click();
+    }
+    function resizeImageFile(file, maxW, maxH){
+      return new Promise((resolve,reject)=>{
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          const img = new Image();
+          img.onload = ()=>{
+            let { width:w, height:h } = img;
+            const ratio = Math.min(maxW/w, maxH/h, 1);
+            const nw = Math.round(w*ratio), nh = Math.round(h*ratio);
+            const canvas = document.createElement('canvas');
+            canvas.width = nw; canvas.height = nh;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, nw, nh);
+            try{
+              const out = canvas.toDataURL('image/png');
+              resolve(out);
+            }catch(e){ reject(e); }
+          };
+          img.onerror = reject;
+          img.src = reader.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     }
 
     document.getElementById('add-character-btn').onclick=addCharacter;
 
-    switchPreset(1); loadTheme(); updateUTCTime(); buildChecklists();
+    function buildMetaIfMissing(){
+      // helper to migrate existing users: ensure level/job fields exist
+      const d=loadData(); const n=d.charCount||0;
+      let mutated=false;
+      for(let i=0;i<n;i++){
+        if(d[`char_${i}_level`]==null){ d[`char_${i}_level`]=""; mutated=true; }
+        if(d[`char_${i}_job`]==null){ d[`char_${i}_job`]=""; mutated=true; }
+      }
+      if(mutated) saveData(d);
+    }
+
+    switchPreset(1); loadTheme(); updateUTCTime(); buildMetaIfMissing(); buildChecklists();
   </script>
 </body>
 </html>
