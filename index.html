@@ -21,6 +21,7 @@
       transition: background 0.3s, color 0.3s;
       font-size: var(--ui-font-size);
     }
+    input, button, select, textarea { font-family: inherit; font-size: var(--ui-font-size); }
     h1 { margin-bottom: 5px; font-size: 20px; }
     #utc-time, #theme-selector, #preset-selector, #clipboard { margin-bottom: 10px; font-size: 13px; }
     #instructions {
@@ -47,8 +48,6 @@
       border-radius: 8px;
       border: 1px solid;
       background: transparent;
-      font-family: inherit;
-      font-size: 13px;
       outline: none;
     }
     select:focus { outline: none; }
@@ -56,7 +55,6 @@
     button {
       border: none; border-radius: 8px; padding: 6px 10px; margin: 4px; cursor: pointer; font-weight: 600;
       transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
-      font-family: inherit;
     }
     #checklists {
       display: grid;
@@ -74,10 +72,10 @@
       user-select: none;
       font-size: var(--ui-font-size);
     }
-    .character { padding: 36px 20px 16px 20px; }
+    .character { padding: 68px 20px 16px 20px; } /* extra top space for top bars + image */
     .drop-placeholder {
       display: block;
-      padding: 36px 20px 16px 20px;
+      padding: 68px 20px 16px 20px;
       outline: 2px dashed var(--ph-outline);
       outline-offset: -6px;
       background: var(--ph-bg);
@@ -85,10 +83,14 @@
     }
     @keyframes phPulse { from { opacity: 0.7; } to { opacity: 1; } }
     .character.dragging { opacity: 0.6; }
-    /* Top row controls */
-    .window-controls {
+    /* Top controls bars */
+    .window-controls-left {
+      position: absolute; top: 6px; left: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    }
+    .window-controls-right {
       position: absolute; top: 6px; right: 8px; display: flex; gap: 6px; align-items: center;
     }
+    .label { opacity: 0.8; font-weight: 600; }
     .compact-select { font-size: 12px; padding: 2px 8px; }
     .icon-btn {
       width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -96,22 +98,22 @@
     }
     .icon-btn svg { width: 14px; height: 14px; }
     .char-name-row {
-      display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;
+      display: grid; grid-template-columns: 1fr; gap: 8px; align-items: center;
     }
-    .character input.char-name, .character input[type="text"] { -webkit-user-drag: none; }
+    .character input.char-name, .character input[type="text"] { -webkit-user-drag: none; font-family: inherit; font-size: var(--ui-font-size); }
     .character input.char-name {
       font-size: var(--ui-font-size); font-weight: 600; border: none; background: transparent;
       border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
       opacity: 0.95; color: inherit;
     }
     .fetch-image-btn { padding: 4px 8px; font-size: 12px; }
-    .char-image-wrap { display: none; margin: 8px auto 2px auto; text-align: center; }
+    .char-image-wrap { display: none; margin: 8px auto 10px auto; text-align: center; }
     .char-image-wrap img { max-width: 160px; max-height: 160px; display: inline-block; border-radius: 8px; }
     .char-image-wrap.show { display: block; }
     .task { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 0; }
     .task input[type="checkbox"] { width: 16px; height: 16px; }
     .task input[type="text"] {
-      border: none; border-bottom: 1px dashed currentColor; background: transparent; font-size: var(--ui-font-size); padding: 4px 2px;
+      border: none; border-bottom: 1px dashed currentColor; background: transparent; padding: 4px 2px;
       color: inherit;
     }
     .task input[type="text"]::placeholder { color: inherit; opacity: 0.6; }
@@ -202,7 +204,7 @@
       <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
       <li>Type your character name and tasks. Press <em>Enter</em>, <em>Tab</em>, or <em>↓</em> to move to the next line (auto-adds if at the end); use <em>↑</em> or <em>Shift+Tab</em> to move up.</li>
       <li>Use <em>←</em> / <em>→</em> at the start/end of a field to jump to the previous/next character card.</li>
-      <li>To fetch a character image from Nexon rankings (via Cloudflare Worker proxy), choose <em>Region/World</em>, enter the name, and click <em>Fetch</em>.</li>
+      <li>To fetch a character image from Nexon rankings (via Cloudflare Worker proxy), choose <em>Region</em>, enter the name, and click <em>Search for Character Image</em>.</li>
       <li>Drag and drop cards to reorder them; a tinted dashed placeholder shows where the card will land.</li>
       <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
     </ul>
@@ -239,11 +241,20 @@
 
   <script>
     const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
-
-    const WORLD_SUGGESTIONS = {
-      "NA": ["Bera","Scania","Aurora","Reboot (NA)"],
-      "EU": ["Luna","Elysium","Reboot (EU)"]
-    };
+    const PLACEHOLDER_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<?xml version="1.0"?>
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stop-color="#cfcfe6"/><stop offset="100%" stop-color="#e9e9f2"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="160" height="160" rx="12" fill="url(#g)"/>
+        <g fill="none" stroke="#777" stroke-width="2">
+          <circle cx="80" cy="62" r="22" />
+          <path d="M28 128c10-22 30-34 52-34s42 12 52 34" />
+        </g>
+        <text x="80" y="150" text-anchor="middle" font-size="10" fill="#777" font-family="Quicksand, Arial, sans-serif">No image found — please retry</text>
+      </svg>`);
 
     let currentPreset = 1;
     const maxCharacters = 20;
@@ -270,9 +281,8 @@
         list.push({
           name: data[`char_${i}_name`] || "",
           region: data[`char_${i}_region`] || "NA",
-          world: data[`char_${i}_world`] || "",
-          tasks,
-          image: data[`char_${i}_image`] || ""
+          image: data[`char_${i}_image`] || "",
+          tasks
         });
       }
       return list;
@@ -283,9 +293,8 @@
       for (let i = 0; i < chars.length; i++) {
         data[`char_${i}_name`] = chars[i].name || "";
         data[`char_${i}_region`] = chars[i].region || "NA";
-        data[`char_${i}_world`] = chars[i].world || "";
         data[`char_${i}_image`] = chars[i].image || "";
-        data[`char_${i}_taskCount`] = Math.max(1, Math.min(maxTasks, chars[i].tasks.length || 1));
+        data[`char_${i}_taskCount`] = Math.max(1, Math.min(maxTasks, (chars[i].tasks || []).length || 1));
         for (let t = 0; t < data[`char_${i}_taskCount`]; t++) {
           data[`char_${i}_task_${t}`] = chars[i].tasks[t] || "";
         }
@@ -350,11 +359,9 @@
       return null;
     }
 
-    async function fetchCharacterImage(region, world, name) {
-      if (!PROXY_URL) {
-        throw new Error("Proxy URL missing.");
-      }
-      const url = `${PROXY_URL}?region=${encodeURIComponent(region)}&world=${encodeURIComponent(world)}&name=${encodeURIComponent(name)}`;
+    async function fetchCharacterImage(region, name) {
+      if (!PROXY_URL) throw new Error("Proxy URL missing.");
+      const url = `${PROXY_URL}?region=${encodeURIComponent(region)}&world_type=both&search_type=character-name&search=${encodeURIComponent(name)}`;
       const resp = await fetch(url);
       if (!resp.ok) throw new Error("Image fetch failed.");
       const ct = resp.headers.get("content-type") || "";
@@ -418,9 +425,13 @@
           moveCharacter(dragFrom, targetIndex);
         });
 
-        // controls top-right: Region, World, duplicate, X
-        const controls = document.createElement('div');
-        controls.className = "window-controls";
+        // LEFT controls: Region + Search button
+        const controlsLeft = document.createElement('div');
+        controlsLeft.className = "window-controls-left";
+
+        const regionLbl = document.createElement('span');
+        regionLbl.className = "label";
+        regionLbl.textContent = "Region:";
 
         const regionSel = document.createElement('select');
         regionSel.className = "compact-select";
@@ -429,15 +440,44 @@
           opt.value = r; opt.textContent = r; regionSel.appendChild(opt);
         });
         regionSel.value = data[`char_${c}_region`] || "NA";
-        regionSel.onchange = () => {
-          data[`char_${c}_region`] = regionSel.value; saveData(data);
-          populateWorlds(worldSel, regionSel.value, data[`char_${c}_world`] || "");
+        regionSel.onchange = () => { data[`char_${c}_region`] = regionSel.value; saveData(data); };
+
+        const searchBtn = document.createElement('button');
+        searchBtn.className = "fetch-image-btn";
+        searchBtn.title = "Search for Character Image";
+        searchBtn.textContent = "Search for Character Image";
+        searchBtn.onclick = async (ev) => {
+          ev.stopPropagation();
+          searchBtn.disabled = true;
+          const prev = searchBtn.textContent;
+          searchBtn.textContent = "…";
+          try {
+            const region = data[`char_${c}_region`] || "NA";
+            const name = (data[`char_${c}_name`] || "").trim();
+            if (!name) throw new Error("Enter character name first.");
+            const url = await fetchCharacterImage(region, name);
+            data[`char_${c}_image`] = url; saveData(data);
+            showCharImage(charBox, url);
+          } catch (err) {
+            // show placeholder + toast in clipboard area
+            data[`char_${c}_image`] = PLACEHOLDER_SVG; saveData(data);
+            showCharImage(charBox, PLACEHOLDER_SVG);
+            const clip = document.getElementById('clipboard');
+            if (clip) clip.textContent = "Character image not found. Please check the name and try again.";
+          } finally {
+            searchBtn.disabled = false;
+            searchBtn.textContent = prev;
+          }
         };
 
-        const worldSel = document.createElement('select');
-        worldSel.className = "compact-select";
-        populateWorlds(worldSel, regionSel.value, data[`char_${c}_world`] || "");
-        worldSel.onchange = () => { data[`char_${c}_world`] = worldSel.value; saveData(data); };
+        controlsLeft.appendChild(regionLbl);
+        controlsLeft.appendChild(regionSel);
+        controlsLeft.appendChild(searchBtn);
+        charBox.appendChild(controlsLeft);
+
+        // RIGHT controls: duplicate, delete
+        const controlsRight = document.createElement('div');
+        controlsRight.className = "window-controls-right";
 
         const dupBtn = document.createElement('button');
         dupBtn.className = "icon-btn";
@@ -451,16 +491,23 @@
         delBtn.innerHTML = "&#215;";
         delBtn.onclick = (ev) => { ev.stopPropagation(); deleteCharacter(c); };
 
-        controls.appendChild(regionSel);
-        controls.appendChild(worldSel);
-        controls.appendChild(dupBtn);
-        controls.appendChild(delBtn);
-        charBox.appendChild(controls);
+        controlsRight.appendChild(dupBtn);
+        controlsRight.appendChild(delBtn);
+        charBox.appendChild(controlsRight);
 
-        // Name + Fetch row
+        // Image area (now above name)
+        const imgWrap = document.createElement('div');
+        imgWrap.className = "char-image-wrap";
+        const img = document.createElement('img');
+        img.alt = "Character image";
+        imgWrap.appendChild(img);
+        charBox.appendChild(imgWrap);
+        const cached = data[`char_${c}_image`];
+        if (cached) showCharImage(charBox, cached);
+
+        // Name row
         const nameRow = document.createElement('div');
         nameRow.className = "char-name-row";
-
         const charName = document.createElement('input');
         charName.className = "char-name";
         charName.placeholder = "Character Name";
@@ -484,46 +531,10 @@
             focusCardByOffset(charBox, -1);
           }
         });
-
-        const fetchBtn = document.createElement('button');
-        fetchBtn.className = "fetch-image-btn";
-        fetchBtn.title = "Fetch Character Image";
-        fetchBtn.textContent = "Fetch";
-        fetchBtn.onclick = async (ev) => {
-          ev.stopPropagation();
-          fetchBtn.disabled = true;
-          const prev = fetchBtn.textContent;
-          fetchBtn.textContent = "…";
-          try {
-            const region = data[`char_${c}_region`] || "NA";
-            const world = data[`char_${c}_world`] || "";
-            const name = (data[`char_${c}_name`] || "").trim();
-            if (!name || !world) throw new Error("Enter name and select world.");
-            const url = await fetchCharacterImage(region, world, name);
-            data[`char_${c}_image`] = url; saveData(data);
-            showCharImage(charBox, url);
-          } catch (err) {
-            alert(err.message || "Failed to fetch image.");
-          } finally {
-            fetchBtn.disabled = false;
-            fetchBtn.textContent = prev;
-          }
-        };
-
         nameRow.appendChild(charName);
-        nameRow.appendChild(fetchBtn);
         charBox.appendChild(nameRow);
 
-        // Image area
-        const imgWrap = document.createElement('div');
-        imgWrap.className = "char-image-wrap";
-        const img = document.createElement('img');
-        img.alt = "Character image";
-        imgWrap.appendChild(img);
-        charBox.appendChild(imgWrap);
-        const cached = data[`char_${c}_image`];
-        if (cached) showCharImage(charBox, cached);
-
+        // Tasks
         let taskCount = data[`char_${c}_taskCount`];
         if (taskCount == null) taskCount = 2;
         if (taskCount < 1) taskCount = 1;
@@ -540,38 +551,8 @@
     function showCharImage(card, src) {
       const wrap = card.querySelector('.char-image-wrap');
       const img = wrap.querySelector('img');
-      img.src = src;
+      img.src = src || PLACEHOLDER_SVG;
       wrap.classList.add('show');
-    }
-
-    function populateWorlds(selectEl, region, selected) {
-      selectEl.innerHTML = "";
-      const placeholder = document.createElement('option');
-      placeholder.value = ""; placeholder.textContent = "World";
-      selectEl.appendChild(placeholder);
-      const list = WORLD_SUGGESTIONS[region] || [];
-      list.forEach(w => {
-        const opt = document.createElement('option');
-        opt.value = w; opt.textContent = w;
-        selectEl.appendChild(opt);
-      });
-      const custom = document.createElement('option');
-      custom.value = "__CUSTOM__"; custom.textContent = "Custom…";
-      selectEl.appendChild(custom);
-      selectEl.value = selected || "";
-      selectEl.onchange = () => {
-        if (selectEl.value === "__CUSTOM__") {
-          const val = prompt("Enter world name:");
-          if (val) {
-            const opt = document.createElement('option');
-            opt.value = val; opt.textContent = val;
-            selectEl.insertBefore(opt, custom);
-            selectEl.value = val;
-          } else {
-            selectEl.value = "";
-          }
-        }
-      };
     }
 
     function createTaskLine(charBox, data, c, t) {
