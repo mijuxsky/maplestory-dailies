@@ -1,205 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>MapleStory Dailies</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MapleStory Dailies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    :root { 
-      --radius: 12px; 
-      --shadow: 0 6px 16px rgba(0,0,0,0.12);
-      --ui-font-size: 14px;
-      --overlay-bg: rgba(0,0,0,0.55);
-    }
-    body {
-      font-family: 'Quicksand', sans-serif;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: background 0.3s, color 0.3s;
-      font-size: var(--ui-font-size);
-    }
-    input, button, select, textarea { font-family: inherit; font-size: var(--ui-font-size); }
-    h1 { margin-bottom: 5px; font-size: 20px; }
-    #utc-time, #theme-selector, #preset-selector, #clipboard { margin-bottom: 10px; font-size: 13px; }
-    #instructions {
-      position: relative;
-      margin: 10px 0 14px 0;
-      padding: 12px 14px 14px 14px;
-      border-radius: var(--radius);
-      max-width: 900px;
-      width: 100%;
-      box-shadow: var(--shadow);
-      line-height: 1.5;
-      font-size: var(--ui-font-size);
-    }
-    #instructions.minimized { padding-top: 10px; padding-bottom: 10px; }
-    #instructions ul { margin: 8px 0 0 16px; padding: 0; }
-    #instructions.minimized ul { display: none; }
-    #instr-toggle {
-      position: absolute; top: 8px; right: 10px;
-      padding: 4px 10px; font-size: 12px;
-    }
-    /* Transparent dropdowns */
-    select {
-      padding: 4px 8px;
-      border-radius: 8px;
-      border: 1px solid;
-      background: transparent;
-      outline: none;
-    }
-    select:focus { outline: none; }
-    option { background: inherit; color: inherit; }
-    button {
-      border: none; border-radius: 8px; padding: 6px 10px; margin: 4px; cursor: pointer; font-weight: 600;
-      transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
-    }
-    #checklists {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px; width: 100%; max-width: 1200px;
-      align-items: start;
-    }
-    #add-character { align-self: flex-end; margin: 10px 0; }
-    #add-character-btn { font-size: var(--ui-font-size); }
-    .character, .drop-placeholder {
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      min-height: 120px;
-      position: relative;
-      user-select: none;
-      font-size: var(--ui-font-size);
-    }
-    .character { padding: 68px 20px 16px 20px; } /* extra top space for top bar + image */
-    .drop-placeholder {
-      display: block;
-      padding: 68px 20px 16px 20px;
-      outline: 2px dashed var(--ph-outline);
-      outline-offset: -6px;
-      background: var(--ph-bg);
-      animation: phPulse 0.6s ease-in-out infinite alternate;
-    }
-    @keyframes phPulse { from { opacity: 0.7; } to { opacity: 1; } }
-    .character.dragging { opacity: 0.6; }
-    /* Top right controls */
-    .window-controls-right {
-      position: absolute; top: 6px; right: 8px; display: flex; gap: 6px; align-items: center;
-    }
-    .icon-btn {
-      width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; padding: 0; margin: 0; cursor: pointer;
-    }
-    .icon-btn svg { width: 14px; height: 14px; }
-    .char-name-row {
-      display: grid; grid-template-columns: 1fr; gap: 8px; align-items: center;
-    }
-    .character input.char-name, .character input[type="text"] { -webkit-user-drag: none; font-family: inherit; font-size: var(--ui-font-size); }
-    .character input.char-name {
-      font-size: var(--ui-font-size); font-weight: 600; border: none; background: transparent;
-      border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
-      opacity: 0.95; color: inherit;
-    }
-    .char-image-wrap { display: block; margin: 8px auto 10px auto; text-align: center; }
-    .char-image-wrap img { max-width: 160px; max-height: 160px; display: inline-block; border-radius: 8px; }
-    .task { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 0; }
-    .task input[type="checkbox"] { width: 16px; height: 16px; }
-    .task input[type="text"] {
-      border: none; border-bottom: 1px dashed currentColor; background: transparent; padding: 4px 2px;
-      color: inherit;
-    }
-    .task input[type="text"]::placeholder { color: inherit; opacity: 0.6; }
-    .task .task-delete {
-      background: transparent; border: none; padding: 0 4px; margin: 0;
-      font-size: 16px; line-height: 1; cursor: pointer; opacity: 0.6; color: inherit;
-    }
-    .task .task-delete:hover { opacity: 1; transform: scale(1.05); }
+    :root { --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.12); --ui:14px; --overlay:rgba(0,0,0,.55);}
+    * { box-sizing:border-box; }
+    body { font-family:Quicksand,system-ui,sans-serif; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; font-size:var(--ui); transition:.3s background,.3s color;}
+    h1 { margin:0 0 6px; font-size:20px; }
+    #utc-time { font-size:13px; margin-bottom:10px; }
+    #instructions { position:relative; width:100%; max-width:900px; margin:10px 0 14px; padding:12px 14px 14px; border-radius:var(--radius); box-shadow:var(--shadow); }
+    #instructions.minimized ul { display:none; }
+    #instr-toggle { position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; }
+    select { padding:4px 8px; border-radius:8px; border:1px solid; background:transparent; outline:none; }
+    option { background:inherit; color:inherit; }
+    button { border:none; border-radius:8px; padding:6px 10px; margin:4px; cursor:pointer; font-weight:600; transition:.2s background,.2s color; }
+    #checklists { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1200px; align-items:start; }
+    .character,.drop-placeholder { border-radius:var(--radius); box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); }
+    .character { padding:68px 20px 16px; }
+    .drop-placeholder { padding:68px 20px 16px; outline:2px dashed var(--ph-outline); outline-offset:-6px; background:var(--ph-bg); animation:ph .6s ease-in-out infinite alternate; }
+    @keyframes ph { from{opacity:.72} to{opacity:1} }
+    .window-controls-right { position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
+    .icon-btn { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; padding:0; }
+    /* Image area between top controls and name */
+    .char-image-wrap { height: 140px; display:flex; align-items:center; justify-content:center; margin:6px auto 6px; text-align:center; }
+    .char-image-wrap img { height: 100%; width:auto; max-width: 100%; object-fit: contain; border-radius:8px; display:block; }
+    .char-name { width:100%; border:none; background:transparent; border-bottom:2px solid currentColor; text-align:center; font-weight:600; margin-bottom:8px; }
+    .task { display:grid; grid-template-columns:18px 1fr auto; gap:8px; align-items:center; margin:8px 0; }
+    .task input[type="text"] { border:none; border-bottom:1px dashed currentColor; background:transparent; padding:4px 2px; }
+    .task .task-delete { background:transparent; border:none; font-size:16px; opacity:.7; }
 
     /* Modal */
-    .modal-overlay {
-      position: fixed; inset: 0; background: var(--overlay-bg); display: none; align-items: center; justify-content: center; z-index: 1000;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal {
-      background: inherit; color: inherit; border: 1px solid; border-radius: var(--radius);
-      padding: 16px; min-width: 300px; max-width: 420px; box-shadow: var(--shadow);
-    }
-    .modal h3 { margin: 0 0 10px 0; font-size: 16px; }
-    .modal .row { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 8px 0; }
-    .modal .row label { font-weight: 600; opacity: 0.9; }
-    .modal .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
-    .modal .error { color: #d66; min-height: 18px; font-size: 12px; }
+    .modal-overlay { position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; z-index:1000; }
+    .modal-overlay.show { display:flex; }
+    .modal { background:inherit; color:inherit; border:1px solid; border-radius:var(--radius); padding:16px; min-width:320px; max-width:520px; box-shadow:var(--shadow); }
+    .modal h3 { margin:0 0 10px; font-size:16px; }
+    .modal .row { display:grid; grid-template-columns:1fr; gap:10px; margin:8px 0; }
+    .modal label { font-weight:600; opacity:.9; font-size:12px; }
+    .modal .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
+    .modal .error { color:#d66; min-height:18px; font-size:12px; }
 
-    /* THEME VARIABLES & STYLES */
-    body.light { --ph-outline: #9aa0a6; --ph-bg: rgba(0,0,0,0.04); background: #f7f7f8; color: #333; }
-    body.light #instructions { background: #ffffff; border: 1px solid #e9e9ee; }
-    body.light .character { background: #ffffff; }
-    body.light .drop-placeholder { background: rgba(0,0,0,0.02); }
-    body.light select { border-color: #bbb; color: #333; background-color: rgba(255,255,255,0.6); }
-    body.light option { background: #ffffff; color: #333; }
-    body.light button, body.light .icon-btn { background: #d9d9dd; color: #222; }
-    body.light button:hover, body.light .icon-btn:hover { background: #c6c6cb; }
-    body.light .task input[type="checkbox"] { accent-color: #666; }
-    body.light .task .task-delete { color: #555; }
-    /* Cloud (Light) */
-    body.cloud { --ph-outline: #5a86b5; --ph-bg: rgba(90,134,181,0.10); background: #eaf4ff; color: #2f4152; }
-    body.cloud #instructions { background: #ffffff; border: 1px solid #d6e7f7; }
-    body.cloud .character { background: #ffffff; border: 1px solid #d6e7f7; }
-    body.cloud .drop-placeholder { background: rgba(90,134,181,0.06); }
-    body.cloud select { border-color: #a9c8e7; color: #2f4152; background-color: rgba(255,255,255,0.5); }
-    body.cloud option { background: #f3f9ff; color: #2f4152; }
-    body.cloud button, body.cloud .icon-btn { background: #b7d7f5; color: #223244; }
-    body.cloud button:hover, body.cloud .icon-btn:hover { background: #a0c7ef; }
-    body.cloud .task input[type="checkbox"] { accent-color: #5a86b5; }
-    body.cloud .task .task-delete { color: #3a5e82; }
-    /* Lavender (Light) */
-    body.lavender { --ph-outline: #7c5db0; --ph-bg: rgba(124,93,176,0.10); background: #f4f0fa; color: #4b3b60; }
-    body.lavender #instructions { background: #ffffff; border: 1px solid #e6d9f8; }
-    body.lavender .character { background: #ffffff; }
-    body.lavender .drop-placeholder { background: rgba(124,93,176,0.06); }
-    body.lavender select { border-color: #cbb7f0; color: #4b3b60; background-color: rgba(255,255,255,0.5); }
-    body.lavender option { background: #fbf8ff; color: #4b3b60; }
-    body.lavender button, body.lavender .icon-btn { background: #f3d6f0; color: #4b3b60; }
-    body.lavender button:hover, body.lavender .icon-btn:hover { background: #e9c0e6; }
-    body.lavender .task input[type="checkbox"] { accent-color: #7c5db0; }
-    body.lavender .task .task-delete { color: #6a5aa0; }
-    /* Matcha (Light) */
-    body.matcha { --ph-outline: #4a8c4a; --ph-bg: rgba(74,140,74,0.10); background: #f0faf2; color: #2f3b2f; }
-    body.matcha #instructions { background: #ffffff; border: 1px solid #cfead0; }
-    body.matcha .character { background: #e8f7ea; }
-    body.matcha .drop-placeholder { background: rgba(74,140,74,0.06); }
-    body.matcha select { border-color: #a7d8a7; color: #2f3b2f; background-color: rgba(255,255,255,0.5); }
-    body.matcha option { background: #f3fbf4; color: #2f3b2f; }
-    body.matcha button, body.matcha .icon-btn { background: #bfe8bf; color: #2f3b2f; }
-    body.matcha button:hover, body.matcha .icon-btn:hover { background: #a8dda8; }
-    body.matcha .task input[type="checkbox"] { accent-color: #4a8c4a; }
-    body.matcha .task .task-delete { color: #3b6d3b; }
-    /* Dark Mode */
-    body.dark { --ph-outline: #cfd3df; --ph-bg: rgba(207,211,223,0.14); background: #12131a; color: #e6e7eb; }
-    body.dark #instructions { background: #1b1d28; border: 1px solid #3a3f54; }
-    body.dark .character { background: #1f2230; }
-    body.dark .drop-placeholder { background: rgba(207,211,223,0.08); }
-    body.dark select { border-color: #4b4f63; color: #e6e7eb; background-color: #2a2f3f; }
-    body.dark option { background: #2a2f3f; color: #e6e7eb; }
-    body.dark button, body.dark .icon-btn { background: #3a3f54; color: #f0f1f5; }
-    body.dark button:hover, body.dark .icon-btn:hover { background: #4a5068; }
-    body.dark .task input[type="checkbox"] { accent-color: #cfd3df; }
-    body.dark .task .task-delete { color: #cfd3df; }
-    body.dark input::placeholder { color: #b9bfcc; opacity: 0.75; }
-    /* Evergreen (Dark) */
-    body.evergreen { --ph-outline: #8bcf9b; --ph-bg: rgba(139,207,155,0.16); background: #0e1a11; color: #d9f2de; }
-    body.evergreen #instructions { background: #15251c; border: 1px solid #2a4a34; }
-    body.evergreen .character { background: #1a2b1f; }
-    body.evergreen .drop-placeholder { background: rgba(139,207,155,0.12); }
-    body.evergreen select { border-color: #3c5c45; color: #d9f2de; background-color: #1a2b1f; }
-    body.evergreen option { background: #1a2b1f; color: #d9f2de; }
-    body.evergreen button, body.evergreen .icon-btn { background: #2a4a34; color: #d9f2de; }
-    body.evergreen button:hover, body.evergreen .icon-btn:hover { background: #386546; }
-    body.evergreen .task input[type="checkbox"] { accent-color: #8bcf9b; }
-    body.evergreen .task .task-delete { color: #b6e4c2; }
-    body.evergreen input::placeholder { color: #b6e4c2; opacity: 0.75; }
+    /* Themes */
+    body.light { --ph-outline:#9aa0a6; --ph-bg:rgba(0,0,0,.04); background:#f7f7f8; color:#333; }
+    body.light #instructions, body.cloud #instructions, body.lavender #instructions { background:#fff; }
+    body.light .character { background:#fff; }
+    body.cloud { --ph-outline:#5a86b5; --ph-bg:rgba(90,134,181,.10); background:#eaf4ff; color:#2f4152; }
+    body.cloud .character { background:#fff; border:1px solid #d6e7f7; }
+    body.lavender { --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10); background:#f4f0fa; color:#4b3b60; }
+    body.lavender .character { background:#fff; }
+    body.matcha { --ph-outline:#4a8c4a; --ph-bg:rgba(74,140,74,.10); background:#f0faf2; color:#2f3b2f; }
+    body.matcha .character { background:#e8f7ea; }
+    body.dark { --ph-outline:#cfd3df; --ph-bg:rgba(207,211,223,.14); background:#12131a; color:#e6e7eb; }
+    body.dark .character { background:#1f2230; }
+    body.evergreen { --ph-outline:#8bcf9b; --ph-bg:rgba(139,207,155,.16); background:#0e1a11; color:#d9f2de; }
+    body.evergreen .character { background:#1a2b1f; }
   </style>
 </head>
 <body class="lavender">
@@ -210,12 +66,11 @@
     <button id="instr-toggle" type="button">Hide</button>
     <strong>How to use:</strong>
     <ul>
-      <li>Use <em>Preset</em> to switch between three saved sets of characters and tasks.</li>
-      <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
-      <li>Type your character name and tasks. Press <em>Enter</em>, <em>Tab</em>, or <em>↓</em> to move to the next line (auto-adds if at the end); use <em>↑</em> or <em>Shift+Tab</em> to move up.</li>
-      <li>Use <em>←</em> / <em>→</em> at the start/end of a field to jump to the previous/next character card.</li>
-      <li>Click the camera button on a card to open a popup, enter Region and Character name, then search. If found, the avatar will replace the base model above the name.</li>
-      <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
+      <li>Presets switch between three saved sets of characters and tasks.</li>
+      <li>+ Add Character (max 20). Each starts with two task lines (min 1, max 10).</li>
+      <li>Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
+      <li>Click the camera icon on a card → enter <em>Character Name</em> → <em>Search For Character</em>. The avatar (from MapleRanks) replaces the base model above the name.</li>
+      <li>Checkboxes reset at 00:00 UTC. Data is saved locally per preset.</li>
     </ul>
   </div>
 
@@ -248,17 +103,10 @@
 
   <div id="checklists"></div>
 
-  <!-- Avatar search modal -->
+  <!-- Avatar search modal (no region) -->
   <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="avatar-modal-title" aria-modal="true">
       <h3 id="avatar-modal-title">Set Avatar</h3>
-      <div class="row">
-        <label for="avatar-region">Region</label>
-        <select id="avatar-region">
-          <option value="NA">NA</option>
-          <option value="EU">EU</option>
-        </select>
-      </div>
       <div class="row">
         <label for="avatar-name">Character Name</label>
         <input id="avatar-name" type="text" placeholder="Enter character name" />
@@ -266,7 +114,7 @@
       <div id="avatar-error" class="error"></div>
       <div class="actions">
         <button id="avatar-cancel">Cancel</button>
-        <button id="avatar-search">Search</button>
+        <button id="avatar-search">Search For Character</button>
       </div>
     </div>
   </div>
@@ -278,489 +126,179 @@
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
-    let dragFrom = null;
-    let dropPlaceholder = null;
-    let avatarTargetIndex = null; // which card opened the modal
+    let dragFrom = null, dropPlaceholder = null, avatarTargetIndex = null;
+
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
 
     function getDataKey() { return `mapleData_preset${currentPreset}`; }
     function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || { charCount: 0 }; }
-    function saveData(data) { localStorage.setItem(getDataKey(), JSON.stringify(data)); }
+    function saveData(d) { localStorage.setItem(getDataKey(), JSON.stringify(d)); }
+    function dailyKey(c,t) { return `mapleCheck_${new Date().toISOString().split('T')[0]}_preset${currentPreset}_c${c}_t${t}`; }
 
-    function dailyKey(c, t) {
-      const today = new Date().toISOString().split('T')[0];
-      return `mapleCheck_${today}_preset${currentPreset}_c${c}_t${t}`;
-    }
-
-    function exportCharacters(data) {
-      const list = [];
-      const n = data.charCount || 0;
-      for (let i = 0; i < n; i++) {
-        const taskCount = Math.max(1, data[`char_${i}_taskCount`] || 1);
-        const tasks = [];
-        for (let t = 0; t < taskCount; t++) tasks.push(data[`char_${i}_task_${t}`] || "");
-        list.push({
-          name: data[`char_${i}_name`] || "",
-          image: data[`char_${i}_image`] || "",
-          tasks
-        });
+    function exportCharacters(d) {
+      const list = []; const n = d.charCount||0;
+      for (let i=0;i<n;i++) {
+        const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
+        const tasks=[]; for (let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+        list.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", tasks });
       }
       return list;
     }
     function importCharacters(chars) {
-      const data = {};
-      data.charCount = chars.length;
-      for (let i = 0; i < chars.length; i++) {
-        data[`char_${i}_name`] = chars[i].name || "";
-        data[`char_${i}_image`] = chars[i].image || "";
-        data[`char_${i}_taskCount`] = Math.max(1, Math.min(maxTasks, (chars[i].tasks || []).length || 1));
-        for (let t = 0; t < data[`char_${i}_taskCount`]; t++) {
-          data[`char_${i}_task_${t}`] = chars[i].tasks[t] || "";
-        }
+      const d={}; d.charCount=chars.length;
+      for (let i=0;i<chars.length;i++) {
+        d[`char_${i}_name`]=chars[i].name||"";
+        d[`char_${i}_image`]=chars[i].image||"";
+        d[`char_${i}_taskCount`]=Math.max(1, Math.min(maxTasks,(chars[i].tasks||[]).length||1));
+        for (let t=0;t<d[`char_${i}_taskCount`];t++) d[`char_${i}_task_${t}`]=chars[i].tasks[t]||"";
       }
-      saveData(data);
+      saveData(d);
     }
-    function moveCharacter(from, to) {
-      const data = loadData();
-      const arr = exportCharacters(data);
-      if (from === null || to === null || from === to) return;
-      const item = arr.splice(from, 1)[0];
-      arr.splice(to, 0, item);
-      importCharacters(arr);
-      buildChecklists();
+    function moveCharacter(fr,to) {
+      const d=loadData(); const arr=exportCharacters(d);
+      if (fr===null||to===null||fr===to) return;
+      const it=arr.splice(fr,1)[0]; arr.splice(to,0,it);
+      importCharacters(arr); buildChecklists();
     }
+    function ensurePlaceholder() { if(!dropPlaceholder){dropPlaceholder=document.createElement('div');dropPlaceholder.className='drop-placeholder';} return dropPlaceholder; }
+    function removePlaceholder() { if(dropPlaceholder&&dropPlaceholder.parentElement) dropPlaceholder.parentElement.removeChild(dropPlaceholder); }
 
-    function ensurePlaceholder() {
-      if (!dropPlaceholder) {
-        dropPlaceholder = document.createElement('div');
-        dropPlaceholder.className = 'drop-placeholder';
-        dropPlaceholder.setAttribute('draggable', 'false');
-      }
-      return dropPlaceholder;
-    }
-
-    function removePlaceholder() {
-      if (dropPlaceholder && dropPlaceholder.parentElement) {
-        dropPlaceholder.parentElement.removeChild(dropPlaceholder);
-      }
-    }
-
-    function focusFirstTaskInCard(card) {
-      const firstTask = card.querySelector('.task input[type="text"]');
-      const nameField = card.querySelector('.char-name');
-      const target = firstTask || nameField;
-      if (target) {
-        target.focus();
-        const end = target.value.length;
-        target.setSelectionRange(end, end);
-        return true;
-      }
-      return false;
-    }
-
-    function focusCardByOffset(currentCard, offset) {
-      const cards = Array.from(document.querySelectorAll('.character'));
-      const idx = cards.indexOf(currentCard);
-      if (idx === -1) return false;
-      const nextIdx = idx + offset;
-      if (nextIdx < 0 || nextIdx >= cards.length) return false;
-      return focusFirstTaskInCard(cards[nextIdx]);
-    }
-
-    function addTaskLine(charBox, data, c) {
-      let taskCount = data[`char_${c}_taskCount`] || 1;
-      if (taskCount < maxTasks) {
-        data[`char_${c}_taskCount`] = taskCount + 1;
-        saveData(data);
-        const newInput = createTaskLine(charBox, data, c, taskCount);
-        return newInput;
-      }
+    function addTaskLine(card,d,c) {
+      let count=d[`char_${c}_taskCount`]||1;
+      if(count<maxTasks){ d[`char_${c}_taskCount`]=count+1; saveData(d); return createTaskLine(card,d,c,count); }
       return null;
     }
-
-    async function fetchCharacterImage(region, name) {
-      const url = `${PROXY_URL}?region=${encodeURIComponent(region)}&world_type=both&search_type=character-name&search=${encodeURIComponent(name)}`;
-      const resp = await fetch(url);
-      if (!resp.ok) throw new Error("Image fetch failed.");
-      const ct = resp.headers.get("content-type") || "";
-      if (ct.includes("application/json")) {
-        const data = await resp.json();
-        if (data.imageUrl) return data.imageUrl;
-        if (data.imageBase64) return `data:image/png;base64,${data.imageBase64}`;
-        throw new Error("No image in JSON response.");
-      } else {
-        const blob = await resp.blob();
-        return URL.createObjectURL(blob);
-      }
-    }
-
-    function buildChecklists() {
-      const container = document.getElementById('checklists');
-      container.innerHTML = '';
-      removePlaceholder();
-      const data = loadData();
-      for (let c = 0; c < (data.charCount || 0); c++) {
-        const charBox = document.createElement('div');
-        charBox.className = "character";
-        charBox.setAttribute('draggable', 'true');
-        charBox.dataset.index = c;
-
-        // DnD events
-        charBox.addEventListener('dragstart', (e) => {
-          dragFrom = c;
-          charBox.classList.add('dragging');
-          e.dataTransfer.effectAllowed = 'move';
-        });
-        charBox.addEventListener('dragend', () => {
-          dragFrom = null;
-          charBox.classList.remove('dragging');
-          removePlaceholder();
-        });
-        charBox.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          const rect = charBox.getBoundingClientRect();
-          const before = (e.clientY - rect.top) < rect.height / 2;
-          const placeholder = ensurePlaceholder();
-          if (before) {
-            if (placeholder.nextSibling !== charBox) {
-              container.insertBefore(placeholder, charBox);
-            }
-          } else {
-            if (charBox.nextSibling !== placeholder) {
-              container.insertBefore(placeholder, charBox.nextSibling);
-            }
-          }
-        });
-        charBox.addEventListener('drop', (e) => {
-          e.preventDefault();
-          const children = Array.from(container.children);
-          let targetIndex = 0;
-          for (let node of children) {
-            if (node === dropPlaceholder) break;
-            if (node.classList.contains('character')) targetIndex++;
-          }
-          removePlaceholder();
-          moveCharacter(dragFrom, targetIndex);
-        });
-
-        // RIGHT controls: set avatar (camera), duplicate, delete
-        const controlsRight = document.createElement('div');
-        controlsRight.className = "window-controls-right";
-
-        const setAvatarBtn = document.createElement('button');
-        setAvatarBtn.className = "icon-btn";
-        setAvatarBtn.title = "Set Avatar";
-        setAvatarBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10zm0 2a3 3 0 1 0 .002 6.002A3 3 0 0 0 12 9z"/></svg>';
-        setAvatarBtn.onclick = (ev) => {
-          ev.stopPropagation();
-          openAvatarModal(c, (loadData()[`char_${c}_name`]||""));
-        };
-
-        const dupBtn = document.createElement('button');
-        dupBtn.className = "icon-btn";
-        dupBtn.title = "Duplicate Character";
-        dupBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
-        dupBtn.onclick = (ev) => { ev.stopPropagation(); duplicateCharacter(c); };
-
-        const delBtn = document.createElement('button');
-        delBtn.className = "icon-btn";
-        delBtn.title = "Delete Character";
-        delBtn.innerHTML = "&#215;";
-        delBtn.onclick = (ev) => { ev.stopPropagation(); deleteCharacter(c); };
-
-        controlsRight.appendChild(setAvatarBtn);
-        controlsRight.appendChild(dupBtn);
-        controlsRight.appendChild(delBtn);
-        charBox.appendChild(controlsRight);
-
-        // Image area (above name)
-        const imgWrap = document.createElement('div');
-        imgWrap.className = "char-image-wrap";
-        const img = document.createElement('img');
-        img.alt = "Character image";
-        imgWrap.appendChild(img);
-        charBox.appendChild(imgWrap);
-        const currentImg = (loadData()[`char_${c}_image`] || "").trim();
-        showCharImage(charBox, currentImg || BASE_MODEL_URL);
-
-        // Name row
-        const nameRow = document.createElement('div');
-        nameRow.className = "char-name-row";
-        const charName = document.createElement('input');
-        charName.className = "char-name";
-        charName.placeholder = "Character Name";
-        charName.value = loadData()[`char_${c}_name`] || "";
-        charName.setAttribute('draggable','false');
-        charName.addEventListener("input", () => {
-          const d = loadData();
-          d[`char_${c}_name`] = charName.value; saveData(d);
-        });
-        charName.addEventListener("keydown", (e) => {
-          const atStart = charName.selectionStart === 0 && charName.selectionEnd === 0;
-          const atEnd = charName.selectionStart === charName.value.length && charName.selectionEnd === charName.value.length;
-          if (e.key === "Enter") {
-            e.preventDefault();
-            const first = charBox.querySelector('.task input[type="text"]');
-            if (first) first.focus();
-          } else if (e.key === "ArrowRight" && atEnd) {
-            e.preventDefault();
-            focusCardByOffset(charBox, +1);
-          } else if (e.key === "ArrowLeft" && atStart) {
-            e.preventDefault();
-            focusCardByOffset(charBox, -1);
-          }
-        });
-        nameRow.appendChild(charName);
-        charBox.appendChild(nameRow);
-
-        // Tasks
-        const d = loadData();
-        let taskCount = d[`char_${c}_taskCount`];
-        if (taskCount == null) taskCount = 2;
-        if (taskCount < 1) taskCount = 1;
-        d[`char_${c}_taskCount`] = taskCount;
-
-        for (let t = 0; t < taskCount; t++) {
-          createTaskLine(charBox, d, c, t);
-        }
-        saveData(d);
-        container.appendChild(charBox);
-      }
-    }
-
-    function showCharImage(card, src) {
-      const wrap = card.querySelector('.char-image-wrap');
-      const img = wrap.querySelector('img');
-      img.src = src || BASE_MODEL_URL;
-    }
-
-    function createTaskLine(charBox, data, c, t) {
-      const wrapper = document.createElement('div');
-      wrapper.className = "task";
-      wrapper.setAttribute('draggable','false');
-
-      const checkbox = document.createElement('input');
-      checkbox.type = "checkbox";
-      checkbox.setAttribute('draggable','false');
-      const key = dailyKey(c, t);
-      const saved = localStorage.getItem(key);
-      checkbox.checked = (saved === 'true');
-      checkbox.addEventListener("change", () => {
-        localStorage.setItem(key, checkbox.checked ? 'true' : 'false');
-      });
-
-      const taskInput = document.createElement('input');
-      taskInput.type = "text"; taskInput.placeholder = "Daily Task";
-      taskInput.setAttribute("data-tip", "Enter/Tab/↓ next, ↑/Shift+Tab prev");
-      taskInput.value = data[`char_${c}_task_${t}`] || "";
-      taskInput.setAttribute('draggable','false');
-
-      // Keyboard nav
-      taskInput.addEventListener("keydown", (e) => {
-        const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
-        const idx = inputs.indexOf(taskInput);
-        const atStart = taskInput.selectionStart === 0 && taskInput.selectionEnd === 0;
-        const atEnd = taskInput.selectionStart === taskInput.value.length && taskInput.selectionEnd === taskInput.value.length;
-
-        if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey) || (e.key === "ArrowDown" && atEnd)) {
-          if (e.key !== "ArrowDown") e.preventDefault();
-          if (!focusTaskAt(charBox, idx + 1)) {
-            const newInput = addTaskLine(charBox, data, c);
-            if (newInput) newInput.focus();
-          }
-        } else if ((e.key === "Tab" && e.shiftKey) || (e.key === "ArrowUp" && atStart)) {
-          e.preventDefault();
-          if (!focusTaskAt(charBox, idx - 1)) {
-            const nameField = charBox.querySelector('.char-name');
-            if (nameField) nameField.focus();
-          }
-        } else if (e.key === "ArrowRight" && atEnd) {
-          e.preventDefault();
-          focusCardByOffset(charBox, +1);
-        } else if (e.key === "ArrowLeft" && atStart) {
-          e.preventDefault();
-          focusCardByOffset(charBox, -1);
-        }
-      });
-
-      taskInput.addEventListener("input", () => {
-        if (taskInput.value === "") {
-          const currentCount = data[`char_${c}_taskCount`] || 1;
-          if (currentCount > 1) {
-            wrapper.remove();
-            delete data[`char_${c}_task_${t}`];
-            data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
-            saveData(data);
-          } else {
-            delete data[`char_${c}_task_${t}`];
-            saveData(data);
-          }
-        } else {
-          data[`char_${c}_task_${t}`] = taskInput.value; saveData(data);
-        }
-      });
-
-      const taskDelete = document.createElement('button');
-      taskDelete.className = "task-delete";
-      taskDelete.textContent = "×";
-      taskDelete.title = "Delete Task";
-      taskDelete.setAttribute('draggable','false');
-      taskDelete.onclick = () => {
-        const currentCount = data[`char_${c}_taskCount`] || 1;
-        if (currentCount > 1) {
-          wrapper.remove();
-          delete data[`char_${c}_task_${t}`];
-          data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
-          saveData(data);
-        } else {
-          taskInput.value = "";
-          delete data[`char_${c}_task_${t}`];
-          saveData(data);
-        }
-      };
-
-      wrapper.appendChild(checkbox); wrapper.appendChild(taskInput); wrapper.appendChild(taskDelete);
-      charBox.appendChild(wrapper);
-      return taskInput;
-    }
-
-    function focusTaskAt(charBox, idx) {
-      const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
-      if (idx >= 0 && idx < inputs.length) {
-        inputs[idx].focus();
-        const end = inputs[idx].value.length;
-        inputs[idx].setSelectionRange(end, end);
-        return true;
-      }
+    function focusTaskAt(card,idx){
+      const arr=Array.from(card.querySelectorAll('.task input[type="text"]'));
+      if(idx>=0&&idx<arr.length){ arr[idx].focus(); const e=arr[idx].value.length; arr[idx].setSelectionRange(e,e); return true;}
       return false;
     }
-
-    function addCharacter() {
-      const data = loadData();
-      if (data.charCount >= maxCharacters) { alert("Maximum of 20 characters reached."); return; }
-      const c = data.charCount;
-      data.charCount = (data.charCount || 0) + 1;
-      data[`char_${c}_taskCount`] = 2;
-      saveData(data); buildChecklists();
+    function focusFirstTaskInCard(card){
+      const el = card.querySelector('.task input[type="text"]') || card.querySelector('.char-name');
+      if(el){ el.focus(); const e=el.value.length; el.setSelectionRange?.(e,e); return true; }
+      return false;
+    }
+    function focusCardByOffset(card,off){
+      const cards=$$('.character'); const i=cards.indexOf(card); const nx=i+off;
+      if(nx<0||nx>=cards.length) return false;
+      return focusFirstTaskInCard(cards[nx]);
     }
 
-    function duplicateCharacter(index) {
-      const data = loadData();
-      if (data.charCount >= maxCharacters) { alert("Maximum of 20 characters reached."); return; }
-      const arr = exportCharacters(data);
-      const clone = JSON.parse(JSON.stringify(arr[index]));
-      arr.splice(index + 1, 0, clone);
-      importCharacters(arr);
-      buildChecklists();
-      const clip = document.getElementById('clipboard');
-      if (clip) clip.textContent = "Character duplicated.";
+    async function fetchAvatar(name) {
+      const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
+      if(!resp.ok) throw new Error('Avatar fetch failed');
+      const data = await resp.json();
+      if(!data.imageUrl) throw new Error('No image in response');
+      return data.imageUrl;
     }
 
-    function deleteCharacter(index) {
-      const data = loadData();
-      const arr = exportCharacters(data);
-      arr.splice(index, 1);
-      importCharacters(arr);
-      buildChecklists();
+    function createTaskLine(card,d,c,t){
+      const wrap=document.createElement('div'); wrap.className='task';
+      const cb=document.createElement('input'); cb.type='checkbox';
+      const key=dailyKey(c,t); cb.checked=(localStorage.getItem(key)==='true');
+      cb.onchange=()=>localStorage.setItem(key, cb.checked?'true':'false');
+      const input=document.createElement('input'); input.type='text'; input.placeholder='Daily Task'; input.value=d[`char_${c}_task_${t}`]||"";
+      input.addEventListener('keydown',e=>{
+        const inputs=Array.from(card.querySelectorAll('.task input[type="text"]')); const idx=inputs.indexOf(input);
+        const atStart=input.selectionStart===0&&input.selectionEnd===0; const atEnd=input.selectionStart===input.value.length&&input.selectionEnd===input.value.length;
+        if(e.key==='Enter'||(e.key==='Tab'&&!e.shiftKey)||(e.key==='ArrowDown'&&atEnd)){ if(e.key!=='ArrowDown') e.preventDefault(); if(!focusTaskAt(card,idx+1)){ const ni=addTaskLine(card,d,c); if(ni) ni.focus(); } }
+        else if((e.key==='Tab'&&e.shiftKey)||(e.key==='ArrowUp'&&atStart)){ e.preventDefault(); if(!focusTaskAt(card,idx-1)) (card.querySelector('.char-name')||{}).focus?.(); }
+        else if(e.key==='ArrowRight'&&atEnd){ e.preventDefault(); focusCardByOffset(card,+1); }
+        else if(e.key==='ArrowLeft'&&atStart){ e.preventDefault(); focusCardByOffset(card,-1); }
+      });
+      input.addEventListener('input',()=>{ if(input.value===""){ const ct=d[`char_${c}_taskCount`]||1; if(ct>1){ wrap.remove(); delete d[`char_${c}_task_${t}`]; d[`char_${c}_taskCount`]=Math.max(1,ct-1); saveData(d);} else { delete d[`char_${c}_task_${t}`]; saveData(d);} } else { d[`char_${c}_task_${t}`]=input.value; saveData(d);} });
+      const del=document.createElement('button'); del.className='task-delete'; del.title='Delete Task'; del.textContent='×';
+      del.onclick=()=>{ const ct=d[`char_${c}_taskCount`]||1; if(ct>1){ wrap.remove(); delete d[`char_${c}_task_${t}`]; d[`char_${c}_taskCount`]=Math.max(1,ct-1); saveData(d);} else { input.value=""; delete d[`char_${c}_task_${t}`]; saveData(d);} };
+      wrap.append(cb,input,del); card.appendChild(wrap); return input;
     }
 
-    function switchPreset(preset) {
-      currentPreset = preset;
-      buildChecklists();
-    }
+    function showCharImage(card,src){ const img=card.querySelector('.char-image-wrap img'); img.src=src||BASE_MODEL_URL; }
 
-    function updateUTCTime() {
-      const now = new Date();
-      const utcYear = now.getUTCFullYear();
-      const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0');
-      const utcDay = String(now.getUTCDate()).padStart(2, '0');
-      const utcHours = String(now.getUTCHours()).padStart(2, '0');
-      const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
-      const utcSeconds = String(now.getUTCSeconds()).padStart(2, '0');
-      document.getElementById('utc-time').innerText =
-        `UTC Time: ${utcMonth}/${utcDay}/${utcYear} ${utcHours}:${utcMinutes}:${utcSeconds}`;
-    }
-    setInterval(updateUTCTime, 1000);
+    function buildChecklists(){
+      const container=document.getElementById('checklists'); container.innerHTML=''; removePlaceholder();
+      const d=loadData();
+      for(let c=0;c<(d.charCount||0);c++){
+        const card=document.createElement('div'); card.className='character'; card.setAttribute('draggable','true'); card.dataset.index=c;
+        card.addEventListener('dragstart',e=>{ dragFrom=c; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+        card.addEventListener('dragend',()=>{ dragFrom=null; card.classList.remove('dragging'); removePlaceholder(); });
+        card.addEventListener('dragover',e=>{ e.preventDefault(); const rect=card.getBoundingClientRect(); const before=(e.clientY-rect.top)<rect.height/2; const ph=ensurePlaceholder(); if(before){ if(ph.nextSibling!==card) container.insertBefore(ph,card);} else { if(card.nextSibling!==ph) container.insertBefore(ph,card.nextSibling);} });
+        card.addEventListener('drop',e=>{ e.preventDefault(); const kids=Array.from(container.children); let target=0; for(const node of kids){ if(node===dropPlaceholder) break; if(node.classList.contains('character')) target++; } removePlaceholder(); moveCharacter(dragFrom,target); });
 
-    function loadTheme() {
-      const savedTheme = localStorage.getItem("mapleTheme") || "lavender";
-      document.body.className = savedTheme;
-      document.getElementById("theme").value = savedTheme;
-    }
-    document.getElementById("theme").addEventListener("change", function() {
-      const theme = this.value; document.body.className = theme;
-      localStorage.setItem("mapleTheme", theme);
-    });
+        const topRight=document.createElement('div'); topRight.className='window-controls-right';
+        const cam=document.createElement('button'); cam.className='icon-btn'; cam.title='Set Avatar'; cam.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>';
+        cam.onclick=()=>openAvatarModal(c,(loadData()[`char_${c}_name`]||""));
+        const dup=document.createElement('button'); dup.className='icon-btn'; dup.title='Duplicate'; dup.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
+        dup.onclick=()=>duplicateCharacter(c);
+        const close=document.createElement('button'); close.className='icon-btn'; close.title='Delete'; close.innerHTML='&times;';
+        close.onclick=()=>deleteCharacter(c);
+        topRight.append(cam,dup,close);
+        card.appendChild(topRight);
 
-    // Instructions hide/unhide toggle with persistence
-    const instrBox = document.getElementById('instructions');
-    const instrToggle = document.getElementById('instr-toggle');
-    function setInstrState(minimized) {
-      if (minimized) {
-        instrBox.classList.add('minimized');
-        instrToggle.textContent = 'Unhide';
-      } else {
-        instrBox.classList.remove('minimized');
-        instrToggle.textContent = 'Hide';
+        const imgWrap=document.createElement('div'); imgWrap.className='char-image-wrap'; imgWrap.innerHTML='<img alt="Character image" />'; card.appendChild(imgWrap);
+        const cachedImg=(d[`char_${c}_image`]||"").trim(); showCharImage(card, cachedImg || BASE_MODEL_URL);
+
+        const name=document.createElement('input'); name.className='char-name'; name.placeholder='Character Name'; name.value=d[`char_${c}_name`]||"";
+        name.addEventListener('input',()=>{ const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd); });
+        name.addEventListener('keydown',e=>{ const atStart=name.selectionStart===0&&name.selectionEnd===0; const atEnd=name.selectionStart===name.value.length&&name.selectionEnd===name.value.length;
+          if(e.key==='Enter'){ e.preventDefault(); (card.querySelector('.task input[type="text"]')||{}).focus?.(); }
+          else if(e.key==='ArrowRight'&&atEnd){ e.preventDefault(); focusCardByOffset(card,+1); }
+          else if(e.key==='ArrowLeft'&&atStart){ e.preventDefault(); focusCardByOffset(card,-1); }
+        });
+        card.appendChild(name);
+
+        let count=d[`char_${c}_taskCount`]; if(count==null) count=2; if(count<1) count=1; d[`char_${c}_taskCount`]=count;
+        for(let t=0;t<count;t++) createTaskLine(card,d,c,t);
+        saveData(d);
+        container.appendChild(card);
       }
-      localStorage.setItem('mapleInstrMin', minimized ? '1' : '0');
     }
-    instrToggle.addEventListener('click', () => {
-      const isMin = instrBox.classList.contains('minimized');
-      setInstrState(!isMin);
-    });
-    (function() {
-      const saved = localStorage.getItem('mapleInstrMin');
-      setInstrState(saved === '1');
-    })();
 
-    document.getElementById("add-character-btn").addEventListener("click", addCharacter);
+    function addCharacter(){
+      const d=loadData(); if((d.charCount||0)>=20) return alert('Maximum of 20 characters reached.');
+      const c=d.charCount||0; d.charCount=c+1; d[`char_${c}_taskCount`]=2; saveData(d); buildChecklists();
+    }
+    function duplicateCharacter(i){
+      const d=loadData(); if((d.charCount||0)>=20) return alert('Maximum of 20 characters reached.');
+      const arr=exportCharacters(d); const clone=JSON.parse(JSON.stringify(arr[i])); arr.splice(i+1,0,clone); importCharacters(arr); buildChecklists(); document.getElementById('clipboard').textContent='Character duplicated.';
+    }
+    function deleteCharacter(i){ const d=loadData(); const arr=exportCharacters(d); arr.splice(i,1); importCharacters(arr); buildChecklists(); }
+    function switchPreset(p){ currentPreset=p; buildChecklists(); }
+
+    function updateUTCTime(){
+      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
+      document.getElementById('utc-time').textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+    }
+    setInterval(updateUTCTime,1000);
+
+    function loadTheme(){ const t=localStorage.getItem('mapleTheme')||'lavender'; document.body.className=t; document.getElementById('theme').value=t; }
+    document.getElementById('theme').addEventListener('change',function(){ document.body.className=this.value; localStorage.setItem('mapleTheme',this.value); });
+
+    // Instructions toggle
+    const instr=document.getElementById('instructions'); const toggle=document.getElementById('instr-toggle');
+    function setInstr(min){ instr.classList.toggle('minimized',min); toggle.textContent=min?'Unhide':'Hide'; localStorage.setItem('mapleInstrMin',min?'1':'0'); }
+    toggle.onclick=()=>setInstr(!instr.classList.contains('minimized'));
+    setInstr(localStorage.getItem('mapleInstrMin')==='1');
 
     // Modal logic
-    const overlay = document.getElementById('avatar-modal-overlay');
-    const regionSel = document.getElementById('avatar-region');
-    const nameInput = document.getElementById('avatar-name');
-    const errorBox = document.getElementById('avatar-error');
-    document.getElementById('avatar-cancel').addEventListener('click', closeAvatarModal);
-    document.getElementById('avatar-search').addEventListener('click', () => doAvatarSearch());
-    nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doAvatarSearch(); });
-
-    function openAvatarModal(charIndex, prefillName) {
-      avatarTargetIndex = charIndex;
-      errorBox.textContent = "";
-      nameInput.value = prefillName || "";
-      regionSel.value = "NA";
-      overlay.classList.add('show');
-      overlay.setAttribute('aria-hidden', 'false');
-      nameInput.focus();
-      nameInput.select();
-    }
-    function closeAvatarModal() {
-      overlay.classList.remove('show');
-      overlay.setAttribute('aria-hidden', 'true');
-      avatarTargetIndex = null;
-    }
-    async function doAvatarSearch() {
-      errorBox.textContent = "";
-      const region = regionSel.value;
-      const name = nameInput.value.trim();
-      if (!name) { errorBox.textContent = "Please enter a character name."; return; }
-      try {
-        const url = await fetchCharacterImage(region, name);
-        const cards = Array.from(document.querySelectorAll('.character'));
-        const card = cards[avatarTargetIndex];
-        if (!card) throw new Error("Card not found.");
-        const d = loadData();
-        d[`char_${avatarTargetIndex}_image`] = url; saveData(d);
-        showCharImage(card, url);
-        closeAvatarModal();
-      } catch (e) {
-        errorBox.textContent = "Character image not found. Please check the region/name and retry.";
-      }
+    const overlay=document.getElementById('avatar-modal-overlay');
+    const nameInput=document.getElementById('avatar-name');
+    const errBox=document.getElementById('avatar-error');
+    function openAvatarModal(cardIndex,prefill){ avatarTargetIndex=cardIndex; errBox.textContent=""; nameInput.value=prefill||""; overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); nameInput.focus(); nameInput.select(); }
+    function closeAvatarModal(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); avatarTargetIndex=null; }
+    document.getElementById('avatar-cancel').onclick=closeAvatarModal;
+    document.getElementById('avatar-search').onclick=()=>doAvatarSearch();
+    nameInput.addEventListener('keydown',e=>{ if(e.key==='Enter') doAvatarSearch(); });
+    async function doAvatarSearch(){
+      errBox.textContent=""; const nm=nameInput.value.trim();
+      if(!nm) return errBox.textContent='Please enter a character name.';
+      try{ const url=await fetchAvatar(nm); const cards=$$('.character'); const card=cards[avatarTargetIndex]; if(!card) throw new Error('Card not found'); const d=loadData(); d[`char_${avatarTargetIndex}_image`]=url; saveData(d); showCharImage(card,url); closeAvatarModal(); }
+      catch(e){ errBox.textContent='Character image not found. Please verify the name and retry.'; }
     }
 
-    switchPreset(1);
-    loadTheme();
-    updateUTCTime();
+    document.getElementById('add-character-btn').onclick=addCharacter;
+
+    switchPreset(1); loadTheme(); updateUTCTime(); buildChecklists();
   </script>
 </body>
 </html>
