@@ -31,42 +31,23 @@
     body{ font-family:Quicksand,system-ui,sans-serif; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; font-size:var(--ui); background:var(--bg); color:var(--fg); transition:.25s background,.25s color; }
     h1{ margin:0 0 6px; font-size:20px; }
     #utc-time{ font-size:13px; margin-bottom:10px; }
-
-    /* Toolbar */
+    #instructions{ width:100%; max-width:900px; margin:10px 0 14px; padding:12px 14px 14px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); text-align:left; }
+    #instructions ul{ padding-left:20px; }
+    #instructions button{ position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); border-radius:8px; cursor:pointer; }
+    /* --- Toolbar styling --- */
     .toolbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; width:100%; max-width:1200px; }
-    .toolbar-row{ display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
-    .toolbar-row label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; white-space:nowrap; }
     .select-wrap{ position:relative; display:inline-flex; align-items:center; }
     .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
-    select{ appearance:none; -webkit-appearance:none; -moz-appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
+    select{ appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
     select:focus{ box-shadow:none; outline:none; }
-    option{ background:var(--control-bg); color:var(--control-fg); }
-
-    #add-character-btn, #export-btn, #import-btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); }
-    #add-character-btn:hover, #export-btn:hover, #import-btn:hover{ filter:brightness(1.02); }
-    #add-character-btn:active, #export-btn:active, #import-btn:active{ transform:translateY(1px); }
-
-    /* Character cards */
-    #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1200px; align-items:start; }
-    .character,.drop-placeholder{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); }
-    .character{ padding:48px 16px 12px; transition:transform .08s ease, opacity .08s ease; will-change: transform; }
-    .character.dragging{ opacity:.96; transform:scale(.985); }
-    .drop-placeholder{ padding:48px 16px 12px; border:1px dotted var(--ph-outline); border-radius:12px; background:transparent; opacity:.28; outline:none; box-shadow:none; pointer-events:none; }
-    .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
-    .icon-btn{ width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; opacity:.7; font-family:inherit; }
-    .icon-btn:hover{ background:var(--icon-hover); border-color:var(--control-border); }
-    .icon-btn:active{ transform:translateY(1px); }
-    .char-image-wrap{ text-align:center; margin:0 auto 2px; min-height:24px; }
-    .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
-    .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 6px; font-family:inherit; }
-    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:2px 0 6px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
-    .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
-    .checkall-row{ display:flex; align-items:center; gap:8px; justify-content:flex-end; margin:2px 0 6px; }
-    .checkall-row label{ font-size:12px; opacity:.8; }
-    .task{ display:grid; grid-template-columns:18px 18px 1fr auto; gap:8px; align-items:center; margin:6px 0; }
+    /* --- Character Card Styling --- */
+    #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1200px; }
+    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; background:var(--card-bg); border:1px solid var(--card-border); padding:48px 16px 12px; }
+    .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; }
+    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
-    .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
     .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; }
+    /* --- Modal styling --- */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show{ display:flex; }
     .modal{ background:#fff; color:#222; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
@@ -135,9 +116,21 @@
       </div>
     </div>
   </div>
-  
+
   <script>
-    // Additional JavaScript logic goes here.
+    // Add JavaScript logic for fixing buttons, dropdowns, UTC time, etc.
+    document.getElementById("instr-toggle").addEventListener("click", function(){
+      document.getElementById("instructions").classList.toggle("minimized");
+      this.innerHTML = document.getElementById("instructions").classList.contains("minimized") ? "Unhide" : "Hide";
+    });
+
+    // UTC Time
+    function updateUTC() {
+      const now = new Date();
+      const utcTime = now.toUTCString();
+      document.getElementById("utc-time").textContent = `UTC Time: ${utcTime}`;
+    }
+    setInterval(updateUTC, 1000);
   </script>
 </body>
 </html>
