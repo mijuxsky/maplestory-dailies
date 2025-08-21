@@ -24,23 +24,26 @@
     @keyframes ph { from{opacity:.72} to{opacity:1} }
     .window-controls-right { position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
     .icon-btn { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; padding:0; }
-    /* Image area between top controls and name */
-    .char-image-wrap { height: 140px; display:flex; align-items:center; justify-content:center; margin:6px auto 6px; text-align:center; }
-    .char-image-wrap img { height: 100%; width:auto; max-width: 100%; object-fit: contain; border-radius:8px; display:block; }
+    .char-image-wrap { text-align:center; margin:8px auto 10px; }
+    .char-image-wrap img { max-width:160px; max-height:160px; border-radius:8px; display:inline-block; }
     .char-name { width:100%; border:none; background:transparent; border-bottom:2px solid currentColor; text-align:center; font-weight:600; margin-bottom:8px; }
     .task { display:grid; grid-template-columns:18px 1fr auto; gap:8px; align-items:center; margin:8px 0; }
     .task input[type="text"] { border:none; border-bottom:1px dashed currentColor; background:transparent; padding:4px 2px; }
     .task .task-delete { background:transparent; border:none; font-size:16px; opacity:.7; }
 
-    /* Modal */
-    .modal-overlay { position:fixed; inset:0; background:var(--overlay); display:none; align-items:center; justify-content:center; z-index:1000; }
+    /* Modal (monochrome, legible, independent of theme) */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show { display:flex; }
-    .modal { background:inherit; color:inherit; border:1px solid; border-radius:var(--radius); padding:16px; min-width:320px; max-width:520px; box-shadow:var(--shadow); }
-    .modal h3 { margin:0 0 10px; font-size:16px; }
-    .modal .row { display:grid; grid-template-columns:1fr; gap:10px; margin:8px 0; }
-    .modal label { font-weight:600; opacity:.9; font-size:12px; }
-    .modal .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px; }
-    .modal .error { color:#d66; min-height:18px; font-size:12px; }
+    .modal { background:#fff; color:#222; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); }
+    .modal h3 { margin:0 0 12px; font-size:18px; font-weight:700; color:#111; letter-spacing:.2px; }
+    .modal .row { display:grid; grid-template-columns:1fr; gap:8px; margin:6px 0 10px; }
+    .modal label { font-weight:600; font-size:12px; color:#333; }
+    .modal input[type="text"] { width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#111; }
+    .modal .error { color:#b00020; min-height:18px; font-size:12px; margin-top:2px; }
+    .modal .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+    .modal .actions button { padding:8px 12px; border-radius:8px; }
+    .modal .actions #avatar-cancel { background:#f5f5f5; color:#222; border:1px solid #e5e5e5; }
+    .modal .actions #avatar-search { background:#111; color:#fff; }
 
     /* Themes */
     body.light { --ph-outline:#9aa0a6; --ph-bg:rgba(0,0,0,.04); background:#f7f7f8; color:#333; }
@@ -113,8 +116,8 @@
       </div>
       <div id="avatar-error" class="error"></div>
       <div class="actions">
-        <button id="avatar-cancel">Cancel</button>
-        <button id="avatar-search">Search For Character</button>
+        <button id="avatar-cancel" type="button">Cancel</button>
+        <button id="avatar-search" type="button">Search For Character</button>
       </div>
     </div>
   </div>
