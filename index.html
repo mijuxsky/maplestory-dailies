@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,18 +55,17 @@
     <strong>How to use:</strong>
     <ul id="howto">
       <li><strong>Themes & Presets:</strong> Choose a Theme and one of 3 Presets (saved locally).</li>
-      <li><strong>Add Characters:</strong> Click <em>+ Add Character</em> (max 20). Starts with 2 task lines (min 1, max 10).</li>
+      <li><strong>Add Characters:</strong> Click **+ Add Character** (max 20). Starts with 2 task lines (min 1, max 10).</li>
       <li><strong>Navigating with keyboard:</strong> Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
       <li><strong>Reorder cards:</strong> Drag any card; drop anywhere in the grid. Smooth, snap-by-row then column.</li>
-      <li><strong>Reorder tasks:</strong> Drag the <em>⋮⋮</em> handle to move a task; or press <em>Enter</em> to insert a task under the current one.</li>
-      <li><strong>Update characters:</strong> Camera → <em>Set Avatar</em> popup. Or type a name in the card and press Enter/blur to auto-fetch avatar + Lv./Class from MapleRanks.</li>
-      <li><strong>Import/Export:</strong> Use <em>Export</em> (JSON file) and <em>Import</em> to move your data between devices—no servers.</li>
-      <li><strong>Daily reset:</strong> Checkboxes reset automatically at 00:00 UTC.</li>
+      <li><strong>Reorder tasks:</strong> Drag the **⋮⋮** handle to move a task; or press **Enter** to insert a task under the current one.</li>
+      <li><strong>Update characters:</strong> Camera → *Set Avatar* popup. Or type a name in the card and press Enter/blur to auto-fetch avatar + Lv./Class from MapleRanks.</li>
+      <li><strong>Import/Export:</strong> Use **Export** (JSON file) and **Import** to move your data between devices—no servers.</li>
+      <li><strong>Daily reset:</strong> Checkboxes reset automatically at **00:00 UTC**.</li>
     </ul>
   </div>
 
   <div class="toolbar">
-    <!-- Theme row -->
     <div class="toolbar-row" id="row-theme">
       <label for="theme">Theme:</label>
       <div class="select-wrap">
@@ -79,8 +79,6 @@
         </select>
       </div>
     </div>
-
-    <!-- Preset row -->
     <div class="toolbar-row" id="row-preset">
       <label for="preset">Preset:</label>
       <div class="select-wrap">
@@ -91,8 +89,6 @@
         </select>
       </div>
     </div>
-
-    <!-- Actions row -->
     <div class="toolbar-row" id="row-actions">
       <button id="add-character-btn" title="Add Character">+ Add Character</button>
       <button id="export-btn" title="Export data">Export</button>
@@ -100,33 +96,9 @@
       <input id="import-file" type="file" accept="application/json" hidden>
     </div>
   </div>
-
-  <div id="clipboard" aria-live="polite"></div>
+  
   <div id="checklists"></div>
 
-  <!-- Avatar search modal -->
-  <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-labelledby="avatar-modal-title" aria-modal="true">
-      <h3 id="avatar-modal-title">Set Avatar</h3>
-      <div class="row">
-        <label for="avatar-name">Character Name</label>
-        <input id="avatar-name" type="text" placeholder="Enter character name" />
-      </div>
-      <div id="avatar-error" class="error"></div>
-      <div class="actions">
-        <div class="left-actions">
-          <button id="avatar-upload" type="button">Upload Image</button>
-          <button id="avatar-delete" type="button">Delete Avatar</button>
-        </div>
-        <div class="right-actions">
-          <button id="avatar-cancel" type="button">No</button>
-          <button id="avatar-search" type="button">Set Avatar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delete confirmation modal -->
   <div id="confirm-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal confirm" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
       <h3 id="confirm-title">Confirm Delete</h3>
@@ -137,11 +109,9 @@
       </div>
     </div>
   </div>
-
-  <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
-
+  
   <script>
-  // Your JavaScript logic here.
+    // Additional code logic and fixes go here.
   </script>
 </body>
 </html>

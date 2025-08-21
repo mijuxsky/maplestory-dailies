@@ -1,3 +1,4 @@
+
 # MapleStory Dailies
 
 A minimal tracker for your dailies in MapleStory.
