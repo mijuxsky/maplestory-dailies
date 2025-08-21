@@ -202,6 +202,7 @@
     .modal .left-actions{ display:flex; gap:8px; }
     .modal .right-actions{ display:flex; gap:8px; }
     .modal .actions button{ padding:8px 12px; border-radius:8px; font-family:inherit; font-size:var(--ui); }
+    .modal #avatar-upload{ background:#fff; color:#222; border:1px solid #d9d9d9; }
     .modal #avatar-delete{ background:#fff; color:#222; border:1px solid #e0e0e0; }
     .modal #avatar-cancel{ background:#f5f5f5; color:#222; border:1px solid #e5e5e5; }
     .modal #avatar-search{ background:#111; color:#fff; border:1px solid #111; }
@@ -214,12 +215,15 @@
   <div id="instructions">
     <button id="instr-toggle" type="button">Hide</button>
     <strong>How to use:</strong>
-    <ul>
-      <li>Presets switch between three saved sets of characters and tasks.</li>
-      <li>+ Add Character (max 20). Each starts with two task lines (min 1, max 10).</li>
+    <ul id="howto">
+      <li>Use <em>Theme</em> & <em>Preset</em> to style and switch between three saved sets.</li>
+      <li>Click <strong>+ Add Character</strong> (max 20). Each starts with two task lines (min 1, max 10).</li>
       <li>Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
-      <li>Camera = fetch avatar from MapleRanks. **Upload** = add your image (auto-fits to 150×110). Below image shows <em>Lv. N Job</em> if found.</li>
-      <li>Checkboxes reset at 00:00 UTC. Data is saved locally per preset.</li>
+      <li>Reorder cards by dragging—cards snap in grid order.</li>
+      <li>Click the camera on a card → <strong>Set Avatar</strong> popup: type the name and press <kbd>Enter</kbd> or click <strong>Set Avatar</strong> to fetch from MapleRanks.</li>
+      <li>In the popup you can also <strong>Upload Image</strong> (auto-resizes to 150×110) or <strong>Delete Avatar</strong> to revert to the base model.</li>
+      <li>Under the avatar, the page shows <em>Lv. N Job</em> (e.g., <strong>Lv. 287 Adele</strong>) when available.</li>
+      <li>Checkboxes reset at 00:00 UTC. All data is saved locally per preset.</li>
     </ul>
   </div>
 
@@ -262,6 +266,7 @@
       <div id="avatar-error" class="error"></div>
       <div class="actions">
         <div class="left-actions">
+          <button id="avatar-upload" type="button">Upload Image</button>
           <button id="avatar-delete" type="button">Delete Avatar</button>
         </div>
         <div class="right-actions">
@@ -324,7 +329,8 @@
     function moveCharacter(fr,to) {
       const d=loadData(); const arr=exportCharacters(d);
       if (fr===null||to===null||fr===to) return;
-      const it=arr.splice(fr,1)[0]; arr.splice(to,0,it);
+      const it=arr.splice(fr,1)[0];
+      arr.splice(to,0,it);
       importCharacters(arr); buildChecklists();
     }
     function ensurePlaceholder() { if(!dropPlaceholder){dropPlaceholder=document.createElement('div');dropPlaceholder.className='drop-placeholder';} return dropPlaceholder; }
@@ -355,7 +361,7 @@
       const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
       if(!resp.ok) throw new Error('Avatar fetch failed');
       const data = await resp.json();
-      // Expecting: { imageUrl, level, job } — unknown fields may be undefined
+      // Expecting: { imageUrl, level, job }
       return data;
     }
 
@@ -402,20 +408,16 @@
       for(let c=0;c<(d.charCount||0);c++){
         const card=document.createElement('div'); card.className='character'; card.setAttribute('draggable','true'); card.dataset.index=c;
         card.addEventListener('dragstart',e=>{ dragFrom=c; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
-        card.addEventListener('dragend',()=>{ dragFrom=null; card.classList.remove('dragging'); removePlaceholder(); });
-        card.addEventListener('dragover',e=>{ e.preventDefault(); const rect=card.getBoundingClientRect(); const before=(e.clientY-rect.top)<rect.height/2; const ph=ensurePlaceholder(); if(before){ if(ph.nextSibling!==card) container.insertBefore(ph,card);} else { if(card.nextSibling!==ph) container.insertBefore(ph,card.nextSibling);} });
-        card.addEventListener('drop',e=>{ e.preventDefault(); const kids=Array.from(container.children); let target=0; for(const node of kids){ if(node===dropPlaceholder) break; if(node.classList.contains('character')) target++; } removePlaceholder(); moveCharacter(dragFrom,target); });
+        card.addEventListener('dragend',()=>{ dragFrom=null; const dragging=$('.character.dragging'); dragging?.classList.remove('dragging'); removePlaceholder(); });
 
         const topRight=document.createElement('div'); topRight.className='window-controls-right';
         const cam=document.createElement('button'); cam.className='icon-btn'; cam.title='Set Avatar'; cam.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>';
         cam.onclick=()=>openAvatarModal(c,(loadData()[`char_${c}_name`]||""));
-        const upload=document.createElement('button'); upload.className='icon-btn'; upload.title='Upload Avatar'; upload.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2zM12 2l5 5h-3v6h-4V7H7l5-5z"/></svg>';
-        upload.onclick=()=>beginUpload(c);
         const dup=document.createElement('button'); dup.className='icon-btn'; dup.title='Duplicate'; dup.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>';
         dup.onclick=()=>duplicateCharacter(c);
         const close=document.createElement('button'); close.className='icon-btn'; close.title='Delete'; close.innerHTML='&times;';
         close.onclick=()=>deleteCharacter(c);
-        topRight.append(cam,upload,dup,close);
+        topRight.append(cam,dup,close);
         card.appendChild(topRight);
 
         const imgWrap=document.createElement('div'); imgWrap.className='char-image-wrap'; imgWrap.innerHTML='<img alt="Character image" />'; card.appendChild(imgWrap);
@@ -443,6 +445,47 @@
         saveData(d);
         container.appendChild(card);
       }
+
+      // Container-level DnD: robust placement index
+      container.addEventListener('dragover', onContainerDragOver);
+      container.addEventListener('drop', onContainerDrop);
+    }
+
+    function onContainerDragOver(e){
+      e.preventDefault();
+      const container = document.getElementById('checklists');
+      const y = e.clientY;
+      const cards = Array.from(container.querySelectorAll('.character:not(.dragging)'));
+      const ph = ensurePlaceholder();
+
+      // Find the first card whose midpoint is below the cursor; insert before it
+      let insertBefore = null;
+      for(const card of cards){
+        const rect = card.getBoundingClientRect();
+        const mid = rect.top + rect.height/2;
+        if(y < mid){ insertBefore = card; break; }
+      }
+      if(insertBefore){ if(ph !== insertBefore) container.insertBefore(ph, insertBefore); }
+      else { if(ph !== container.lastElementChild) container.appendChild(ph); }
+    }
+
+    function onContainerDrop(e){
+      e.preventDefault();
+      const container = document.getElementById('checklists');
+      if(dropPlaceholder && dropPlaceholder.parentElement === container){
+        // compute target index = number of character cards before placeholder
+        let to = 0;
+        for(const node of Array.from(container.children)){
+          if(node === dropPlaceholder) break;
+          if(node.classList.contains('character')) to++;
+        }
+        // Adjust when moving downwards so position is intuitive
+        if(dragFrom !== null && dragFrom < to) to--;
+        moveCharacter(dragFrom, to);
+      }
+      removePlaceholder();
+      const dragging=$('.character.dragging'); dragging?.classList.remove('dragging');
+      dragFrom = null;
     }
 
     function addCharacter(){
@@ -485,6 +528,11 @@
     document.getElementById('avatar-cancel').onclick=closeAvatarModal;
     document.getElementById('avatar-search').onclick=()=>doAvatarSearch();
     document.getElementById('avatar-delete').onclick=()=>doAvatarDelete();
+    document.getElementById('avatar-upload').onclick=()=>{
+      if(avatarTargetIndex==null) return;
+      uploadTargetIndex = avatarTargetIndex;
+      document.getElementById('hidden-upload').click();
+    };
     nameInput.addEventListener('keydown',e=>{ if(e.key==='Enter') { e.preventDefault(); doAvatarSearch(); } });
     nameInput.addEventListener('input',()=>{
       if(avatarTargetIndex==null) return;
@@ -548,6 +596,7 @@
         saveData(d);
         const cards=$$('.character'); const card=cards[uploadTargetIndex];
         if(card) showCharImage(card, dataUrl);
+        closeAvatarModal();
       }catch(err){
         alert('Could not load that image. Please try a different file.');
       }finally{
@@ -555,10 +604,6 @@
         uploadTargetIndex = null;
       }
     });
-    function beginUpload(idx){
-      uploadTargetIndex = idx;
-      hiddenUpload.click();
-    }
     function resizeImageFile(file, maxW, maxH){
       return new Promise((resolve,reject)=>{
         const reader = new FileReader();
