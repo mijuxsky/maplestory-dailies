@@ -3,21 +3,32 @@
 A minimal tracker for your dailies in MapleStory.
 
 ## Features
-- Editable character names and daily tasks
-- Minimum of one task per character (cannot delete the last task)
-- Add new characters (up to 20 total)
-- Duplicate a character via the top-right copy icon (creates a new card next to it)
-- Delete characters with the top-right “×”
-- Drag-and-drop to reorder cards with a **tinted dashed placeholder** preview matching each theme
-- **Keyboard navigation:** Enter and ↓ move to the next task (auto-adds a line if at the end); ↑ moves to the previous task. Enter in the name field jumps to the first task.
-- Hide/Unhide the instructions panel (persists across visits)
-- Each character starts with 2 daily task lines by default
-- Press Enter in a task to add a new line (up to 10 tasks per character)
-- Clearing all text in a task line removes that line (last line is preserved)
-- Delete button next to each task for manual removal
-- Automatic reset at UTC 00:00 every day
-- Live UTC time display in MM/DD/YYYY format
-- Three presets stored locally in your browser (via dropdown selector)
-- Theme selector with Light Mode, Cloud (Light), Lavender (Light), Matcha (Light), Dark Mode, and Evergreen (Dark)
-- Transparent dropdowns with legible, theme-appropriate colors
-- Theme-tuned card backgrounds and improved contrast in dark themes
+- Manage up to **20 characters**, each with a name and checklist
+- **Duplicate** or **Delete** a character card from its top toolbar
+- **Drag & drop** cards to reorder (snap-to-grid layout)
+- Tasks per character: **min 1**, **max 10**; start with **2** lines by default
+- **Keyboard navigation**:
+  - **Enter / Tab / ↓** → go to next task (auto-adds a new line at the end)
+  - **↑ / Shift+Tab** → previous task (jumps to name if above first)
+  - **← / →** at field edges → move to previous/next character card
+- **Presets** dropdown to switch between three saved configurations (stored locally in your browser)
+- **Auto-reset** of checkboxes at **00:00 UTC** daily
+- **UTC clock** at the top in **MM/DD/YYYY** format
+- **Instructions panel** with **Hide/Unhide** toggle
+- **Themes**:
+  - Light: **Light Mode**, **Cloud (Light)**, **Lavender (Light)**, **Matcha (Light)**
+  - Dark: **Dark Mode**, **Evergreen (Dark)**
+  - Transparent, theme-matching dropdown menus and legible contrast in dark modes
+- **Character images**:
+  - Per-card **Region** and **World** selectors and a minimal **Fetch** button
+  - Uses Nexon rankings via a **Cloudflare Worker** proxy
+
+## Configuration
+- The site is already configured to use your Worker:
+  ```js
+  const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
+  ```
+  If you deploy a new Worker later, update the `PROXY_URL` value in `index.html`.
+
+## Hosting
+- Open `index.html` directly in a browser, or publish it with **GitHub Pages** by committing it to your repository and enabling Pages.

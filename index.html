@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>MapleStory Dailies</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root { 
       --radius: 12px; 
@@ -84,21 +85,29 @@
     }
     @keyframes phPulse { from { opacity: 0.7; } to { opacity: 1; } }
     .character.dragging { opacity: 0.6; }
-    /* Top-right window-style controls: Duplicate then X */
+    /* Top row controls */
     .window-controls {
       position: absolute; top: 6px; right: 8px; display: flex; gap: 6px; align-items: center;
     }
+    .compact-select { font-size: 12px; padding: 2px 8px; }
     .icon-btn {
       width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       font-size: 14px; padding: 0; margin: 0; cursor: pointer;
     }
     .icon-btn svg { width: 14px; height: 14px; }
+    .char-name-row {
+      display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;
+    }
     .character input.char-name, .character input[type="text"] { -webkit-user-drag: none; }
     .character input.char-name {
       font-size: var(--ui-font-size); font-weight: 600; border: none; background: transparent;
       border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
       opacity: 0.95; color: inherit;
     }
+    .fetch-image-btn { padding: 4px 8px; font-size: 12px; }
+    .char-image-wrap { display: none; margin: 8px auto 2px auto; text-align: center; }
+    .char-image-wrap img { max-width: 160px; max-height: 160px; display: inline-block; border-radius: 8px; }
+    .char-image-wrap.show { display: block; }
     .task { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 0; }
     .task input[type="checkbox"] { width: 16px; height: 16px; }
     .task input[type="text"] {
@@ -191,9 +200,9 @@
     <ul>
       <li>Use <em>Preset</em> to switch between three saved sets of characters and tasks.</li>
       <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
-      <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10); use <em>↑/↓</em> to move between tasks.</li>
-      <li>Clear a task’s text or click the “×” beside it to remove that line. At least one task is always kept.</li>
-      <li>Use the duplicate icon to clone a character; use the “×” to delete one.</li>
+      <li>Type your character name and tasks. Press <em>Enter</em>, <em>Tab</em>, or <em>↓</em> to move to the next line (auto-adds if at the end); use <em>↑</em> or <em>Shift+Tab</em> to move up.</li>
+      <li>Use <em>←</em> / <em>→</em> at the start/end of a field to jump to the previous/next character card.</li>
+      <li>To fetch a character image from Nexon rankings (via Cloudflare Worker proxy), choose <em>Region/World</em>, enter the name, and click <em>Fetch</em>.</li>
       <li>Drag and drop cards to reorder them; a tinted dashed placeholder shows where the card will land.</li>
       <li>All checkboxes reset automatically at 00:00 UTC each day. Names and task lists are saved in your browser.</li>
     </ul>
@@ -229,6 +238,13 @@
   <div id="checklists"></div>
 
   <script>
+    const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
+
+    const WORLD_SUGGESTIONS = {
+      "NA": ["Bera","Scania","Aurora","Reboot (NA)"],
+      "EU": ["Luna","Elysium","Reboot (EU)"]
+    };
+
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
@@ -251,7 +267,13 @@
         const taskCount = Math.max(1, data[`char_${i}_taskCount`] || 1);
         const tasks = [];
         for (let t = 0; t < taskCount; t++) tasks.push(data[`char_${i}_task_${t}`] || "");
-        list.push({ name: data[`char_${i}_name`] || "", tasks });
+        list.push({
+          name: data[`char_${i}_name`] || "",
+          region: data[`char_${i}_region`] || "NA",
+          world: data[`char_${i}_world`] || "",
+          tasks,
+          image: data[`char_${i}_image`] || ""
+        });
       }
       return list;
     }
@@ -260,6 +282,9 @@
       data.charCount = chars.length;
       for (let i = 0; i < chars.length; i++) {
         data[`char_${i}_name`] = chars[i].name || "";
+        data[`char_${i}_region`] = chars[i].region || "NA";
+        data[`char_${i}_world`] = chars[i].world || "";
+        data[`char_${i}_image`] = chars[i].image || "";
         data[`char_${i}_taskCount`] = Math.max(1, Math.min(maxTasks, chars[i].tasks.length || 1));
         for (let t = 0; t < data[`char_${i}_taskCount`]; t++) {
           data[`char_${i}_task_${t}`] = chars[i].tasks[t] || "";
@@ -292,15 +317,26 @@
       }
     }
 
-    function focusTaskAt(charBox, idx) {
-      const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
-      if (idx >= 0 && idx < inputs.length) {
-        inputs[idx].focus();
-        const end = inputs[idx].value.length;
-        inputs[idx].setSelectionRange(end, end);
+    function focusFirstTaskInCard(card) {
+      const firstTask = card.querySelector('.task input[type="text"]');
+      const nameField = card.querySelector('.char-name');
+      const target = firstTask || nameField;
+      if (target) {
+        target.focus();
+        const end = target.value.length;
+        target.setSelectionRange(end, end);
         return true;
       }
       return false;
+    }
+
+    function focusCardByOffset(currentCard, offset) {
+      const cards = Array.from(document.querySelectorAll('.character'));
+      const idx = cards.indexOf(currentCard);
+      if (idx === -1) return false;
+      const nextIdx = idx + offset;
+      if (nextIdx < 0 || nextIdx >= cards.length) return false;
+      return focusFirstTaskInCard(cards[nextIdx]);
     }
 
     function addTaskLine(charBox, data, c) {
@@ -308,11 +344,29 @@
       if (taskCount < maxTasks) {
         data[`char_${c}_taskCount`] = taskCount + 1;
         saveData(data);
-        // create at the end
         const newInput = createTaskLine(charBox, data, c, taskCount);
         return newInput;
       }
       return null;
+    }
+
+    async function fetchCharacterImage(region, world, name) {
+      if (!PROXY_URL) {
+        throw new Error("Proxy URL missing.");
+      }
+      const url = `${PROXY_URL}?region=${encodeURIComponent(region)}&world=${encodeURIComponent(world)}&name=${encodeURIComponent(name)}`;
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error("Image fetch failed.");
+      const ct = resp.headers.get("content-type") || "";
+      if (ct.includes("application/json")) {
+        const data = await resp.json();
+        if (data.imageUrl) return data.imageUrl;
+        if (data.imageBase64) return `data:image/png;base64,${data.imageBase64}`;
+        throw new Error("No image in JSON response.");
+      } else {
+        const blob = await resp.blob();
+        return URL.createObjectURL(blob);
+      }
     }
 
     function buildChecklists() {
@@ -364,9 +418,26 @@
           moveCharacter(dragFrom, targetIndex);
         });
 
-        // controls top-right: duplicate then X
+        // controls top-right: Region, World, duplicate, X
         const controls = document.createElement('div');
         controls.className = "window-controls";
+
+        const regionSel = document.createElement('select');
+        regionSel.className = "compact-select";
+        ["NA","EU"].forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r; opt.textContent = r; regionSel.appendChild(opt);
+        });
+        regionSel.value = data[`char_${c}_region`] || "NA";
+        regionSel.onchange = () => {
+          data[`char_${c}_region`] = regionSel.value; saveData(data);
+          populateWorlds(worldSel, regionSel.value, data[`char_${c}_world`] || "");
+        };
+
+        const worldSel = document.createElement('select');
+        worldSel.className = "compact-select";
+        populateWorlds(worldSel, regionSel.value, data[`char_${c}_world`] || "");
+        worldSel.onchange = () => { data[`char_${c}_world`] = worldSel.value; saveData(data); };
 
         const dupBtn = document.createElement('button');
         dupBtn.className = "icon-btn";
@@ -380,9 +451,15 @@
         delBtn.innerHTML = "&#215;";
         delBtn.onclick = (ev) => { ev.stopPropagation(); deleteCharacter(c); };
 
+        controls.appendChild(regionSel);
+        controls.appendChild(worldSel);
         controls.appendChild(dupBtn);
         controls.appendChild(delBtn);
         charBox.appendChild(controls);
+
+        // Name + Fetch row
+        const nameRow = document.createElement('div');
+        nameRow.className = "char-name-row";
 
         const charName = document.createElement('input');
         charName.className = "char-name";
@@ -393,13 +470,59 @@
           data[`char_${c}_name`] = charName.value; saveData(data);
         });
         charName.addEventListener("keydown", (e) => {
+          const atStart = charName.selectionStart === 0 && charName.selectionEnd === 0;
+          const atEnd = charName.selectionStart === charName.value.length && charName.selectionEnd === charName.value.length;
           if (e.key === "Enter") {
             e.preventDefault();
             const first = charBox.querySelector('.task input[type="text"]');
             if (first) first.focus();
+          } else if (e.key === "ArrowRight" && atEnd) {
+            e.preventDefault();
+            focusCardByOffset(charBox, +1);
+          } else if (e.key === "ArrowLeft" && atStart) {
+            e.preventDefault();
+            focusCardByOffset(charBox, -1);
           }
         });
-        charBox.appendChild(charName);
+
+        const fetchBtn = document.createElement('button');
+        fetchBtn.className = "fetch-image-btn";
+        fetchBtn.title = "Fetch Character Image";
+        fetchBtn.textContent = "Fetch";
+        fetchBtn.onclick = async (ev) => {
+          ev.stopPropagation();
+          fetchBtn.disabled = true;
+          const prev = fetchBtn.textContent;
+          fetchBtn.textContent = "…";
+          try {
+            const region = data[`char_${c}_region`] || "NA";
+            const world = data[`char_${c}_world`] || "";
+            const name = (data[`char_${c}_name`] || "").trim();
+            if (!name || !world) throw new Error("Enter name and select world.");
+            const url = await fetchCharacterImage(region, world, name);
+            data[`char_${c}_image`] = url; saveData(data);
+            showCharImage(charBox, url);
+          } catch (err) {
+            alert(err.message || "Failed to fetch image.");
+          } finally {
+            fetchBtn.disabled = false;
+            fetchBtn.textContent = prev;
+          }
+        };
+
+        nameRow.appendChild(charName);
+        nameRow.appendChild(fetchBtn);
+        charBox.appendChild(nameRow);
+
+        // Image area
+        const imgWrap = document.createElement('div');
+        imgWrap.className = "char-image-wrap";
+        const img = document.createElement('img');
+        img.alt = "Character image";
+        imgWrap.appendChild(img);
+        charBox.appendChild(imgWrap);
+        const cached = data[`char_${c}_image`];
+        if (cached) showCharImage(charBox, cached);
 
         let taskCount = data[`char_${c}_taskCount`];
         if (taskCount == null) taskCount = 2;
@@ -412,6 +535,43 @@
         saveData(data);
         container.appendChild(charBox);
       }
+    }
+
+    function showCharImage(card, src) {
+      const wrap = card.querySelector('.char-image-wrap');
+      const img = wrap.querySelector('img');
+      img.src = src;
+      wrap.classList.add('show');
+    }
+
+    function populateWorlds(selectEl, region, selected) {
+      selectEl.innerHTML = "";
+      const placeholder = document.createElement('option');
+      placeholder.value = ""; placeholder.textContent = "World";
+      selectEl.appendChild(placeholder);
+      const list = WORLD_SUGGESTIONS[region] || [];
+      list.forEach(w => {
+        const opt = document.createElement('option');
+        opt.value = w; opt.textContent = w;
+        selectEl.appendChild(opt);
+      });
+      const custom = document.createElement('option');
+      custom.value = "__CUSTOM__"; custom.textContent = "Custom…";
+      selectEl.appendChild(custom);
+      selectEl.value = selected || "";
+      selectEl.onchange = () => {
+        if (selectEl.value === "__CUSTOM__") {
+          const val = prompt("Enter world name:");
+          if (val) {
+            const opt = document.createElement('option');
+            opt.value = val; opt.textContent = val;
+            selectEl.insertBefore(opt, custom);
+            selectEl.value = val;
+          } else {
+            selectEl.value = "";
+          }
+        }
+      };
     }
 
     function createTaskLine(charBox, data, c, t) {
@@ -431,33 +591,35 @@
 
       const taskInput = document.createElement('input');
       taskInput.type = "text"; taskInput.placeholder = "Daily Task";
-      taskInput.setAttribute("data-tip", "Press Enter to add a new task (max 10)");
+      taskInput.setAttribute("data-tip", "Enter/Tab/↓ next, ↑/Shift+Tab prev");
       taskInput.value = data[`char_${c}_task_${t}`] || "";
       taskInput.setAttribute('draggable','false');
 
-      // Keyboard navigation (Enter, ArrowDown to next/add; ArrowUp to previous)
+      // Keyboard nav
       taskInput.addEventListener("keydown", (e) => {
         const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
         const idx = inputs.indexOf(taskInput);
         const atStart = taskInput.selectionStart === 0 && taskInput.selectionEnd === 0;
         const atEnd = taskInput.selectionStart === taskInput.value.length && taskInput.selectionEnd === taskInput.value.length;
 
-        if (e.key === "Enter") {
-          e.preventDefault();
-          // Move to next if exists, else add new and focus
+        if (e.key === "Enter" || (e.key === "Tab" && !e.shiftKey) || (e.key === "ArrowDown" && atEnd)) {
+          if (e.key !== "ArrowDown") e.preventDefault();
           if (!focusTaskAt(charBox, idx + 1)) {
             const newInput = addTaskLine(charBox, data, c);
             if (newInput) newInput.focus();
           }
-        } else if (e.key === "ArrowDown" && atEnd) {
+        } else if ((e.key === "Tab" && e.shiftKey) || (e.key === "ArrowUp" && atStart)) {
           e.preventDefault();
-          if (!focusTaskAt(charBox, idx + 1)) {
-            const newInput = addTaskLine(charBox, data, c);
-            if (newInput) newInput.focus();
+          if (!focusTaskAt(charBox, idx - 1)) {
+            const nameField = charBox.querySelector('.char-name');
+            if (nameField) nameField.focus();
           }
-        } else if (e.key === "ArrowUp" && atStart) {
+        } else if (e.key === "ArrowRight" && atEnd) {
           e.preventDefault();
-          focusTaskAt(charBox, idx - 1);
+          focusCardByOffset(charBox, +1);
+        } else if (e.key === "ArrowLeft" && atStart) {
+          e.preventDefault();
+          focusCardByOffset(charBox, -1);
         }
       });
 
@@ -500,6 +662,17 @@
       wrapper.appendChild(checkbox); wrapper.appendChild(taskInput); wrapper.appendChild(taskDelete);
       charBox.appendChild(wrapper);
       return taskInput;
+    }
+
+    function focusTaskAt(charBox, idx) {
+      const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
+      if (idx >= 0 && idx < inputs.length) {
+        inputs[idx].focus();
+        const end = inputs[idx].value.length;
+        inputs[idx].setSelectionRange(end, end);
+        return true;
+      }
+      return false;
     }
 
     function addCharacter() {
