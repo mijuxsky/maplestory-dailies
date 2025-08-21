@@ -19,9 +19,7 @@
       --name-underline:1px solid currentColor;
       --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10);
       --meta-fg:#6b7280;
-      --meta-fg-dark:#cbd5e1;
     }
-    /* THEME TOKENS */
     body.light{
       --bg:#f7f7f8; --fg:#333;
       --card-bg:#ffffff; --card-border:#e7e7ea;
@@ -102,7 +100,6 @@
       border-radius:8px; cursor:pointer; font-family:inherit;
     }
 
-    /* Controls */
     .toolbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
     label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
 
@@ -117,7 +114,7 @@
       background:var(--control-bg); color:var(--control-fg); outline:none;
       font-family:inherit; font-size:var(--ui);
     }
-    select:focus{ box-shadow:none; outline:none; } /* remove black border/glow */
+    select:focus{ box-shadow:none; outline:none; }
     option{ background:var(--control-bg); color:var(--control-fg); }
 
     #add-character-btn{
@@ -129,7 +126,6 @@
     #add-character-btn:hover{ filter:brightness(1.02); }
     #add-character-btn:active{ transform:translateY(1px); }
 
-    /* Grid */
     #checklists{
       display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
       gap:20px; width:100%; max-width:1200px; align-items:start;
@@ -146,7 +142,6 @@
     }
     @keyframes ph{ from{opacity:.72} to{opacity:1} }
 
-    /* Window controls */
     .window-controls-right{
       position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center;
     }
@@ -162,12 +157,10 @@
     .icon-btn:active{ transform:translateY(1px); }
     .icon-btn svg{ width:16px; height:16px; }
 
-    /* Character image & meta */
     .char-image-wrap{ text-align:center; margin:0 auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
     .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 4px; font-family:inherit; }
 
-    /* Character name */
     .char-name{
       width:100%; border:none; background:transparent;
       border-bottom:var(--name-underline);
@@ -176,7 +169,6 @@
     }
     .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
 
-    /* Tasks */
     .task{ display:grid; grid-template-columns:18px 1fr auto; gap:8px; align-items:center; margin:6px 0; }
     .task input[type="text"]{
       border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px;
@@ -189,7 +181,6 @@
       font-family:inherit;
     }
 
-    /* Modal (monochrome, legible, minimal) */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show{ display:flex; }
     .modal{ background:#fff; color:#222; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
@@ -220,9 +211,9 @@
       <li>Click <strong>+ Add Character</strong> (max 20). Each starts with two task lines (min 1, max 10).</li>
       <li>Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
       <li><strong>Reorder cards</strong> by dragging—drop anywhere in the grid; positions snap by row then column.</li>
-      <li>Click the camera → <strong>Set Avatar</strong> popup: type the name and press <kbd>Enter</kbd> or click <strong>Set Avatar</strong> to pull the character model from <strong>MapleRanks</strong>.</li>
+      <li>Click the camera → <strong>Set Avatar</strong> popup: type the name and press <kbd>Enter</kbd> or click <strong>Set Avatar</strong> to pull the character model & stats from <strong>MapleRanks</strong>.</li>
       <li>In the popup you can also <strong>Upload Image</strong> (auto-resizes to 150×110) or <strong>Delete Avatar</strong> to revert to the base model.</li>
-      <li>Under the avatar, the page shows <em>Lv. N Job</em> (e.g., <strong>Lv. 287 Adele</strong>). Level & Job also auto-update when you fill the <em>Character Name</em>.</li>
+      <li>Under the avatar, the page shows <em>Lv. N Job</em> (e.g., <strong>Lv. 287 Adele</strong>). Level & Job also auto-update after you type a <em>Character Name</em>.</li>
       <li>Checkboxes reset at 00:00 UTC. All data is saved locally per preset.</li>
     </ul>
   </div>
@@ -255,7 +246,6 @@
   <div id="clipboard" aria-live="polite"></div>
   <div id="checklists"></div>
 
-  <!-- Avatar search modal -->
   <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="avatar-modal-title" aria-modal="true">
       <h3 id="avatar-modal-title">Set Avatar</h3>
@@ -277,14 +267,14 @@
     </div>
   </div>
 
-  <!-- Hidden file input for uploads -->
   <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
 
   <script>
+  try {
     const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
     const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
 
-    const MAX_W = 150, MAX_H = 110; // constrain uploads to model area
+    const MAX_W = 150, MAX_H = 110;
 
     let currentPreset = 1;
     const maxCharacters = 20;
@@ -327,6 +317,14 @@
       }
       saveData(d);
     }
+    function ensureAtLeastOneCharacter(){
+      const d=loadData();
+      if((d.charCount||0)===0){
+        d.charCount=1;
+        d[`char_0_taskCount`]=2;
+        saveData(d);
+      }
+    }
     function moveCharacter(fr,to) {
       const d=loadData(); const arr=exportCharacters(d);
       if (fr===null||to===null||fr===to) return;
@@ -360,7 +358,7 @@
       const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
       if(!resp.ok) throw new Error('Avatar fetch failed');
       const data = await resp.json();
-      return data; // { imageUrl, level, job }
+      return data;
     }
 
     function createTaskLine(card,d,c,t){
@@ -402,12 +400,12 @@
 
     function buildChecklists(){
       const container=document.getElementById('checklists'); container.innerHTML='';
+
       const d=loadData();
-      // Build cards
       for(let c=0;c<(d.charCount||0);c++){
         const card=document.createElement('div'); card.className='character'; card.setAttribute('draggable','true'); card.dataset.index=c;
         card.addEventListener('dragstart',e=>{ dragFrom=c; card.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
-        card.addEventListener('dragend',()=>{ dragFrom=null; const dragging=$('.character.dragging'); dragging?.classList.remove('dragging'); removePlaceholder(); });
+        card.addEventListener('dragend',()=>{ dragFrom=null; const dragging=$('.character.dragging'); dragging?.classList.remove('dragging'); });
 
         const topRight=document.createElement('div'); topRight.className='window-controls-right';
         const cam=document.createElement('button'); cam.className='icon-btn'; cam.title='Set Avatar'; cam.innerHTML='<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>';
@@ -427,11 +425,9 @@
         const name=document.createElement('input'); name.className='char-name'; name.placeholder='Character Name'; name.value=d[`char_${c}_name`]||"";
         name.addEventListener('input',()=>{
           const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd);
-          // sync into modal if open on same card
           if(document.getElementById('avatar-modal-overlay').classList.contains('show') && avatarTargetIndex===c){
             document.getElementById('avatar-name').value = name.value;
           }
-          // debounce auto meta fetch (do not change custom images)
           clearTimeout(nameFetchTimers[c]);
           const nm = name.value.trim();
           if(nm.length >= 3){
@@ -441,14 +437,13 @@
                 const d2 = loadData();
                 d2[`char_${c}_level`] = data.level || "";
                 d2[`char_${c}_job`] = data.job || "";
-                // Only set image if none/custom not set
                 if(!d2[`char_${c}_image`] || d2[`char_${c}_image`]===BASE_MODEL_URL){
                   if(data.imageUrl) d2[`char_${c}_image`] = data.imageUrl;
                 }
                 saveData(d2);
                 showCharMeta(card, d2[`char_${c}_level`], d2[`char_${c}_job`]);
                 if(d2[`char_${c}_image`]) showCharImage(card, d2[`char_${c}_image`]);
-              }catch(_){ /* ignore */ }
+              }catch(_){}
             }, 800);
           }
         });
@@ -466,12 +461,11 @@
         container.appendChild(card);
       }
 
-      // Add container-level DnD for free placement
       attachGridDnD(container);
     }
 
     function attachGridDnD(container){
-      const ph = document.createElement('div');
+      let ph = document.createElement('div');
       ph.className = 'drop-placeholder';
 
       function getCards(){ return Array.from(container.querySelectorAll('.character:not(.dragging)')); }
@@ -479,9 +473,10 @@
       function computeInsertIndex(x,y){
         const cards = getCards();
         if(cards.length===0) return 0;
-        // Build rects cache
         const rects = cards.map(el=>({el, rect: el.getBoundingClientRect()}));
-        // Find nearest by center point
+        // sort by top-left flow (row-major) for consistent placement
+        rects.sort((a,b)=> (a.rect.top - b.rect.top) || (a.rect.left - b.rect.left));
+        // find nearest rect by center
         let best = 0, bestDist = Infinity;
         for(let i=0;i<rects.length;i++){
           const r = rects[i].rect;
@@ -510,35 +505,50 @@
         if(ref && ref !== ph) container.insertBefore(ph, ref);
       }
 
-      function onOver(e){
+      container.addEventListener('dragover', (e)=>{
         e.preventDefault();
-        const idx = computeInsertIndex(e.clientX, e.clientY);
-        placePlaceholderAt(idx);
-      }
-      function onDrop(e){
+        placePlaceholderAt(computeInsertIndex(e.clientX, e.clientY));
+      });
+      container.addEventListener('drop', (e)=>{
         e.preventDefault();
         if(!ph.parentElement) return;
-        // Compute target index as number of character cards before placeholder
         let to = 0;
         for(const node of Array.from(container.children)){
           if(node===ph) break;
           if(node.classList.contains('character')) to++;
         }
-        // If moving downward in list, account for removal of the dragged element
         if(dragFrom !== null && dragFrom < to) to--;
-        moveCharacter(dragFrom, to);
         ph.remove();
-      }
-      function onLeave(e){
-        // Optional: keep placeholder while dragging over page
-      }
-
-      container.addEventListener('dragover', onOver);
-      container.addEventListener('drop', onDrop);
-      container.addEventListener('dragleave', onLeave);
+        moveCharacter(dragFrom, to);
+      });
     }
 
-    // Modal logic + sync name both ways
+    function addCharacter(){
+      const d=loadData(); if((d.charCount||0)>=20) return alert('Maximum of 20 characters reached.');
+      const c=d.charCount||0; d.charCount=c+1; d[`char_${c}_taskCount`]=2; saveData(d); buildChecklists();
+    }
+    function duplicateCharacter(i){
+      const d=loadData(); if((d.charCount||0)>=20) return alert('Maximum of 20 characters reached.');
+      const arr=exportCharacters(d); const clone=JSON.parse(JSON.stringify(arr[i])); arr.splice(i+1,0,clone); importCharacters(arr); buildChecklists(); document.getElementById('clipboard').textContent='Character duplicated.';
+    }
+    function deleteCharacter(i){ const d=loadData(); const arr=exportCharacters(d); arr.splice(i,1); importCharacters(arr); buildChecklists(); }
+    function switchPreset(p){ currentPreset=p; buildChecklists(); }
+
+    function updateUTCTime(){
+      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
+      document.getElementById('utc-time').textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+    }
+
+    // Init
+    loadTheme();
+    updateUTCTime();
+    setInterval(updateUTCTime,1000);
+
+    const instr=document.getElementById('instructions'); const toggle=document.getElementById('instr-toggle');
+    function setInstr(min){ instr.classList.toggle('minimized',min); toggle.textContent=min?'Unhide':'Hide'; localStorage.setItem('mapleInstrMin',min?'1':'0'); }
+    toggle.onclick=()=>setInstr(!instr.classList.contains('minimized'));
+    setInstr(localStorage.getItem('mapleInstrMin')==='1');
+
     const overlay=document.getElementById('avatar-modal-overlay');
     const nameInput=document.getElementById('avatar-name');
     const errBox=document.getElementById('avatar-error');
@@ -588,7 +598,6 @@
         showCharMeta(card, level, job);
         closeAvatarModal();
       }catch(e){
-        // If not found, revert to base model and inform user
         const cards=$$('.character'); const card=cards[avatarTargetIndex];
         if(card){
           const d=loadData();
@@ -608,7 +617,6 @@
       closeAvatarModal();
     }
 
-    // Upload flow: constrain to MAX_W x MAX_H via canvas
     const hiddenUpload = document.getElementById('hidden-upload');
     hiddenUpload.addEventListener('change', async (e)=>{
       const file = e.target.files && e.target.files[0];
@@ -624,8 +632,7 @@
       }catch(err){
         alert('Could not load that image. Please try a different file.');
       }finally{
-        e.target.value = ''; // reset
-        uploadTargetIndex = null;
+        e.target.value = ''; uploadTargetIndex = null;
       }
     });
     function resizeImageFile(file, maxW, maxH){
@@ -634,19 +641,15 @@
         reader.onload = ()=>{
           const img = new Image();
           img.onload = ()=>{
-            let { width:w, height:h } = img;
-            const ratio = Math.min(maxW/w, maxH/h, 1);
-            const nw = Math.round(w*ratio), nh = Math.round(h*ratio);
+            const ratio = Math.min(maxW/img.width, maxH/img.height, 1);
+            const nw = Math.round(img.width*ratio), nh = Math.round(img.height*ratio);
             const canvas = document.createElement('canvas');
             canvas.width = nw; canvas.height = nh;
             const ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             ctx.drawImage(img, 0, 0, nw, nh);
-            try{
-              const out = canvas.toDataURL('image/png');
-              resolve(out);
-            }catch(e){ reject(e); }
+            resolve(canvas.toDataURL('image/png'));
           };
           img.onerror = reject;
           img.src = reader.result;
@@ -656,10 +659,12 @@
       });
     }
 
+    function loadTheme(){ const t=localStorage.getItem('mapleTheme')||'lavender'; document.body.className=t; document.getElementById('theme').value=t; }
+    document.getElementById('theme').addEventListener('change',function(){ document.body.className=this.value; localStorage.setItem('mapleTheme',this.value); });
+
     document.getElementById('add-character-btn').onclick=addCharacter;
 
     function buildMetaIfMissing(){
-      // helper to migrate existing users: ensure level/job fields exist
       const d=loadData(); const n=d.charCount||0;
       let mutated=false;
       for(let i=0;i<n;i++){
@@ -669,7 +674,19 @@
       if(mutated) saveData(d);
     }
 
-    switchPreset(1); loadTheme(); updateUTCTime(); buildMetaIfMissing(); buildChecklists();
+    ensureAtLeastOneCharacter();
+    buildMetaIfMissing();
+    switchPreset(1);
+  } catch(err) {
+    // If anything fails, at least keep the UTC clock updating
+    console.error(err);
+    const safeTick = () => {
+      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
+      const el = document.getElementById('utc-time'); if(el) el.textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+    };
+    safeTick();
+    setInterval(safeTick, 1000);
+  }
   </script>
 </body>
 </html>
