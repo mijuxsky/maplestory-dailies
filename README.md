@@ -9,6 +9,8 @@ A minimal tracker for your dailies in MapleStory.
 - Duplicate a character via the top-right copy icon (creates a new card next to it)
 - Delete characters with the top-right “×”
 - Drag-and-drop to reorder cards with a **tinted dashed placeholder** preview matching each theme
+- **Keyboard navigation:** Enter and ↓ move to the next task (auto-adds a line if at the end); ↑ moves to the previous task. Enter in the name field jumps to the first task.
+- Hide/Unhide the instructions panel (persists across visits)
 - Each character starts with 2 daily task lines by default
 - Press Enter in a task to add a new line (up to 10 tasks per character)
 - Clearing all text in a task line removes that line (last line is preserved)

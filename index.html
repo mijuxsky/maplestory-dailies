@@ -5,7 +5,11 @@
   <title>MapleStory Dailies</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root { --radius: 12px; --shadow: 0 6px 16px rgba(0,0,0,0.12); }
+    :root { 
+      --radius: 12px; 
+      --shadow: 0 6px 16px rgba(0,0,0,0.12);
+      --ui-font-size: 14px;
+    }
     body {
       font-family: 'Quicksand', sans-serif;
       margin: 0;
@@ -14,20 +18,28 @@
       flex-direction: column;
       align-items: center;
       transition: background 0.3s, color 0.3s;
-      font-size: 14px;
+      font-size: var(--ui-font-size);
     }
     h1 { margin-bottom: 5px; font-size: 20px; }
     #utc-time, #theme-selector, #preset-selector, #clipboard { margin-bottom: 10px; font-size: 13px; }
     #instructions {
+      position: relative;
       margin: 10px 0 14px 0;
-      padding: 12px 14px;
+      padding: 12px 14px 14px 14px;
       border-radius: var(--radius);
       max-width: 900px;
+      width: 100%;
       box-shadow: var(--shadow);
       line-height: 1.5;
+      font-size: var(--ui-font-size);
     }
+    #instructions.minimized { padding-top: 10px; padding-bottom: 10px; }
     #instructions ul { margin: 8px 0 0 16px; padding: 0; }
-    #instructions li { margin: 4px 0; }
+    #instructions.minimized ul { display: none; }
+    #instr-toggle {
+      position: absolute; top: 8px; right: 10px;
+      padding: 4px 10px; font-size: 12px;
+    }
     /* Transparent dropdowns */
     select {
       padding: 4px 8px;
@@ -43,6 +55,7 @@
     button {
       border: none; border-radius: 8px; padding: 6px 10px; margin: 4px; cursor: pointer; font-weight: 600;
       transition: background 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+      font-family: inherit;
     }
     #checklists {
       display: grid;
@@ -51,12 +64,14 @@
       align-items: start;
     }
     #add-character { align-self: flex-end; margin: 10px 0; }
+    #add-character-btn { font-size: var(--ui-font-size); }
     .character, .drop-placeholder {
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       min-height: 120px;
       position: relative;
       user-select: none;
+      font-size: var(--ui-font-size);
     }
     .character { padding: 36px 20px 16px 20px; }
     .drop-placeholder {
@@ -80,14 +95,14 @@
     .icon-btn svg { width: 14px; height: 14px; }
     .character input.char-name, .character input[type="text"] { -webkit-user-drag: none; }
     .character input.char-name {
-      font-size: 14px; font-weight: 600; border: none; background: transparent;
+      font-size: var(--ui-font-size); font-weight: 600; border: none; background: transparent;
       border-bottom: 2px solid currentColor; margin-bottom: 8px; width: 100%; text-align: center;
       opacity: 0.95; color: inherit;
     }
     .task { display: grid; grid-template-columns: 18px 1fr auto; align-items: center; gap: 8px; margin: 8px 0; }
     .task input[type="checkbox"] { width: 16px; height: 16px; }
     .task input[type="text"] {
-      border: none; border-bottom: 1px dashed currentColor; background: transparent; font-size: 13px; padding: 4px 2px;
+      border: none; border-bottom: 1px dashed currentColor; background: transparent; font-size: var(--ui-font-size); padding: 4px 2px;
       color: inherit;
     }
     .task input[type="text"]::placeholder { color: inherit; opacity: 0.6; }
@@ -100,6 +115,7 @@
     body.light { --ph-outline: #9aa0a6; --ph-bg: rgba(0,0,0,0.04); background: #f7f7f8; color: #333; }
     body.light #instructions { background: #ffffff; border: 1px solid #e9e9ee; }
     body.light .character { background: #ffffff; }
+    body.light .drop-placeholder { background: rgba(0,0,0,0.02); }
     body.light select { border-color: #bbb; color: #333; background-color: rgba(255,255,255,0.6); }
     body.light option { background: #ffffff; color: #333; }
     body.light button, body.light .icon-btn { background: #d9d9dd; color: #222; }
@@ -110,6 +126,7 @@
     body.cloud { --ph-outline: #5a86b5; --ph-bg: rgba(90,134,181,0.10); background: #eaf4ff; color: #2f4152; }
     body.cloud #instructions { background: #ffffff; border: 1px solid #d6e7f7; }
     body.cloud .character { background: #ffffff; border: 1px solid #d6e7f7; }
+    body.cloud .drop-placeholder { background: rgba(90,134,181,0.06); }
     body.cloud select { border-color: #a9c8e7; color: #2f4152; background-color: rgba(255,255,255,0.5); }
     body.cloud option { background: #f3f9ff; color: #2f4152; }
     body.cloud button, body.cloud .icon-btn { background: #b7d7f5; color: #223244; }
@@ -120,6 +137,7 @@
     body.lavender { --ph-outline: #7c5db0; --ph-bg: rgba(124,93,176,0.10); background: #f4f0fa; color: #4b3b60; }
     body.lavender #instructions { background: #ffffff; border: 1px solid #e6d9f8; }
     body.lavender .character { background: #ffffff; }
+    body.lavender .drop-placeholder { background: rgba(124,93,176,0.06); }
     body.lavender select { border-color: #cbb7f0; color: #4b3b60; background-color: rgba(255,255,255,0.5); }
     body.lavender option { background: #fbf8ff; color: #4b3b60; }
     body.lavender button, body.lavender .icon-btn { background: #f3d6f0; color: #4b3b60; }
@@ -130,6 +148,7 @@
     body.matcha { --ph-outline: #4a8c4a; --ph-bg: rgba(74,140,74,0.10); background: #f0faf2; color: #2f3b2f; }
     body.matcha #instructions { background: #ffffff; border: 1px solid #cfead0; }
     body.matcha .character { background: #e8f7ea; }
+    body.matcha .drop-placeholder { background: rgba(74,140,74,0.06); }
     body.matcha select { border-color: #a7d8a7; color: #2f3b2f; background-color: rgba(255,255,255,0.5); }
     body.matcha option { background: #f3fbf4; color: #2f3b2f; }
     body.matcha button, body.matcha .icon-btn { background: #bfe8bf; color: #2f3b2f; }
@@ -140,6 +159,7 @@
     body.dark { --ph-outline: #cfd3df; --ph-bg: rgba(207,211,223,0.14); background: #12131a; color: #e6e7eb; }
     body.dark #instructions { background: #1b1d28; border: 1px solid #3a3f54; }
     body.dark .character { background: #1f2230; }
+    body.dark .drop-placeholder { background: rgba(207,211,223,0.08); }
     body.dark select { border-color: #4b4f63; color: #e6e7eb; background-color: #2a2f3f; }
     body.dark option { background: #2a2f3f; color: #e6e7eb; }
     body.dark button, body.dark .icon-btn { background: #3a3f54; color: #f0f1f5; }
@@ -151,6 +171,7 @@
     body.evergreen { --ph-outline: #8bcf9b; --ph-bg: rgba(139,207,155,0.16); background: #0e1a11; color: #d9f2de; }
     body.evergreen #instructions { background: #15251c; border: 1px solid #2a4a34; }
     body.evergreen .character { background: #1a2b1f; }
+    body.evergreen .drop-placeholder { background: rgba(139,207,155,0.12); }
     body.evergreen select { border-color: #3c5c45; color: #d9f2de; background-color: #1a2b1f; }
     body.evergreen option { background: #1a2b1f; color: #d9f2de; }
     body.evergreen button, body.evergreen .icon-btn { background: #2a4a34; color: #d9f2de; }
@@ -165,11 +186,12 @@
   <div id="utc-time">Loading UTC time...</div>
 
   <div id="instructions">
+    <button id="instr-toggle" type="button">Hide</button>
     <strong>How to use:</strong>
     <ul>
       <li>Use <em>Preset</em> to switch between three saved sets of characters and tasks.</li>
       <li>Click <em>+ Add Character</em> to add a new character (up to 20). Each starts with two task lines.</li>
-      <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10).</li>
+      <li>Type your character name and tasks. Press <em>Enter</em> in a task to add a new line (max 10); use <em>↑/↓</em> to move between tasks.</li>
       <li>Clear a task’s text or click the “×” beside it to remove that line. At least one task is always kept.</li>
       <li>Use the duplicate icon to clone a character; use the “×” to delete one.</li>
       <li>Drag and drop cards to reorder them; a tinted dashed placeholder shows where the card will land.</li>
@@ -270,6 +292,29 @@
       }
     }
 
+    function focusTaskAt(charBox, idx) {
+      const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
+      if (idx >= 0 && idx < inputs.length) {
+        inputs[idx].focus();
+        const end = inputs[idx].value.length;
+        inputs[idx].setSelectionRange(end, end);
+        return true;
+      }
+      return false;
+    }
+
+    function addTaskLine(charBox, data, c) {
+      let taskCount = data[`char_${c}_taskCount`] || 1;
+      if (taskCount < maxTasks) {
+        data[`char_${c}_taskCount`] = taskCount + 1;
+        saveData(data);
+        // create at the end
+        const newInput = createTaskLine(charBox, data, c, taskCount);
+        return newInput;
+      }
+      return null;
+    }
+
     function buildChecklists() {
       const container = document.getElementById('checklists');
       container.innerHTML = '';
@@ -309,7 +354,6 @@
         });
         charBox.addEventListener('drop', (e) => {
           e.preventDefault();
-          // Determine target index from placeholder position
           const children = Array.from(container.children);
           let targetIndex = 0;
           for (let node of children) {
@@ -348,6 +392,13 @@
         charName.addEventListener("input", () => {
           data[`char_${c}_name`] = charName.value; saveData(data);
         });
+        charName.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const first = charBox.querySelector('.task input[type="text"]');
+            if (first) first.focus();
+          }
+        });
         charBox.appendChild(charName);
 
         let taskCount = data[`char_${c}_taskCount`];
@@ -383,6 +434,33 @@
       taskInput.setAttribute("data-tip", "Press Enter to add a new task (max 10)");
       taskInput.value = data[`char_${c}_task_${t}`] || "";
       taskInput.setAttribute('draggable','false');
+
+      // Keyboard navigation (Enter, ArrowDown to next/add; ArrowUp to previous)
+      taskInput.addEventListener("keydown", (e) => {
+        const inputs = Array.from(charBox.querySelectorAll('.task input[type="text"]'));
+        const idx = inputs.indexOf(taskInput);
+        const atStart = taskInput.selectionStart === 0 && taskInput.selectionEnd === 0;
+        const atEnd = taskInput.selectionStart === taskInput.value.length && taskInput.selectionEnd === taskInput.value.length;
+
+        if (e.key === "Enter") {
+          e.preventDefault();
+          // Move to next if exists, else add new and focus
+          if (!focusTaskAt(charBox, idx + 1)) {
+            const newInput = addTaskLine(charBox, data, c);
+            if (newInput) newInput.focus();
+          }
+        } else if (e.key === "ArrowDown" && atEnd) {
+          e.preventDefault();
+          if (!focusTaskAt(charBox, idx + 1)) {
+            const newInput = addTaskLine(charBox, data, c);
+            if (newInput) newInput.focus();
+          }
+        } else if (e.key === "ArrowUp" && atStart) {
+          e.preventDefault();
+          focusTaskAt(charBox, idx - 1);
+        }
+      });
+
       taskInput.addEventListener("input", () => {
         if (taskInput.value === "") {
           const currentCount = data[`char_${c}_taskCount`] || 1;
@@ -399,17 +477,6 @@
           data[`char_${c}_task_${t}`] = taskInput.value; saveData(data);
         }
       });
-      taskInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          let taskCount = data[`char_${c}_taskCount`] || 1;
-          if (taskCount < 10) {
-            data[`char_${c}_taskCount`] = taskCount + 1;
-            saveData(data);
-            createTaskLine(charBox, data, c, taskCount);
-          }
-        }
-      });
 
       const taskDelete = document.createElement('button');
       taskDelete.className = "task-delete";
@@ -423,17 +490,16 @@
           delete data[`char_${c}_task_${t}`];
           data[`char_${c}_taskCount`] = Math.max(1, currentCount - 1);
           saveData(data);
-          localStorage.removeItem(key);
         } else {
           taskInput.value = "";
           delete data[`char_${c}_task_${t}`];
           saveData(data);
-          localStorage.removeItem(key);
         }
       };
 
       wrapper.appendChild(checkbox); wrapper.appendChild(taskInput); wrapper.appendChild(taskDelete);
       charBox.appendChild(wrapper);
+      return taskInput;
     }
 
     function addCharacter() {
@@ -492,6 +558,28 @@
       const theme = this.value; document.body.className = theme;
       localStorage.setItem("mapleTheme", theme);
     });
+
+    // Instructions hide/unhide toggle with persistence
+    const instrBox = document.getElementById('instructions');
+    const instrToggle = document.getElementById('instr-toggle');
+    function setInstrState(minimized) {
+      if (minimized) {
+        instrBox.classList.add('minimized');
+        instrToggle.textContent = 'Unhide';
+      } else {
+        instrBox.classList.remove('minimized');
+        instrToggle.textContent = 'Hide';
+      }
+      localStorage.setItem('mapleInstrMin', minimized ? '1' : '0');
+    }
+    instrToggle.addEventListener('click', () => {
+      const isMin = instrBox.classList.contains('minimized');
+      setInstrState(!isMin);
+    });
+    (function() {
+      const saved = localStorage.getItem('mapleInstrMin');
+      setInstrState(saved === '1');
+    })();
 
     document.getElementById("add-character-btn").addEventListener("click", addCharacter);
 
