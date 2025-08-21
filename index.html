@@ -9,7 +9,6 @@
     :root{
       --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.12);
       --ui:14px; --overlay:rgba(0,0,0,.55);
-      /* defaults (lavender-like) */
       --bg:#f4f0fa; --fg:#4b3b60;
       --card-bg:#ffffff; --card-border:#e6def6;
       --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea;
@@ -20,139 +19,43 @@
       --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10);
       --meta-fg:#6b7280;
     }
-    body.light{
-      --bg:#f7f7f8; --fg:#333;
-      --card-bg:#ffffff; --card-border:#e7e7ea;
-      --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc;
-      --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc;
-      --icon:#555; --icon-bg:transparent; --icon-hover:rgba(0,0,0,.07);
-      --ph-outline:#9aa0a6; --ph-bg:rgba(0,0,0,.04);
-      --meta-fg:#6b7280;
-    }
-    body.cloud{
-      --bg:#eaf4ff; --fg:#2f4152;
-      --card-bg:#ffffff; --card-border:#d6e7f7;
-      --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2;
-      --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5;
-      --icon:#5a86b5; --icon-bg:transparent; --icon-hover:rgba(90,134,181,.14);
-      --ph-outline:#5a86b5; --ph-bg:rgba(90,134,181,.10);
-      --meta-fg:#6b7280;
-    }
-    body.lavender{
-      --bg:#f4f0fa; --fg:#4b3b60;
-      --card-bg:#ffffff; --card-border:#e6def6;
-      --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea;
-      --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea;
-      --icon:#7c5db0; --icon-bg:transparent; --icon-hover:rgba(124,93,176,.14);
-      --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10);
-      --meta-fg:#6b7280;
-    }
-    body.matcha{
-      --bg:#f0faf2; --fg:#2f3b2f;
-      --card-bg:#e8f7ea; --card-border:#cfead4;
-      --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4;
-      --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc;
-      --icon:#4a8c4a; --icon-bg:transparent; --icon-hover:rgba(74,140,74,.14);
-      --ph-outline:#4a8c4a; --ph-bg:rgba(74,140,74,.10);
-      --meta-fg:#64748b;
-    }
-    body.dark{
-      --bg:#12131a; --fg:#e6e7eb;
-      --card-bg:#1f2230; --card-border:#2c3144;
-      --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144;
-      --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161;
-      --icon:#cfd3df; --icon-bg:transparent; --icon-hover:rgba(255,255,255,.09);
-      --ph-outline:#cfd3df; --ph-bg:rgba(207,211,223,.14);
-      --meta-fg:#cbd5e1;
-    }
-    body.evergreen{
-      --bg:#0e1a11; --fg:#d9f2de;
-      --card-bg:#1a2b1f; --card-border:#25402d;
-      --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833;
-      --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640;
-      --icon:#8bcf9b; --icon-bg:transparent; --icon-hover:rgba(139,207,155,.15);
-      --ph-outline:#8bcf9b; --ph-bg:rgba(139,207,155,.16);
-      --meta-fg:#d1d5db;
-    }
+    body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-bg:transparent; --icon-hover:rgba(0,0,0,.07); --ph-outline:#9aa0a6; --ph-bg:rgba(0,0,0,.04); --meta-fg:#6b7280;}
+    body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#ffffff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-bg:transparent; --icon-hover:rgba(90,134,181,.14); --ph-outline:#5a86b5; --ph-bg:rgba(90,134,181,.10); --meta-fg:#6b7280;}
+    body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#ffffff; --card-border:#e6def6; --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-bg:transparent; --icon-hover:rgba(124,93,176,.14); --ph-outline:#7c5db0; --ph-bg:rgba(124,93,176,.10); --meta-fg:#6b7280;}
+    body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-bg:transparent; --icon-hover:rgba(74,140,74,.14); --ph-outline:#4a8c4a; --ph-bg:rgba(74,140,74,.10); --meta-fg:#64748b;}
+    body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-bg:transparent; --icon-hover:rgba(255,255,255,.09); --ph-outline:#cfd3df; --ph-bg:rgba(207,211,223,.14); --meta-fg:#cbd5e1;}
+    body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-bg:transparent; --icon-hover:rgba(139,207,155,.15); --ph-outline:#8bcf9b; --ph-bg:rgba(139,207,155,.16); --meta-fg:#d1d5db;}
 
     *{ box-sizing:border-box; }
-    body{
-      font-family:Quicksand,system-ui,sans-serif;
-      margin:0; padding:20px;
-      display:flex; flex-direction:column; align-items:center;
-      font-size:var(--ui);
-      background:var(--bg); color:var(--fg);
-      transition:.25s background,.25s color;
-    }
+    body{ font-family:Quicksand,system-ui,sans-serif; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; font-size:var(--ui); background:var(--bg); color:var(--fg); transition:.25s background,.25s color; }
     h1{ margin:0 0 6px; font-size:20px; }
     #utc-time{ font-size:13px; margin-bottom:10px; }
 
-    #instructions{
-      position:relative; width:100%; max-width:900px;
-      margin:10px 0 14px; padding:12px 14px 14px;
-      border-radius:12px; box-shadow:var(--shadow);
-      background:var(--card-bg); border:1px solid var(--card-border);
-    }
+    #instructions{ position:relative; width:100%; max-width:900px; margin:10px 0 14px; padding:12px 14px 14px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); }
     #instructions.minimized ul{ display:none; }
-    #instr-toggle{
-      position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px;
-      background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border);
-      border-radius:8px; cursor:pointer; font-family:inherit;
-    }
+    #instr-toggle{ position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); border-radius:8px; cursor:pointer; font-family:inherit; }
 
     .toolbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
     label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
 
     .select-wrap{ position:relative; display:inline-flex; align-items:center; }
-    .select-wrap::after{
-      content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8;
-      color:var(--control-fg); font-size:12px;
-    }
-    select{
-      appearance:none; -webkit-appearance:none; -moz-appearance:none;
-      padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border);
-      background:var(--control-bg); color:var(--control-fg); outline:none;
-      font-family:inherit; font-size:var(--ui);
-    }
+    .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
+    select{ appearance:none; -webkit-appearance:none; -moz-appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
     select:focus{ box-shadow:none; outline:none; }
     option{ background:var(--control-bg); color:var(--control-fg); }
 
-    #add-character-btn{
-      padding:8px 12px; border-radius:10px;
-      background:var(--button-bg); color:var(--button-fg);
-      border:1px solid var(--button-border); font-weight:600;
-      font-family:inherit; font-size:var(--ui);
-    }
+    #add-character-btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); }
     #add-character-btn:hover{ filter:brightness(1.02); }
     #add-character-btn:active{ transform:translateY(1px); }
 
-    #checklists{
-      display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-      gap:20px; width:100%; max-width:1200px; align-items:start;
-    }
-    .character,.drop-placeholder{
-      border-radius:12px; box-shadow:var(--shadow);
-      min-height:120px; position:relative; user-select:none; font-size:var(--ui);
-      background:var(--card-bg); border:1px solid var(--card-border);
-    }
+    #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1200px; align-items:start; }
+    .character,.drop-placeholder{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); }
     .character{ padding:48px 16px 12px; }
-    .drop-placeholder{
-      padding:48px 16px 12px; outline:2px dashed var(--ph-outline);
-      outline-offset:-6px; background:var(--ph-bg); animation:ph .6s ease-in-out infinite alternate;
-    }
+    .drop-placeholder{ padding:48px 16px 12px; outline:2px dashed var(--ph-outline); outline-offset:-6px; background:var(--ph-bg); animation:ph .6s ease-in-out infinite alternate; }
     @keyframes ph{ from{opacity:.72} to{opacity:1} }
 
-    .window-controls-right{
-      position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center;
-    }
-    .icon-btn{
-      width:24px; height:24px; border-radius:6px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:14px; padding:0; border:1px solid var(--control-border);
-      background:var(--control-bg); color:var(--icon);
-      transition:.15s background,.15s color,.15s border-color, transform .05s ease-in-out;
-      font-family:inherit;
-    }
+    .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
+    .icon-btn{ width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); transition:.15s background,.15s color,.15s border-color, transform .05s ease-in-out; font-family:inherit; }
     .icon-btn:hover{ background:var(--icon-hover); border-color:var(--control-border); }
     .icon-btn:active{ transform:translateY(1px); }
     .icon-btn svg{ width:16px; height:16px; }
@@ -161,42 +64,13 @@
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
     .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 4px; font-family:inherit; }
 
-    .char-name{
-      width:100%; border:none; background:transparent;
-      border-bottom:var(--name-underline);
-      text-align:center; font-weight:600; margin:2px 0 4px;
-      font-size:var(--ui); color:var(--fg); font-family:inherit;
-    }
+    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:2px 0 4px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
 
     .task{ display:grid; grid-template-columns:18px 1fr auto; gap:8px; align-items:center; margin:6px 0; }
-    .task input[type="text"]{
-      border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px;
-      font-size:var(--ui); color:var(--fg); font-family:inherit;
-    }
+    .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
-    .task .task-delete{
-      background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon);
-      width:22px; height:22px; display:flex; align-items:center; justify-content:center;
-      font-family:inherit;
-    }
-
-    .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
-    .modal-overlay.show{ display:flex; }
-    .modal{ background:#fff; color:#222; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
-    .modal h3{ margin:0 0 12px; font-size:18px; font-weight:700; color:#111; letter-spacing:.2px; font-family:inherit; }
-    .modal .row{ display:grid; grid-template-columns:1fr; gap:8px; margin:6px 0 10px; }
-    .modal label{ font-weight:600; font-size:12px; color:#333; font-family:inherit; }
-    .modal input[type="text"]{ width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#111; font-family:inherit; font-size:var(--ui); }
-    .modal .error{ color:#b00020; min-height:18px; font-size:12px; margin-top:2px; font-family:inherit; }
-    .modal .actions{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px; }
-    .modal .left-actions{ display:flex; gap:8px; }
-    .modal .right-actions{ display:flex; gap:8px; }
-    .modal .actions button{ padding:8px 12px; border-radius:8px; font-family:inherit; font-size:var(--ui); }
-    .modal #avatar-upload{ background:#fff; color:#222; border:1px solid #d9d9d9; }
-    .modal #avatar-delete{ background:#fff; color:#222; border:1px solid #e0e0e0; }
-    .modal #avatar-cancel{ background:#f5f5f5; color:#222; border:1px solid #e5e5e5; }
-    .modal #avatar-search{ background:#111; color:#fff; border:1px solid #111; }
+    .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; }
   </style>
 </head>
 <body class="lavender">
@@ -212,8 +86,7 @@
       <li>Enter/Tab/↓ to next task (auto-adds). ↑/Shift+Tab up. ←/→ at edges to switch cards.</li>
       <li><strong>Reorder cards</strong> by dragging—drop anywhere in the grid; positions snap by row then column.</li>
       <li>Click the camera → <strong>Set Avatar</strong> popup: type the name and press <kbd>Enter</kbd> or click <strong>Set Avatar</strong> to pull the character model & stats from <strong>MapleRanks</strong>.</li>
-      <li>In the popup you can also <strong>Upload Image</strong> (auto-resizes to 150×110) or <strong>Delete Avatar</strong> to revert to the base model.</li>
-      <li>Under the avatar, the page shows <em>Lv. N Job</em> (e.g., <strong>Lv. 287 Adele</strong>). Level & Job also auto-update after you type a <em>Character Name</em>.</li>
+      <li>Under the avatar, you’ll see <em>Lv. N Job</em>. Level & Job also auto-update after you type a <em>Character Name</em> on the card.</li>
       <li>Checkboxes reset at 00:00 UTC. All data is saved locally per preset.</li>
     </ul>
   </div>
@@ -246,36 +119,15 @@
   <div id="clipboard" aria-live="polite"></div>
   <div id="checklists"></div>
 
-  <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-labelledby="avatar-modal-title" aria-modal="true">
-      <h3 id="avatar-modal-title">Set Avatar</h3>
-      <div class="row">
-        <label for="avatar-name">Character Name</label>
-        <input id="avatar-name" type="text" placeholder="Enter character name" />
-      </div>
-      <div id="avatar-error" class="error"></div>
-      <div class="actions">
-        <div class="left-actions">
-          <button id="avatar-upload" type="button">Upload Image</button>
-          <button id="avatar-delete" type="button">Delete Avatar</button>
-        </div>
-        <div class="right-actions">
-          <button id="avatar-cancel" type="button">Cancel</button>
-          <button id="avatar-search" type="button">Set Avatar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
+  <!-- Avatar search modal -->
+  <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true" style="display:none"></div>
 
   <script>
-  try {
+  (function(){
     const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
     const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
 
     const MAX_W = 150, MAX_H = 110;
-
     let currentPreset = 1;
     const maxCharacters = 20;
     const maxTasks = 10;
@@ -284,6 +136,12 @@
 
     const $ = s => document.querySelector(s);
     const $$ = s => Array.from(document.querySelectorAll(s));
+
+    function tickUTC(){
+      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
+      const el = document.getElementById('utc-time'); if(el) el.textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+    }
+    tickUTC(); setInterval(tickUTC, 1000);
 
     function getDataKey() { return `mapleData_preset${currentPreset}`; }
     function loadData() { return JSON.parse(localStorage.getItem(getDataKey())) || { charCount: 0 }; }
@@ -356,8 +214,8 @@
 
     async function fetchAvatarAndStats(name) {
       const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
-      if(!resp.ok) throw new Error('Avatar fetch failed');
-      const data = await resp.json();
+      const data = await resp.json().catch(()=>({}));
+      if(!resp.ok) throw new Error(data && data.error || "Avatar fetch failed");
       return data;
     }
 
@@ -425,9 +283,6 @@
         const name=document.createElement('input'); name.className='char-name'; name.placeholder='Character Name'; name.value=d[`char_${c}_name`]||"";
         name.addEventListener('input',()=>{
           const dd=loadData(); dd[`char_${c}_name`]=name.value; saveData(dd);
-          if(document.getElementById('avatar-modal-overlay').classList.contains('show') && avatarTargetIndex===c){
-            document.getElementById('avatar-name').value = name.value;
-          }
           clearTimeout(nameFetchTimers[c]);
           const nm = name.value.trim();
           if(nm.length >= 3){
@@ -435,16 +290,18 @@
               try{
                 const data = await fetchAvatarAndStats(nm);
                 const d2 = loadData();
+                // Always update level/job
                 d2[`char_${c}_level`] = data.level || "";
                 d2[`char_${c}_job`] = data.job || "";
+                // Only set image if none or base model
                 if(!d2[`char_${c}_image`] || d2[`char_${c}_image`]===BASE_MODEL_URL){
                   if(data.imageUrl) d2[`char_${c}_image`] = data.imageUrl;
                 }
                 saveData(d2);
                 showCharMeta(card, d2[`char_${c}_level`], d2[`char_${c}_job`]);
                 if(d2[`char_${c}_image`]) showCharImage(card, d2[`char_${c}_image`]);
-              }catch(_){}
-            }, 800);
+              }catch(_){ /* silent fail */ }
+            }, 700);
           }
         });
         name.addEventListener('keydown',e=>{
@@ -474,9 +331,7 @@
         const cards = getCards();
         if(cards.length===0) return 0;
         const rects = cards.map(el=>({el, rect: el.getBoundingClientRect()}));
-        // sort by top-left flow (row-major) for consistent placement
         rects.sort((a,b)=> (a.rect.top - b.rect.top) || (a.rect.left - b.rect.left));
-        // find nearest rect by center
         let best = 0, bestDist = Infinity;
         for(let i=0;i<rects.length;i++){
           const r = rects[i].rect;
@@ -493,22 +348,12 @@
 
       function placePlaceholderAt(index){
         const cards = getCards();
-        if(index <= 0){
-          if(container.firstElementChild !== ph) container.insertBefore(ph, container.firstElementChild);
-          return;
-        }
-        if(index >= cards.length){
-          container.appendChild(ph);
-          return;
-        }
-        const ref = cards[index];
-        if(ref && ref !== ph) container.insertBefore(ph, ref);
+        if(index <= 0){ if(container.firstElementChild !== ph) container.insertBefore(ph, container.firstElementChild); return; }
+        if(index >= cards.length){ container.appendChild(ph); return; }
+        const ref = cards[index]; if(ref && ref !== ph) container.insertBefore(ph, ref);
       }
 
-      container.addEventListener('dragover', (e)=>{
-        e.preventDefault();
-        placePlaceholderAt(computeInsertIndex(e.clientX, e.clientY));
-      });
+      container.addEventListener('dragover', (e)=>{ e.preventDefault(); placePlaceholderAt(computeInsertIndex(e.clientX, e.clientY)); });
       container.addEventListener('drop', (e)=>{
         e.preventDefault();
         if(!ph.parentElement) return;
@@ -534,159 +379,15 @@
     function deleteCharacter(i){ const d=loadData(); const arr=exportCharacters(d); arr.splice(i,1); importCharacters(arr); buildChecklists(); }
     function switchPreset(p){ currentPreset=p; buildChecklists(); }
 
-    function updateUTCTime(){
-      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
-      document.getElementById('utc-time').textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
-    }
-
-    // Init
-    loadTheme();
-    updateUTCTime();
-    setInterval(updateUTCTime,1000);
-
-    const instr=document.getElementById('instructions'); const toggle=document.getElementById('instr-toggle');
-    function setInstr(min){ instr.classList.toggle('minimized',min); toggle.textContent=min?'Unhide':'Hide'; localStorage.setItem('mapleInstrMin',min?'1':'0'); }
-    toggle.onclick=()=>setInstr(!instr.classList.contains('minimized'));
-    setInstr(localStorage.getItem('mapleInstrMin')==='1');
-
-    const overlay=document.getElementById('avatar-modal-overlay');
-    const nameInput=document.getElementById('avatar-name');
-    const errBox=document.getElementById('avatar-error');
-    function openAvatarModal(cardIndex,prefill){
-      avatarTargetIndex=cardIndex; errBox.textContent="";
-      const inputVal = (prefill||"").trim();
-      nameInput.value = inputVal;
-      overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); nameInput.focus(); nameInput.select();
-    }
-    function closeAvatarModal(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); avatarTargetIndex=null; }
-    document.getElementById('avatar-cancel').onclick=closeAvatarModal;
-    document.getElementById('avatar-search').onclick=()=>doAvatarSearch();
-    document.getElementById('avatar-delete').onclick=()=>doAvatarDelete();
-    document.getElementById('avatar-upload').onclick=()=>{
-      if(avatarTargetIndex==null) return;
-      uploadTargetIndex = avatarTargetIndex;
-      document.getElementById('hidden-upload').click();
-    };
-    nameInput.addEventListener('keydown',e=>{ if(e.key==='Enter') { e.preventDefault(); doAvatarSearch(); } });
-    nameInput.addEventListener('input',()=>{
-      if(avatarTargetIndex==null) return;
-      const cards=$$('.character'); const card=cards[avatarTargetIndex];
-      if(!card) return;
-      const nm = nameInput.value;
-      const nameField = card.querySelector('.char-name');
-      if(nameField){ nameField.value = nm; }
-      const d=loadData(); d[`char_${avatarTargetIndex}_name`] = nm; saveData(d);
-    });
-
-    async function doAvatarSearch(){
-      errBox.textContent=""; const nm=nameInput.value.trim();
-      if(!nm){ errBox.textContent='Please enter a character name.'; return; }
-      try{
-        const data=await fetchAvatarAndStats(nm);
-        const url=data.imageUrl;
-        const level=data.level||"";
-        const job=data.job||"";
-        const cards=$$('.character'); const card=cards[avatarTargetIndex]; if(!card) throw new Error('Card not found');
-        const d=loadData();
-        d[`char_${avatarTargetIndex}_image`]=url||"";
-        d[`char_${avatarTargetIndex}_name`]=nm;
-        d[`char_${avatarTargetIndex}_level`]=level;
-        d[`char_${avatarTargetIndex}_job`]=job;
-        saveData(d);
-        const nameField = card.querySelector('.char-name'); if(nameField) nameField.value = nm;
-        showCharImage(card,url||"");
-        showCharMeta(card, level, job);
-        closeAvatarModal();
-      }catch(e){
-        const cards=$$('.character'); const card=cards[avatarTargetIndex];
-        if(card){
-          const d=loadData();
-          d[`char_${avatarTargetIndex}_image`]="";
-          d[`char_${avatarTargetIndex}_level`]="";
-          d[`char_${avatarTargetIndex}_job`]="";
-          saveData(d);
-          showCharImage(card, "");
-          showCharMeta(card, "", "");
-        }
-        errBox.textContent='Character image not found. Reverted to base model. Please verify the name and try again.';
-      }
-    }
-    function doAvatarDelete(){
-      const cards=$$('.character'); const card=cards[avatarTargetIndex];
-      if(card){ const d=loadData(); d[`char_${avatarTargetIndex}_image`]=""; saveData(d); showCharImage(card,""); showCharMeta(card,"",""); }
-      closeAvatarModal();
-    }
-
-    const hiddenUpload = document.getElementById('hidden-upload');
-    hiddenUpload.addEventListener('change', async (e)=>{
-      const file = e.target.files && e.target.files[0];
-      if(!file || uploadTargetIndex==null) return;
-      try{
-        const dataUrl = await resizeImageFile(file, MAX_W, MAX_H);
-        const d=loadData();
-        d[`char_${uploadTargetIndex}_image`] = dataUrl;
-        saveData(d);
-        const cards=$$('.character'); const card=cards[uploadTargetIndex];
-        if(card) showCharImage(card, dataUrl);
-        closeAvatarModal();
-      }catch(err){
-        alert('Could not load that image. Please try a different file.');
-      }finally{
-        e.target.value = ''; uploadTargetIndex = null;
-      }
-    });
-    function resizeImageFile(file, maxW, maxH){
-      return new Promise((resolve,reject)=>{
-        const reader = new FileReader();
-        reader.onload = ()=>{
-          const img = new Image();
-          img.onload = ()=>{
-            const ratio = Math.min(maxW/img.width, maxH/img.height, 1);
-            const nw = Math.round(img.width*ratio), nh = Math.round(img.height*ratio);
-            const canvas = document.createElement('canvas');
-            canvas.width = nw; canvas.height = nh;
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, 0, 0, nw, nh);
-            resolve(canvas.toDataURL('image/png'));
-          };
-          img.onerror = reject;
-          img.src = reader.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
     function loadTheme(){ const t=localStorage.getItem('mapleTheme')||'lavender'; document.body.className=t; document.getElementById('theme').value=t; }
     document.getElementById('theme').addEventListener('change',function(){ document.body.className=this.value; localStorage.setItem('mapleTheme',this.value); });
 
-    document.getElementById('add-character-btn').onclick=addCharacter;
-
-    function buildMetaIfMissing(){
-      const d=loadData(); const n=d.charCount||0;
-      let mutated=false;
-      for(let i=0;i<n;i++){
-        if(d[`char_${i}_level`]==null){ d[`char_${i}_level`]=""; mutated=true; }
-        if(d[`char_${i}_job`]==null){ d[`char_${i}_job`]=""; mutated=true; }
-      }
-      if(mutated) saveData(d);
-    }
-
+    // Build UI
+    loadTheme();
     ensureAtLeastOneCharacter();
-    buildMetaIfMissing();
-    switchPreset(1);
-  } catch(err) {
-    // If anything fails, at least keep the UTC clock updating
-    console.error(err);
-    const safeTick = () => {
-      const n=new Date(); const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
-      const el = document.getElementById('utc-time'); if(el) el.textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
-    };
-    safeTick();
-    setInterval(safeTick, 1000);
-  }
+    buildChecklists();
+
+  })();
   </script>
 </body>
 </html>
