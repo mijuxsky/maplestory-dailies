@@ -31,23 +31,23 @@
     h1{ margin:0 0 6px; font-size:20px; text-align:center; }
     #utc-time{ font-size:13px; margin-bottom:8px; }
 
-    /* Center Theme row */
-    .theme-row{ display:flex; justify-content:center; gap:10px; align-items:center; width:100%; max-width:1000px; margin:4px 0 8px; }
+    /* Theme at top-left */
+    .theme-row{ display:flex; justify-content:flex-start; gap:10px; align-items:center; width:100%; max-width:1000px; margin:4px 0 8px; }
     .select-wrap{ position:relative; display:inline-flex; align-items:center; }
     .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
     select{ appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
     option{ background:var(--control-bg); color:var(--control-fg); }
     label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
 
-    #instructions{ position:relative; width:100%; max-width:1000px; margin:10px 0 14px; padding:12px 14px 14px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); }
+    #instructions{ position:relative; width:100%; max-width:1000px; margin:10px 0 10px; padding:12px 14px 12px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); }
     #instructions.minimized ul{ display:none; }
     #instr-toggle{ position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); border-radius:8px; cursor:pointer; font-family:inherit; }
     #instructions ul{ margin:0; padding-left:18px; }
 
-    /* Toolbar now stacks: centered controls then Add button on next row aligned right */
-    .toolbar{ display:flex; flex-direction:column; gap:8px; width:100%; max-width:1000px; margin-bottom:12px; }
-    .toolbar .left{ display:flex; align-items:center; gap:10px; justify-content:center; }
-    .toolbar .right{ display:flex; align-items:center; gap:10px; justify-content:flex-end; }
+    /* Toolbar: Add left, Preset+Save/Load right, same line */
+    .toolbar{ display:flex; align-items:center; gap:12px; width:100%; max-width:1000px; margin:8px 0 12px; }
+    .toolbar .left{ display:flex; align-items:center; gap:10px; margin-right:auto; }
+    .toolbar .right{ display:flex; align-items:center; gap:10px; margin-left:auto; }
 
     .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
     .btn:hover{ filter:brightness(1.02); }
@@ -60,44 +60,44 @@
 
     /* Grid of cards */
     #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
-    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:48px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
+
+    /* Reduce whitespace above image; keep buttons area intact */
+    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:40px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
     .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
 
     /* Top control rows */
     .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
     .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
 
-    /* Card drag handle – now in normal flow, above the name */
+    /* Invisible drag handle above the name (keeps drag functionality) */
     .card-drag-handle{
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px; color:var(--handle-fg);
-      border-bottom:1px dashed var(--handle-fg);
-      padding-bottom:4px; margin:6px 0 6px;
-      cursor:grab; user-select:none;
+      position:absolute; left:14px; right:14px; top:30px;
+      height:18px; cursor:grab; user-select:none; opacity:0; border:none;
     }
     .card-drag-handle:active{ cursor:grabbing; }
 
-    /* Character image + meta */
-    .char-image-wrap{ text-align:center; margin:4px auto 2px; min-height:24px; }
+    /* Character image + meta (tighten spacing) */
+    .char-image-wrap{ text-align:center; margin:2px auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
-    .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 4px; font-family:inherit; }
+    .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 2px; font-family:inherit; }
 
-    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:2px 0 4px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
+    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:0 0 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
 
     /* Tasks */
     .tasks{ margin-top:2px; }
-    .task{ display:grid; grid-template-columns:16px 1fr auto 14px; gap:8px; align-items:center; margin:6px 0; }
+    .task{ display:grid; grid-template-columns:12px 1fr auto 14px; gap:8px; align-items:center; margin:6px 0; }
     .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
     .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; cursor:pointer; }
-    .task input[type="checkbox"]{ width:16px; height:16px; }
+    .task input[type="checkbox"]{ width:12px; height:12px; vertical-align:middle; } /* 12px checkboxes */
+
     .handle{ cursor:grab; user-select:none; opacity:.7; }
     .handle:active{ cursor:grabbing; }
 
-    /* Check All (bold line) */
+    /* Check All (bold) with 12px checkbox */
     .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); font-weight:600; }
-    .check-all input{ width:16px; height:16px; }
+    .check-all input{ width:12px; height:12px; vertical-align:middle; }
 
     /* Monochrome confirm dialog */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
@@ -112,7 +112,7 @@
   <h1>MapleStory Dailies</h1>
   <div id="utc-time">UTC Time: --/--/---- --:--:--</div>
 
-  <!-- Centered Theme -->
+  <!-- Theme at top-left -->
   <div class="theme-row">
     <label for="theme">Theme:</label>
     <div class="select-wrap">
@@ -132,20 +132,24 @@
     <button id="instr-toggle" type="button" class="btn">Hide</button>
     <strong>How to use:</strong>
     <ul id="howto">
-      <li><strong>Themes and presets</strong>: Choose a theme above; pick one of 3 Presets saved locally.</li>
-      <li><strong>Save and load</strong>: Use the Save (💾) and Load (📂) icons next to Preset to export or import JSON.</li>
-      <li><strong>Add characters</strong>: Use the + Add Character button. Max 20. Starts with 2 tasks (minimum 1, maximum 10).</li>
-      <li><strong>Keyboard</strong>: Enter or Tab inserts a line under the current task. Arrow keys move between tasks and cards.</li>
-      <li><strong>Reorder cards</strong>: Drag by the “Click and Drag Character Tile” bar or use Up/Down arrows. Smooth slide animation.</li>
-      <li><strong>Reorder tasks</strong>: Drag the ⋮⋮ handle; Enter inserts under the current line. Preserves checkbox state.</li>
-      <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image.</li>
-      <li><strong>Daily reset</strong>: All checkboxes reset at 00:00 UTC.</li>
+      <li><strong>Themes</strong>: Pick a theme (top-left). Your choice is saved locally.</li>
+      <li><strong>Presets</strong>: Choose 1–3; each stores its own characters and tasks.</li>
+      <li><strong>Save / Load</strong>: Save (💾) exports JSON; Load (📂) imports it—no servers needed.</li>
+      <li><strong>Add characters</strong>: “+ Add Character” (max 20). Each starts with 2 tasks (min 1, max 10).</li>
+      <li><strong>Keyboard</strong>: Enter/Tab inserts a task under the current one; arrows move between tasks/cards.</li>
+      <li><strong>Reorder cards</strong>: Drag from the invisible strip above the name; or use the Up/Down arrows.</li>
+      <li><strong>Reorder tasks</strong>: Drag the ⋮⋮ handle; checkbox state is preserved.</li>
+      <li><strong>Upload avatar</strong>: Use the upload icon on the card to set an image.</li>
+      <li><strong>Reset</strong>: All checkboxes reset daily at 00:00 UTC.</li>
     </ul>
   </div>
 
-  <!-- Toolbar: centered preset row, then Add Character on next line (right-aligned) -->
+  <!-- Single toolbar line: Add left, Preset+Save/Load right -->
   <div class="toolbar">
     <div class="left">
+      <button id="add-character-btn" class="btn" title="Add Character">+ Add Character</button>
+    </div>
+    <div class="right">
       <label for="preset">Preset:</label>
       <div class="select-wrap">
         <select id="preset">
@@ -162,9 +166,6 @@
       </button>
       <input id="import-file" type="file" accept="application/json" hidden>
     </div>
-    <div class="right">
-      <button id="add-character-btn" class="btn" title="Add Character">+ Add Character</button>
-    </div>
   </div>
 
   <!-- Cards -->
@@ -174,10 +175,10 @@
   <div id="confirm-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
       <h3 id="confirm-title">Confirm Delete</h3>
-      <p id="confirm-msg">Are you sure you want to delete this character?</p>
+      <p id="confirm-msg">Delete the character: Untitled?</p>
       <div class="actions">
-        <button id="confirm-cancel" type="button" class="btn secondary">No</button>
         <button id="confirm-ok" type="button" class="btn">Yes</button>
+        <button id="confirm-cancel" type="button" class="btn secondary">No</button>
       </div>
     </div>
   </div>
@@ -248,7 +249,7 @@
     const wrap=$("#checklists"); wrap.innerHTML="";
     const d=loadData();
     for(let i=0;i<d.charCount;i++) wrap.appendChild(buildCard(i,d));
-    initCardSortable(); // drag by handle only
+    initCardSortable(); // drag by (invisible) handle only
   }
 
   function buildCard(i,d){
@@ -265,18 +266,18 @@
     const delBtn = iconBtn("Delete", "&times;", ()=> confirmDelete(i));
     right.append(uploadBtn,dupBtn,delBtn); card.appendChild(right);
 
+    /* Invisible drag handle above the name (keeps drag functionality) */
+    const dragHandle=document.createElement("div");
+    dragHandle.className="card-drag-handle";
+    dragHandle.textContent=""; // hidden label
+    card.appendChild(dragHandle);
+
     const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
     imgWrap.innerHTML=`<img alt="Character image" src="${(d[`char_${i}_image`]||"") || BASE_MODEL_URL}">`;
     card.appendChild(imgWrap);
 
     const meta=document.createElement("div"); meta.className="char-meta";
     meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
-
-    /* Drag handle now appears ABOVE the Character Name line */
-    const dragHandle=document.createElement("div");
-    dragHandle.className="card-drag-handle";
-    dragHandle.textContent="Click and Drag Character Tile";
-    card.appendChild(dragHandle);
 
     const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
     name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
@@ -420,11 +421,11 @@
 
   function confirmDelete(i){
     const d=loadData(); const nm=d[`char_${i}_name`]||"Untitled";
-    $("#confirm-msg").textContent=`Are you sure you want to delete the character: ${nm}?`;
+    $("#confirm-msg").textContent=`Delete the character: ${nm}?`;
     const overlay=$("#confirm-overlay");
     overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
-    $("#confirm-cancel").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
     $("#confirm-ok").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); doDelete(i); };
+    $("#confirm-cancel").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
   }
 
   function doDelete(i){
@@ -458,7 +459,7 @@
     saveData(d); build();
   }
 
-  // Card Sortable (drag only by the handle)
+  // Card Sortable (drag only by invisible handle)
   let sortableCards=null;
   function initCardSortable(){
     const cont=$("#checklists");
