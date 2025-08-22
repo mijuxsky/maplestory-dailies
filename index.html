@@ -58,6 +58,7 @@
     .icon-btn.small{ width:24px; height:24px; border-radius:6px; }
     .icon-btn svg{ width:16px; height:16px; }
 
+    /* Cards grid */
     #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
 
     .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:40px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
@@ -66,19 +67,21 @@
     .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
     .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
 
-    /* Invisible drag handle above the name (still active, hidden visuals) */
+    /* Invisible drag handle above the name (active, no visuals) */
     .card-drag-handle{ position:absolute; left:14px; right:14px; top:30px; height:18px; cursor:grab; user-select:none; opacity:0; border:none; }
     .card-drag-handle:active{ cursor:grabbing; }
 
+    /* Image/meta */
     .char-image-wrap{ text-align:center; margin:2px auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
     .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 2px; font-family:inherit; min-height:16px; }
 
-    .inline-msg{ text-align:center; font-size:12px; margin:2px 0 0; color:#a94442; } /* short inline error/success */
+    .inline-msg{ text-align:center; font-size:12px; margin:2px 0 0; color:#a94442; display:none; }
 
     .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:0 0 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
 
+    /* Tasks */
     .tasks{ margin-top:2px; }
     .task{ display:grid; grid-template-columns:12px 1fr auto 14px; gap:8px; align-items:center; margin:6px 0; }
     .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
@@ -92,6 +95,7 @@
     .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); font-weight:600; }
     .check-all input{ width:12px; height:12px; vertical-align:middle; }
 
+    /* Dialog */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show{ display:flex; }
     .modal{ background:#fff; color:#111; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
@@ -131,9 +135,9 @@
       <li><strong>Keyboard</strong>: Enter/Tab inserts a task under the current one; arrows move between tasks/cards.</li>
       <li><strong>Reorder cards</strong>: Drag from the invisible strip above the name; or use the Up/Down arrows.</li>
       <li><strong>Reorder tasks</strong>: Drag the ⋮⋮ handle; checkbox state is preserved.</li>
-      <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image.</li>
+      <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image (user uploads are never auto-replaced).</li>
+      <li><strong>Auto-fill</strong>: Type a Character Name to fetch Level/Job and avatar from Maple Ranks via Worker.</li>
       <li><strong>Reset</strong>: All checkboxes reset daily at 00:00 UTC.</li>
-      <li><strong>Auto-fill (Maple Ranks)</strong>: Type a character name to fetch Level and Job via the Worker.</li>
     </ul>
   </div>
 
@@ -175,12 +179,15 @@
     </div>
   </div>
 
+  <!-- Hidden upload input -->
   <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
+
+  <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
   <script>
   // ====== Config ======
-  // CHANGE THIS to your Worker URL if different:
+  // Set to your Worker URL:
   const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
 
   const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
@@ -211,17 +218,25 @@
   function saveData(d){ localStorage.setItem(dataKey(), JSON.stringify(d)); }
   function dailyKey(i,t){ return `check_${todayUTC()}_preset${currentPreset}_c${i}_t${t}`; }
 
-  // Save/Load (export/import)
+  // ====== Save/Load (export/import) ======
   $("#save-btn").addEventListener("click", ()=>{
     const d=loadData(), chars=[];
     for(let i=0;i<d.charCount;i++){
       const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
       const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-      chars.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
+      chars.push({
+        name:d[`char_${i}_name`]||"",
+        image:d[`char_${i}_image`]||"",
+        level:d[`char_${i}_level`]||"",
+        job:d[`char_${i}_job`]||"",
+        userImage: !!d[`char_${i}_userImage`],
+        tasks
+      });
     }
-    const blob=new Blob([JSON.stringify({version:1,preset:currentPreset,characters:chars},null,2)],{type:"application/json"});
+    const blob=new Blob([JSON.stringify({version:2,preset:currentPreset,characters:chars},null,2)],{type:"application/json"});
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="maplestory-dailies.json"; document.body.appendChild(a); a.click(); a.remove();
   });
+
   $("#load-btn").addEventListener("click", ()=> $("#import-file").click());
   $("#import-file").addEventListener("change",(e)=>{
     const f=e.target.files?.[0]; if(!f) return;
@@ -229,8 +244,14 @@
       const obj=safeParse(r.result); if(!obj||!Array.isArray(obj.characters)){ alert("Invalid file."); return; }
       const chars=obj.characters.slice(0,MAX_CHARACTERS); const d={charCount:chars.length};
       for(let i=0;i<chars.length;i++){
-        const c=chars[i]; d[`char_${i}_name`]=c.name||""; d[`char_${i}_image`]=c.image||""; d[`char_${i}_level`]=c.level||""; d[`char_${i}_job`]=c.job||"";
-        const tc=Math.max(1,Math.min(MAX_TASKS,(c.tasks||["",""]).length)); d[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`]=c.tasks[t]||"";
+        const c=chars[i];
+        d[`char_${i}_name`]=c.name||"";
+        d[`char_${i}_image`]=c.image||"";
+        d[`char_${i}_level`]=c.level||"";
+        d[`char_${i}_job`]=c.job||"";
+        d[`char_${i}_userImage`]=!!c.userImage; // default false if missing
+        const tc=Math.max(1,Math.min(MAX_TASKS,(c.tasks||["",""]).length));
+        d[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`]=c.tasks[t]||"";
       }
       saveData(d); build();
     }; r.readAsText(f); e.target.value="";
@@ -258,19 +279,19 @@
     const delBtn = iconBtn("Delete", "&times;", ()=> confirmDelete(i));
     right.append(uploadBtn,dupBtn,delBtn); card.appendChild(right);
 
-    // Invisible drag handle above name (active, no visuals)
+    // Invisible drag handle above name
     const dragHandle=document.createElement("div");
     dragHandle.className="card-drag-handle"; card.appendChild(dragHandle);
 
     const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
-    imgWrap.innerHTML=`<img alt="Character image" src="${(d[`char_${i}_image`]||"") || BASE_MODEL_URL}">`;
+    const imgSrc = (d[`char_${i}_image`]||"") || BASE_MODEL_URL;
+    imgWrap.innerHTML=`<img loading="lazy" decoding="async" alt="Character image" src="${imgSrc}">`;
     card.appendChild(imgWrap);
 
     const meta=document.createElement("div"); meta.className="char-meta";
     meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
 
-    // Inline status message container (for lookup feedback)
-    const msg=document.createElement("div"); msg.className="inline-msg"; msg.style.display="none"; card.appendChild(msg);
+    const msg=document.createElement("div"); msg.className="inline-msg"; card.appendChild(msg);
 
     const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
     name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
@@ -296,7 +317,7 @@
     setTimeout(refreshMaster,0);
 
     attachTaskSortable(tasksWrap, i);
-    attachNameLookup(i, name, meta, msg); // <<<<<< wire lookup
+    attachNameLookup(i, name, meta, msg, imgWrap.querySelector("img")); // wire lookup incl. avatar
     return card;
   }
 
@@ -399,7 +420,7 @@
   $("#add-character-btn").addEventListener("click", ()=>{
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
     const i=d.charCount; d.charCount=i+1;
-    d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`] = ""; d[`char_${i}_job`] = "";
+    d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]=""; d[`char_${i}_userImage`]=false;
     d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]="";
     saveData(d); build();
   });
@@ -408,7 +429,11 @@
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
     const ct=d[`char_${i}_taskCount`]||2; const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
     const ins=d.charCount; d.charCount=ins+1;
-    d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||"";
+    d[`char_${ins}_name`]=d[`char_${i}_name`]||"";
+    d[`char_${ins}_image`]=d[`char_${i}_image`]||"";
+    d[`char_${ins}_level`]=d[`char_${i}_level`]||"";
+    d[`char_${ins}_job`]=d[`char_${i}_job`]||"";
+    d[`char_${ins}_userImage`]=!!d[`char_${i}_userImage`];
     d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||"";
     saveData(d); build();
   }
@@ -438,13 +463,14 @@
       d[`char_${k}_image`]=d[`char_${k+1}_image`]||"";
       d[`char_${k}_level`]=d[`char_${k+1}_level`]||"";
       d[`char_${k}_job`]=d[`char_${k+1}_job`]||"";
+      d[`char_${k}_userImage`]=!!d[`char_${k+1}_userImage`];
       const ct=d[`char_${k+1}_taskCount`]||1;
       d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
     }
     const last=n-1;
     const lastCt=d[`char_${last}_taskCount`]||0;
     for(let t=0;t<lastCt;t++) localStorage.removeItem(dailyKey(last,t));
-    delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`];
+    delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`]; delete d[`char_${last}_userImage`];
     delete d[`char_${last}_taskCount`]; for(let t=0;t<lastCt;t++) delete d[`char_${last}_task_${t}`];
     d.charCount=Math.max(0,n-1);
     saveData(d); build();
@@ -476,7 +502,14 @@
     for(let i=0;i<d.charCount;i++){
       const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
       const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-      list.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
+      list.push({
+        name:d[`char_${i}_name`]||"",
+        image:d[`char_${i}_image`]||"",
+        level:d[`char_${i}_level`]||"",
+        job:d[`char_${i}_job`]||"",
+        userImage: !!d[`char_${i}_userImage`],
+        tasks
+      });
     }
     const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
 
@@ -486,7 +519,7 @@
     const nd={charCount:list.length};
     for(let i=0;i<list.length;i++){
       const c=list[i];
-      nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job;
+      nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
       const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc;
       for(let t=0;t<tc;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
     }
@@ -497,14 +530,17 @@
     saveData(nd); build();
   }
 
-  // Upload avatar
+  // Upload avatar (sets userImage=true so auto-fill won’t replace)
   let uploadIndex=null;
   function startUploadFor(i){ uploadIndex=i; $("#hidden-upload").click(); }
   $("#hidden-upload").addEventListener("change",(e)=>{
     const f=e.target.files?.[0]; if(!f) return;
     const reader=new FileReader();
     reader.onload=()=>{
-      const d=loadData(); d[`char_${uploadIndex}_image`]=reader.result; saveData(d);
+      const d=loadData();
+      d[`char_${uploadIndex}_image`]=reader.result;
+      d[`char_${uploadIndex}_userImage`]=true;
+      saveData(d);
       const card=document.querySelector(`#checklists .character[data-index="${uploadIndex}"]`);
       if(card) card.querySelector('.char-image-wrap img').src=reader.result;
     };
@@ -519,11 +555,11 @@
     set(localStorage.getItem("mapleInstrMin")==="1");
   })();
 
-  // ====== Worker-backed Maple Ranks lookup ======
+  // ====== Worker-backed Maple Ranks lookup (with avatar) ======
   const nameTimers = new Map();           // debounce timers per card index
   const nameControllers = new Map();      // AbortController per card index
 
-  function attachNameLookup(cardIndex, nameInput, metaElem, msgElem){
+  function attachNameLookup(cardIndex, nameInput, metaElem, msgElem, imgElem){
     const debounceMs = 500;
 
     async function doLookup(query){
@@ -542,31 +578,51 @@
         const data = await res.json();
         if(!data || data.ok!==true){ throw new Error(data?.error || "Not found"); }
 
-        // Update data only on success
+        // Update text fields
         const d=loadData();
-        d[`char_${cardIndex}_name`] = data.name || query;
+        d[`char_${cardIndex}_name`]  = data.name || query;
         d[`char_${cardIndex}_level`] = data.level || d[`char_${cardIndex}_level`] || "";
         d[`char_${cardIndex}_job`]   = data.job   || d[`char_${cardIndex}_job`]   || "";
+
+        // Avatar precedence:
+        // - If user uploaded (flag true), DO NOT replace.
+        // - Else if current image empty/placeholder and worker provides avatar, set it.
+        const userHasUpload = !!d[`char_${cardIndex}_userImage`];
+        const currentSrc = d[`char_${cardIndex}_image`] || "";
+        const isPlaceholder = !currentSrc || currentSrc === "" || currentSrc === BASE_MODEL_URL;
+        if(!userHasUpload && isPlaceholder && data.avatar){
+          d[`char_${cardIndex}_image`] = data.avatar;
+        }
+
         saveData(d);
 
         nameInput.value = d[`char_${cardIndex}_name`];
         metaElem.textContent = metaText(d[`char_${cardIndex}_level`], d[`char_${cardIndex}_job`]);
 
+        // Update image if changed
+        const newSrc = d[`char_${cardIndex}_image`] || BASE_MODEL_URL;
+        if(imgElem && imgElem.src !== newSrc){
+          imgElem.loading = "lazy";
+          imgElem.decoding = "async";
+          imgElem.alt = `Avatar for ${d[`char_${cardIndex}_name`] || "character"}`;
+          imgElem.src = newSrc;
+        }
+
         msgElem.style.display="none"; msgElem.textContent="";
       }catch(err){
         // Graceful failure: do not overwrite existing
         msgElem.style.display=""; msgElem.style.color="#a94442";
-        msgElem.textContent = "Not found. Please check the name.";
+        msgElem.textContent = "Not found (or blocked).";
         setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
       }
     }
 
     nameInput.addEventListener("input", ()=>{
       const q = nameInput.value.trim();
-      // Always persist the latest typed value (existing handler already does)
+      // persist name via existing input handler
       // Debounce request; ignore empty names
       clearTimeout(nameTimers.get(cardIndex));
-      if(!q){ 
+      if(!q){
         const prev = nameControllers.get(cardIndex); if(prev){ try{ prev.abort(); }catch{} }
         msgElem.style.display="none"; msgElem.textContent="";
         return;
