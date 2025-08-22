@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MapleStory Dailies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.12);
+      --ui:14px; --overlay:rgba(0,0,0,.55);
+      --bg:#f4f0fa; --fg:#4b3b60;
+      --card-bg:#ffffff; --card-border:#e6def6;
+      --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea;
+      --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea;
+      --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14);
+      --task-underline:1px dotted currentColor;
+      --name-underline:1px solid currentColor;
+      --meta-fg:#6b7280;
+    }
+    body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280;}
+    body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#ffffff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280;}
+    body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#ffffff; --card-border:#e6def6; --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280;}
+    body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b;}
+    body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1;}
+    body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db;}
+
+    *{ box-sizing:border-box; }
+    body{ font-family:Quicksand,system-ui,sans-serif; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; font-size:var(--ui); background:var(--bg); color:var(--fg); transition:.25s background,.25s color; }
+    h1{ margin:0 0 6px; font-size:20px; text-align:center; }
+    #utc-time{ font-size:13px; margin-bottom:10px; }
+
+    /* Instructions */
+    #instructions{ position:relative; width:100%; max-width:1000px; margin:10px 0 14px; padding:12px 14px 14px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); }
+    #instructions.minimized ul{ display:none; }
+    #instr-toggle{ position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); border-radius:8px; cursor:pointer; font-family:inherit; }
+    #instructions ul{ margin:0; padding-left:18px; }
+
+    /* Toolbar */
+    .toolbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px; width:100%; max-width:1000px; }
+    label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
+    .select-wrap{ position:relative; display:inline-flex; align-items:center; }
+    .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
+    select{ appearance:none; -webkit-appearance:none; -moz-appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
+    option{ background:var(--control-bg); color:var(--control-fg); }
+    select:focus{ box-shadow:none; outline:none; }
+
+    .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
+    .btn:hover{ filter:brightness(1.02); }
+    .btn:active{ transform:translateY(1px); }
+
+    /* Grid + Card */
+    #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
+    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:48px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
+    .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
+
+    .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
+    .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
+    .icon-btn{ width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); transition:.15s background,.15s color,.15s border-color, transform .05s ease-in-out; font-family:inherit; }
+    .icon-btn:hover{ background:var(--icon-hover); }
+    .icon-btn:active{ transform:translateY(1px); }
+    .icon-btn svg{ width:16px; height:16px; }
+
+    .char-image-wrap{ text-align:center; margin:0 auto 2px; min-height:24px; }
+    .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
+    .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 4px; font-family:inherit; }
+
+    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:2px 0 4px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
+    .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
+
+    .task{ display:grid; grid-template-columns:18px 1fr auto 14px; gap:8px; align-items:center; margin:6px 0; }
+    .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
+    .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
+    .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; cursor:pointer; }
+    .handle{ cursor:grab; user-select:none; opacity:.7; }
+    .handle:active{ cursor:grabbing; }
+
+    .check-all{ display:flex; align-items:center; gap:8px; margin:6px 0 2px; font-size:12px; color:var(--meta-fg); }
+    .check-all input{ width:18px; height:18px; }
+
+    /* Modal (monochrome, buttons bottom-right) */
+    .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
+    .modal-overlay.show{ display:flex; }
+    .modal{ background:#fff; color:#111; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
+    .modal h3{ margin:0 0 12px; font-size:18px; font-weight:700; letter-spacing:.2px; }
+    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+    .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
+    .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
+    .btn.ghost{ background:#fff; color:#111; border-color:#e0e0e0; }
+  </style>
+</head>
+<body class="lavender">
+  <h1>MapleStory Dailies</h1>
+  <div id="utc-time">UTC Time: --/--/---- --:--:--</div>
+
+  <div id="instructions">
+    <button id="instr-toggle" type="button" class="btn">Hide</button>
+    <strong>How to use:</strong>
+    <ul id="howto">
+      <li><strong>Themes & presets</strong>: Pick a Theme and one of 3 Presets (saved locally).</li>
+      <li><strong>Add characters</strong>: Click <em>+ Add Character</em> (max 20). Starts with 2 tasks (min 1, max 10).</li>
+      <li><strong>Keyboard</strong>: Enter/Tab/↓ to next task (inserts a line under current). ↑/Shift+Tab up. ←/→ switches cards.</li>
+      <li><strong>Reorder cards</strong>: Drag & drop anywhere in the grid (limited to existing slots). Smooth slide animation.</li>
+      <li><strong>Reorder tasks</strong>: Drag the handle ⋮⋮ or press Enter to insert under the current line.</li>
+      <li><strong>Set avatar</strong>: Camera → Set Avatar (fetch from MapleRanks or upload). Shows Lv. + Class.</li>
+      <li><strong>Import/Export</strong>: Export a JSON file and Import it on another device (no servers).</li>
+      <li><strong>Daily reset</strong>: All checkboxes reset at <strong>00:00 UTC</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="toolbar">
+    <label for="theme">Theme:</label>
+    <div class="select-wrap">
+      <select id="theme">
+        <option value="light">Light Mode</option>
+        <option value="cloud">Cloud (Light)</option>
+        <option value="lavender">Lavender (Light)</option>
+        <option value="matcha">Matcha (Light)</option>
+        <option value="dark">Dark Mode</option>
+        <option value="evergreen">Evergreen (Dark)</option>
+      </select>
+    </div>
+
+    <label for="preset">Preset:</label>
+    <div class="select-wrap">
+      <select id="preset">
+        <option value="1">Preset 1</option>
+        <option value="2">Preset 2</option>
+        <option value="3">Preset 3</option>
+      </select>
+    </div>
+
+    <button id="add-character-btn" class="btn" title="Add Character">+ Add Character</button>
+    <button id="export-btn" class="btn" title="Export data">Export</button>
+    <button id="import-btn" class="btn" title="Import data">Import</button>
+    <input id="import-file" type="file" accept="application/json" hidden>
+  </div>
+
+  <div id="checklists"></div>
+
+  <!-- Delete confirm modal -->
+  <div id="confirm-overlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
+      <h3 id="confirm-title">Confirm Delete</h3>
+      <p id="confirm-msg">Are you sure you want to delete this character?</p>
+      <div class="actions">
+        <button id="confirm-cancel" type="button" class="btn secondary">No</button>
+        <button id="confirm-ok" type="button" class="btn">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avatar modal -->
+  <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="avatar-modal-title" aria-modal="true">
+      <h3 id="avatar-modal-title">Set Avatar</h3>
+      <div class="row">
+        <label for="avatar-name">Character Name</label>
+        <input id="avatar-name" type="text" placeholder="Enter character name" />
+      </div>
+      <div class="error" id="avatar-error"></div>
+      <div class="actions">
+        <button id="avatar-upload" type="button" class="btn ghost">Upload</button>
+        <button id="avatar-delete" type="button" class="btn secondary">Delete Avatar</button>
+        <button id="avatar-cancel" type="button" class="btn secondary">Cancel</button>
+        <button id="avatar-search" type="button" class="btn">Set Avatar</button>
+      </div>
+    </div>
+  </div>
+
+  <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
+
+  <script>
+  // === Configuration ===
+  const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
+  const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
+  const MAX_CHARACTERS = 20;
+  const MAX_TASKS = 10;
+  const IMG_MAX_W = 150, IMG_MAX_H = 110;
+
+  // === Utils ===
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const todayUTC = () => {
+    const n=new Date();
+    const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0');
+    return `${y}-${m}-${d}`;
+  };
+  function tickUTC(){
+    const n=new Date();
+    const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
+    $("#utc-time").textContent = `UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+  }
+  setInterval(tickUTC,1000); tickUTC();
+
+  // === Persistence ===
+  let currentPreset = parseInt(localStorage.getItem("maplePreset")||"1",10);
+  function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
+  function safeParse(j){ try{ return JSON.parse(j); }catch{ return null; } }
+  function loadData(){
+    const raw = localStorage.getItem(dataKey());
+    const d = raw ? safeParse(raw) : { charCount: 0 };
+    if(typeof d.charCount !== "number" || d.charCount < 0) d.charCount = 0;
+    return d;
+  }
+  function saveData(d){ localStorage.setItem(dataKey(), JSON.stringify(d)); }
+  function exportJSON(){
+    const d = loadData();
+    const chars = [];
+    for(let i=0;i<d.charCount;i++){
+      const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
+      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      chars.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
+    }
+    const blob = new Blob([JSON.stringify({ version:1, preset: currentPreset, characters: chars }, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "maplestory-dailies.json";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  function importJSON(file){
+    const reader = new FileReader();
+    reader.onload = () => {
+      const obj = safeParse(reader.result);
+      if(!obj || !Array.isArray(obj.characters)){ alert("Invalid file."); return; }
+      const chars = obj.characters.slice(0, MAX_CHARACTERS);
+      const d = { charCount: chars.length };
+      for(let i=0;i<chars.length;i++){
+        const c = chars[i];
+        d[`char_${i}_name`] = c.name||""; d[`char_${i}_image`]=c.image||""; d[`char_${i}_level`]=c.level||""; d[`char_${i}_job`]=c.job||"";
+        const tc = Math.max(1, Math.min(MAX_TASKS, (c.tasks||["",""]).length ));
+        d[`char_${i}_taskCount`] = tc;
+        for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`] = c.tasks[t]||"";
+      }
+      saveData(d); build();
+    };
+    reader.readAsText(file);
+  }
+
+  function dailyKey(i,t){ return `check_${todayUTC()}_preset${currentPreset}_c${i}_t${t}`; }
+
+  // === FLIP animation helper ===
+  function flipReorder(container, reorderFn){
+    const cards = [...container.querySelectorAll('.character')];
+    const first = new Map(cards.map(el => [el, el.getBoundingClientRect()]));
+    reorderFn();
+    const lastCards = [...container.querySelectorAll('.character')];
+    lastCards.forEach(el => {
+      const firstRect = first.get(el);
+      if(!firstRect) return;
+      const lastRect = el.getBoundingClientRect();
+      const dx = firstRect.left - lastRect.left;
+      const dy = firstRect.top - lastRect.top;
+      if(dx || dy){
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+        el.getBoundingClientRect(); // force reflow
+        el.style.transition = 'transform .22s ease';
+        el.style.transform = 'translate(0,0)';
+        el.addEventListener('transitionend', function cleanup(){
+          el.style.transition=''; el.style.transform=''; el.removeEventListener('transitionend', cleanup);
+        });
+      }
+    });
+  }
+
+  // === UI builders ===
+  function build(){
+    const wrap = $("#checklists"); wrap.innerHTML = "";
+    const d = loadData();
+    for(let i=0;i<d.charCount;i++){
+      wrap.appendChild(buildCard(i, d));
+    }
+    attachCardDnD(wrap);
+  }
+
+  function buildCard(i, d){
+    const card = document.createElement("div");
+    card.className = "character";
+    card.setAttribute("draggable","true");
+    card.dataset.index = i;
+
+    // top-left arrows
+    const left = document.createElement("div"); left.className="window-controls-left";
+    const upBtn = iconButton("Move Up", arrowUpSVG(), ()=> moveCard(i, i-1));
+    const downBtn = iconButton("Move Down", arrowDownSVG(), ()=> moveCard(i, i+1));
+    left.append(upBtn, downBtn);
+    card.appendChild(left);
+
+    // top-right controls
+    const ctrls = document.createElement("div");
+    ctrls.className = "window-controls-right";
+    const btnCam = iconButton("Set Avatar", cameraSVG(), () => openAvatarModal(i, d[`char_${i}_name`]||""));
+    const btnDup = iconButton("Duplicate", duplicateSVG(), () => duplicateCharacter(i));
+    const btnDel = iconButton("Delete", "&times;", () => confirmDelete(i));
+    ctrls.append(btnCam, btnDup, btnDel);
+    card.appendChild(ctrls);
+
+    // Image + meta
+    const imgWrap = document.createElement("div"); imgWrap.className="char-image-wrap";
+    imgWrap.innerHTML = `<img alt="Character image" src="${(d[`char_${i}_image`]||"") || BASE_MODEL_URL}">`;
+    card.appendChild(imgWrap);
+    const meta = document.createElement("div"); meta.className="char-meta";
+    meta.textContent = metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
+
+    // Name
+    const name = document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
+    name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
+    name.addEventListener("keydown", async (e)=>{
+      const atStart=name.selectionStart===0&&name.selectionEnd===0; const atEnd=name.selectionStart===name.value.length&&name.selectionEnd===name.value.length;
+      if(e.key==="Enter"){ e.preventDefault(); await fetchFromMapleRanks(i, name.value.trim()); focusFirstTask(card); }
+      else if(e.key==="ArrowRight"&&atEnd){ e.preventDefault(); focusCardByOffset(card,+1); }
+      else if(e.key==="ArrowLeft"&&atStart){ e.preventDefault(); focusCardByOffset(card,-1); }
+    });
+    name.addEventListener("blur", ()=>{ const v=name.value.trim(); if(v) fetchFromMapleRanks(i,v); });
+    card.appendChild(name);
+
+    // Tasks
+    let count = d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1;
+    d[`char_${i}_taskCount`] = count; saveData(d);
+    for(let t=0;t<count;t++) card.appendChild(buildTask(i, t, d));
+
+    // Check-all at bottom
+    const checkRow = document.createElement("div"); checkRow.className="check-all";
+    const checkAll = document.createElement("input"); checkAll.type="checkbox"; checkAll.title="Check/Uncheck all tasks";
+    const checkLbl = document.createElement("label"); checkLbl.textContent="Check All";
+    checkRow.append(checkAll, checkLbl); card.appendChild(checkRow);
+    function refreshMaster(){
+      const boxes = Array.from(card.querySelectorAll('.task input[type="checkbox"]'));
+      checkAll.checked = boxes.length>0 && boxes.every(b=>b.checked);
+    }
+    checkAll.addEventListener("change", ()=>{
+      const boxes = Array.from(card.querySelectorAll('.task input[type="checkbox"]'));
+      boxes.forEach(b=>{ b.checked = checkAll.checked; localStorage.setItem(dailyKey(i, +b.dataset.idx), checkAll.checked?'true':'false'); });
+    });
+    setTimeout(refreshMaster,0);
+
+    attachTaskDnD(card, i);
+    return card;
+  }
+
+  function buildTask(i, t, d){
+    const row = document.createElement("div"); row.className="task"; row.setAttribute("draggable","true");
+    const box = document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked=(localStorage.getItem(dailyKey(i,t))==='true');
+    box.onchange = ()=> localStorage.setItem(dailyKey(i,t), box.checked?'true':'false');
+    const input = document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value = d[`char_${i}_task_${t}`]||"";
+    const del = document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
+    const handle = document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
+
+    input.addEventListener("keydown",(e)=>{
+      const atStart=input.selectionStart===0&&input.selectionEnd===0; const atEnd=input.selectionStart===input.value.length&&input.selectionEnd===input.value.length;
+      if(e.key==="Enter" || (e.key==="Tab"&&!e.shiftKey)){
+        e.preventDefault();
+        insertTaskAfter(i, t);
+        setTimeout(()=>{
+          const card = $(`#checklists .character[data-index="${i}"]`);
+          const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
+          const nextIndex = Math.min(t+1, inputs.length-1);
+          inputs[nextIndex]?.focus();
+        },0);
+      }else if((e.key==="Tab"&&e.shiftKey)||(e.key==="ArrowUp"&&atStart)){
+        e.preventDefault(); focusPrevInput(i, row);
+      }else if(e.key==="ArrowDown"&&atEnd){
+        e.preventDefault(); focusNextInput(i, row);
+      }else if(e.key==="ArrowRight"&&atEnd){
+        e.preventDefault(); focusCardByOffset(row.closest('.character'), +1);
+      }else if(e.key==="ArrowLeft"&&atStart){
+        e.preventDefault(); focusCardByOffset(row.closest('.character'), -1);
+      }
+    });
+    input.addEventListener("input",()=>{
+      const dd=loadData();
+      if(input.value===""){
+        const ct = dd[`char_${i}_taskCount`]||1;
+        if(ct>1){
+          dd[`char_${i}_task_${t}`]="";
+          for(let k=t+1;k<ct;k++){ dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||""; localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false"); }
+          delete dd[`char_${i}_task_${ct-1}`];
+          dd[`char_${i}_taskCount`]=ct-1;
+          saveData(dd); build();
+        }else{
+          dd[`char_${i}_task_${t}`]=""; saveData(dd);
+        }
+      }else{
+        dd[`char_${i}_task_${t}`]=input.value; saveData(dd);
+      }
+    });
+    del.onclick = ()=>{
+      const dd=loadData(); const ct=dd[`char_${i}_taskCount`]||1;
+      if(ct>1){
+        dd[`char_${i}_task_${t}`]="";
+        for(let k=t+1;k<ct;k++){ dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||""; localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false"); }
+        delete dd[`char_${i}_task_${ct-1}`];
+        dd[`char_${i}_taskCount`]=ct-1;
+        saveData(dd); build();
+      }else{
+        input.value=""; dd[`char_${i}_task_${t}`]=""; saveData(dd);
+      }
+    };
+
+    row.append(box, input, del, handle);
+    return row;
+  }
+
+  function metaText(level, job){
+    const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" ");
+  }
+
+  function focusFirstTask(card){
+    const el = card.querySelector('.task input[type="text"]') || card.querySelector('.char-name');
+    if(el){ el.focus(); const e=el.value.length; el.setSelectionRange?.(e,e); }
+  }
+  function focusNextInput(i, row){
+    const card = $(`#checklists .character[data-index="${i}"]`);
+    const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
+    const idx = inputs.indexOf(row.querySelector('input[type="text"]'));
+    if(idx>=0 && idx<inputs.length-1) inputs[idx+1].focus();
+  }
+  function focusPrevInput(i, row){
+    const card = $(`#checklists .character[data-index="${i}"]`);
+    const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
+    const idx = inputs.indexOf(row.querySelector('input[type="text"]'));
+    if(idx>0) inputs[idx-1].focus(); else (card.querySelector('.char-name')||{}).focus?.();
+  }
+
+  function insertTaskAfter(i, t){
+    const d=loadData();
+    const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
+    if(ct>=MAX_TASKS) return;
+    for(let k=ct-1;k>t;k--){ d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||""; localStorage.setItem(dailyKey(i,k+1), localStorage.getItem(dailyKey(i,k))||"false"); }
+    d[`char_${i}_task_${t+1}`] = "";
+    d[`char_${i}_taskCount`] = ct+1;
+    saveData(d); build();
+  }
+
+  // === Drag & Drop: tasks ===
+  function attachTaskDnD(card, i){
+    let dragEl=null, startIdx=null;
+    card.addEventListener("dragstart",(e)=>{
+      const row = e.target.closest(".task"); if(!row) return;
+      if(e.target.classList.contains("handle") || e.target.closest(".handle")){
+        dragEl=row; startIdx=[...card.querySelectorAll(".task")].indexOf(row);
+        e.dataTransfer.effectAllowed="move";
+      }else{
+        e.preventDefault();
+      }
+    });
+    card.addEventListener("dragover",(e)=>{
+      if(!dragEl) return; e.preventDefault();
+      const rows=[...card.querySelectorAll(".task")].filter(r=>r!==dragEl);
+      const y=e.clientY;
+      let after=null;
+      for(const r of rows){
+        const rect=r.getBoundingClientRect();
+        const mid=rect.top+rect.height/2;
+        if(y<mid){ after=r; break; }
+      }
+      if(after) card.insertBefore(dragEl, after);
+      else card.appendChild(dragEl);
+    });
+    card.addEventListener("drop",(e)=>{
+      if(!dragEl) return; e.preventDefault();
+      const newIdx=[...card.querySelectorAll(".task")].indexOf(dragEl);
+      if(newIdx!==startIdx && startIdx!=null){
+        const d=loadData();
+        const ct=d[`char_${i}_taskCount`]||1;
+        const arr=[]; for(let k=0;k<ct;k++) arr.push(d[`char_${i}_task_${k}`]||"");
+        const moved=arr.splice(startIdx,1)[0]; arr.splice(newIdx,0,moved);
+        for(let k=0;k<arr.length;k++) d[`char_${i}_task_${k}`]=arr[k]||"";
+        saveData(d);
+      }
+      dragEl=null; startIdx=null; build();
+    });
+    card.addEventListener("dragend",()=>{ dragEl=null; startIdx=null; });
+  }
+
+  // === Drag & Drop: cards ===
+  function attachCardDnD(container){
+    let dragFrom = null;
+
+    container.addEventListener("dragstart",(e)=>{
+      const card=e.target.closest(".character"); if(!card) return;
+      dragFrom= indexOfCard(card);
+      card.classList.add("dragging");
+      e.dataTransfer.effectAllowed="move";
+    });
+    container.addEventListener("dragend",(e)=>{
+      const dragging=$(".character.dragging"); dragging?.classList.remove("dragging");
+      dragFrom=null;
+    });
+    container.addEventListener("dragover",(e)=>{
+      const dragging=$(".character.dragging"); if(!dragging) return;
+      e.preventDefault();
+      const cards=[...container.querySelectorAll(".character")].filter(c=>!c.classList.contains("dragging"));
+      // compute index based on vertical midpoints, clamp to 0..cards.length-1 (no "after last" slot)
+      const y=e.clientY;
+      let idx=cards.length-1;
+      for(let j=0;j<cards.length;j++){
+        const r=cards[j].getBoundingClientRect();
+        const mid=r.top + r.height/2;
+        if(y<mid){ idx=j; break; }
+      }
+      container.dataset.dropIndex = String(idx);
+    });
+    container.addEventListener("drop",(e)=>{
+      e.preventDefault();
+      const dragging=$(".character.dragging"); if(!dragging) return;
+      const from = dragFrom;
+      const idxAttr = container.dataset.dropIndex;
+      if(idxAttr==null) return;
+      const to = parseInt(idxAttr,10);
+      if(Number.isNaN(to)) return;
+      moveCard(from, to);
+      container.dataset.dropIndex = "";
+    });
+  }
+
+  function indexOfCard(card){
+    const cards=[...$("#checklists").querySelectorAll(".character")];
+    return cards.indexOf(card);
+  }
+
+  function moveCard(from, to){
+    const cont = $("#checklists");
+    const cards=[...cont.querySelectorAll(".character")];
+    const n = cards.length;
+    if(from<0||from>=n) return;
+    to = Math.max(0, Math.min(n-1, to)); // limit to first N slots
+    if(from===to) return;
+
+    // storage reorder
+    const d=loadData();
+    const chars=[];
+    for(let i=0;i<d.charCount;i++){
+      const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
+      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      chars.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
+    }
+    const item=chars.splice(from,1)[0]; chars.splice(to,0,item);
+    const nd={ charCount: chars.length };
+    for(let i=0;i<chars.length;i++){
+      const c=chars[i];
+      nd[`char_${i}_name`]=c.name||""; nd[`char_${i}_image`]=c.image||""; nd[`char_${i}_level`]=c.level||""; nd[`char_${i}_job`]=c.job||"";
+      nd[`char_${i}_taskCount`]=Math.max(1, Math.min(MAX_TASKS, c.tasks.length));
+      for(let t=0;t<c.tasks.length;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
+    }
+    saveData(nd);
+
+    // DOM reorder with FLIP animation and without placeholder or dashed guidance
+    flipReorder(cont, ()=>{
+      const node = cards[from];
+      const ref = cont.querySelectorAll(".character")[to];
+      if(to===0) cont.insertBefore(node, cont.firstElementChild);
+      else cont.insertBefore(node, ref);
+      // update dataset.index sequentially
+      [...cont.querySelectorAll(".character")].forEach((el, idx)=> el.dataset.index = idx);
+    });
+  }
+
+  // === Actions ===
+  function addCharacter(){
+    const d=loadData();
+    if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
+    const i = d.charCount; d.charCount = i+1;
+    d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]="";
+    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]="";
+    saveData(d); build();
+  }
+  function duplicateCharacter(i){
+    const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
+    const ct=d[`char_${i}_taskCount`]||2; const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+    const ins = d.charCount;
+    d.charCount = ins+1;
+    d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||"";
+    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||"";
+    saveData(d); build();
+  }
+  function confirmDelete(i){
+    const d=loadData();
+    const nm = d[`char_${i}_name`] || "Untitled";
+    $("#confirm-msg").textContent = `Are you sure you want to delete the character: ${nm}?`;
+    const overlay = $("#confirm-overlay");
+    overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
+    $("#confirm-cancel").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
+    $("#confirm-ok").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); doDelete(i); };
+  }
+  function doDelete(i){
+    const d=loadData();
+    const n=d.charCount; if(n<=0) return;
+    for(let k=i;k<n-1;k++){
+      d[`char_${k}_name`]=d[`char_${k+1}_name`]||"";
+      d[`char_${k}_image`]=d[`char_${k+1}_image`]||"";
+      d[`char_${k}_level`]=d[`char_${k+1}_level`]||"";
+      d[`char_${k}_job`]=d[`char_${k+1}_job`]||"";
+      const ct=d[`char_${k+1}_taskCount`]||1;
+      d[`char_${k}_taskCount`]=ct;
+      for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
+    }
+    const last=n-1;
+    delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`];
+    const lct=d[`char_${last}_taskCount`]||1; delete d[`char_${last}_taskCount`];
+    for(let t=0;t<lct;t++) delete d[`char_${last}_task_${t}`];
+    d.charCount = Math.max(0, n-1);
+    saveData(d); build();
+  }
+
+  async function fetchFromMapleRanks(i, name){
+    if(!name) return;
+    try{
+      const resp = await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
+      const data = await resp.json();
+      if(!resp.ok) throw new Error(data && data.error || "lookup failed");
+      const { imageUrl, level, job } = data;
+      const d=loadData();
+      d[`char_${i}_name`]=name; d[`char_${i}_image`]=imageUrl||""; d[`char_${i}_level`]=level||""; d[`char_${i}_job`]=job||""; saveData(d);
+      const card = $(`#checklists .character[data-index="${i}"]`);
+      if(card){
+        card.querySelector('.char-name').value = name;
+        card.querySelector('.char-image-wrap img').src = (imageUrl||"") || BASE_MODEL_URL;
+        card.querySelector('.char-meta').textContent = [level?`Lv. ${level}`:null, job||null].filter(Boolean).join(" ");
+      }
+    }catch(e){
+      const d=loadData();
+      d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]=""; saveData(d);
+      const card = $(`#checklists .character[data-index="${i}"]`);
+      if(card){ card.querySelector('.char-image-wrap img').src = BASE_MODEL_URL; card.querySelector('.char-meta').textContent=""; }
+    }
+  }
+
+  // Icons
+  function iconButton(title, svgOrHtml, onClick){
+    const b=document.createElement("button"); b.className="icon-btn"; b.title=title;
+    b.innerHTML=svgOrHtml; b.onclick=onClick; return b;
+  }
+  function cameraSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>'; }
+  function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
+  function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
+  function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
+
+  // Controls
+  (function initControls(){
+    const thSel=$("#theme"); const prSel=$("#preset");
+    const addBtn=$("#add-character-btn"); const expBtn=$("#export-btn"); const impBtn=$("#import-btn"); const impFile=$("#import-file");
+    const lastTheme = localStorage.getItem("mapleTheme") || "lavender";
+    document.body.className = lastTheme; thSel.value = lastTheme;
+    thSel.addEventListener("change",()=>{ document.body.className=thSel.value; localStorage.setItem("mapleTheme", thSel.value); });
+    prSel.value = String(currentPreset);
+    prSel.addEventListener("change",()=>{ currentPreset = parseInt(prSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
+    addBtn.addEventListener("click", addCharacter);
+    expBtn.addEventListener("click", exportJSON);
+    impBtn.addEventListener("click", ()=>impFile.click());
+    impFile.addEventListener("change",(e)=>{ const f=e.target.files?.[0]; if(f) importJSON(f); e.target.value=""; });
+  })();
+
+  // Instructions toggle
+  (function initInstructions(){
+    const instr=$("#instructions"); const btn=$("#instr-toggle");
+    function set(min){ instr.classList.toggle("minimized", min); btn.textContent = min ? "Unhide" : "Hide"; localStorage.setItem("mapleInstrMin", min?"1":"0"); }
+    btn.onclick = ()=> set(!instr.classList.contains("minimized"));
+    set(localStorage.getItem("mapleInstrMin")==="1");
+  })();
+
+  // Avatar modal wiring (minimal for existing flow)
+  function openAvatarModal(i, currentName){
+    $("#avatar-name").value = currentName || "";
+    const ov=$("#avatar-modal-overlay");
+    ov.classList.add("show"); ov.setAttribute("aria-hidden","false");
+    $("#avatar-cancel").onclick = ()=>{ ov.classList.remove("show"); ov.setAttribute("aria-hidden","true"); };
+    $("#avatar-delete").onclick = ()=>{
+      const d=loadData(); d[`char_${i}_image`]=""; saveData(d);
+      const card = $(`#checklists .character[data-index="${i}"]`);
+      if(card) card.querySelector('.char-image-wrap img').src = BASE_MODEL_URL;
+    };
+    $("#avatar-upload").onclick = ()=> $("#hidden-upload").click();
+    $("#hidden-upload").onchange = (e)=>{
+      const f=e.target.files?.[0]; if(!f) return;
+      const reader=new FileReader();
+      reader.onload = ()=>{
+        const d=loadData(); d[`char_${i}_image`]=reader.result; saveData(d);
+        const card = $(`#checklists .character[data-index="${i}"]`);
+        if(card) card.querySelector('.char-image-wrap img').src = reader.result;
+      };
+      reader.readAsDataURL(f);
+      e.target.value="";
+    };
+    $("#avatar-search").onclick = async ()=>{
+      const nm=$("#avatar-name").value.trim(); if(!nm){ $("#avatar-error").textContent="Please enter a character name."; return; }
+      $("#avatar-error").textContent="";
+      await fetchFromMapleRanks(i, nm);
+      ov.classList.remove("show"); ov.setAttribute("aria-hidden","true");
+    };
+    $("#avatar-name").onkeydown = (e)=>{ if(e.key==="Enter"){ e.preventDefault(); $("#avatar-search").click(); } };
+  }
+
+  // Card-to-card focus
+  function focusCardByOffset(card, dir){
+    const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")];
+    const idx=cards.indexOf(card); const next=idx+dir; if(next>=0 && next<cards.length){
+      const el = cards[next].querySelector('.char-name') || cards[next];
+      el.focus?.();
+    }
+  }
+
+  // Boot
+  build();
+  </script>
+</body>
+</html>
