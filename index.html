@@ -283,7 +283,7 @@
 
     // Image + meta
     const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
-    imgWrap.innerHTML = `<img alt="Character image" src="${(d[\`char_\${i}_image\`]||"") || BASE_MODEL_URL}">`;
+    imgWrap.innerHTML = `<img alt="Character image" src="${(d[`char_${i}_image`]||"") || BASE_MODEL_URL}">`;
     card.appendChild(imgWrap);
     const meta=document.createElement("div"); meta.className="char-meta";
     meta.textContent = metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
@@ -481,7 +481,7 @@
     });
   }
 
-  // Programmatic move (Up/Down arrows) with FLIP-like smoothness
+  // Programmatic move (Up/Down arrows)
   function moveCard(from, to){
     const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")]; const n=cards.length;
     if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
