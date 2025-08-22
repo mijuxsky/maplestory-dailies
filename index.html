@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MapleStory Dailies</title>
+  <!-- Unifying font across the app -->
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root{
@@ -18,6 +19,7 @@
       --name-underline:1px solid currentColor;
       --meta-fg:#6b7280;
     }
+    /* Themes */
     body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280;}
     body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#ffffff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280;}
     body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#ffffff; --card-border:#e6def6; --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280;}
@@ -30,11 +32,14 @@
     h1{ margin:0 0 6px; font-size:20px; text-align:center; }
     #utc-time{ font-size:13px; margin-bottom:8px; }
 
-    .theme-row{ display:flex; gap:10px; align-items:center; width:100%; max-width:1000px; margin:4px 0 8px; }
+    /* Dropdowns styled to theme */
     .select-wrap{ position:relative; display:inline-flex; align-items:center; }
     .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
     select{ appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
     option{ background:var(--control-bg); color:var(--control-fg); }
+
+    .theme-row{ display:flex; gap:10px; align-items:center; width:100%; max-width:1000px; margin:4px 0 8px; }
+    label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
 
     #instructions{ position:relative; width:100%; max-width:1000px; margin:10px 0 14px; padding:12px 14px 14px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); }
     #instructions.minimized ul{ display:none; }
@@ -44,7 +49,6 @@
     .toolbar{ display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; width:100%; max-width:1000px; }
     .toolbar .left{ display:flex; align-items:center; gap:10px; }
     .toolbar .right{ display:flex; align-items:center; gap:10px; }
-    label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
 
     .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
     .btn:hover{ filter:brightness(1.02); }
@@ -55,6 +59,7 @@
     .icon-btn.small{ width:24px; height:24px; border-radius:6px; }
     .icon-btn svg{ width:16px; height:16px; }
 
+    /* Grid of cards */
     #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
     .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:48px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
     .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
@@ -62,6 +67,7 @@
     .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
     .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
 
+    /* Character image + meta */
     .char-image-wrap{ text-align:center; margin:0 auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
     .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 4px; font-family:inherit; }
@@ -69,21 +75,25 @@
     .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:2px 0 4px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
 
+    /* Task rows */
     .task{ display:grid; grid-template-columns:18px 1fr auto 14px; gap:8px; align-items:center; margin:6px 0; }
     .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
     .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; cursor:pointer; }
+    .task input[type="checkbox"]{ width:18px; height:18px; } /* checkbox sizes uniform */
     .handle{ cursor:grab; user-select:none; opacity:.7; }
     .handle:active{ cursor:grabbing; }
 
+    /* Check All now at bottom of card */
     .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); }
     .check-all input{ width:18px; height:18px; }
 
+    /* Monochrome confirm dialog */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show{ display:flex; }
     .modal{ background:#fff; color:#111; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
     .modal h3{ margin:0 0 12px; font-size:18px; font-weight:700; }
-    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; } /* Yes/No bottom right */
     .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
     .btn.ghost{ background:#fff; color:#111; border-color:#e0e0e0; }
   </style>
@@ -92,7 +102,7 @@
   <h1>MapleStory Dailies</h1>
   <div id="utc-time">UTC Time: --/--/---- --:--:--</div>
 
-  <!-- Theme row moved here -->
+  <!-- Theme row sits above instructions -->
   <div class="theme-row">
     <label for="theme">Theme:</label>
     <div class="select-wrap">
@@ -107,22 +117,23 @@
     </div>
   </div>
 
+  <!-- How to use (with Hide toggle) -->
   <div id="instructions">
     <button id="instr-toggle" type="button" class="btn">Hide</button>
     <strong>How to use:</strong>
     <ul id="howto">
-      <li><strong>Themes & presets</strong>: Theme is above; choose one of 3 Presets (saved locally).</li>
-      <li><strong>Save/Load</strong>: Use the <em>Save</em> (💾) and <em>Load</em> (📂) icons next to Preset to export/import JSON.</li>
-      <li><strong>Add characters</strong>: Use the <em>+ Add Character</em> button (far right). Max 20. Starts with 2 tasks (min 1, max 10).</li>
-      <li><strong>Keyboard</strong>: Enter/Tab/↓ inserts a line under current task; ↑/Shift+Tab up; ←/→ switches cards.</li>
-      <li><strong>Reorder cards</strong>: Drag & drop (limited to existing slots) or use the ↑/↓ arrows on each card. Smooth slide animation.</li>
-      <li><strong>Reorder tasks</strong>: Drag the handle ⋮⋮ or press Enter to insert below the current line.</li>
-      <li><strong>Upload avatar</strong>: Use the upload icon on a card to set an image (replaces Set Avatar).</li>
-      <li><strong>Daily reset</strong>: All checkboxes reset at <strong>00:00 UTC</strong>.</li>
+      <li><strong>Themes and presets</strong>: Choose a theme above; pick one of 3 Presets saved locally.</li>
+      <li><strong>Save and load</strong>: Use the Save (💾) and Load (📂) icons next to Preset to export or import JSON.</li>
+      <li><strong>Add characters</strong>: Use the + Add Character button. Max 20. Starts with 2 tasks (minimum 1, maximum 10).</li>
+      <li><strong>Keyboard</strong>: Enter or Tab inserts a line under the current task. Arrow keys move between tasks and cards.</li>
+      <li><strong>Reorder cards</strong>: Drag and drop or use the Up and Down arrows on each card. Smooth slide animation.</li>
+      <li><strong>Reorder tasks</strong>: Drag the ⋮⋮ handle; Enter inserts under the current line.</li>
+      <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image.</li>
+      <li><strong>Daily reset</strong>: All checkboxes reset at 00:00 UTC.</li>
     </ul>
   </div>
 
-  <!-- Toolbar: left (preset+icons) | right (add character) -->
+  <!-- Top toolbar: Preset + Save/Load + Add Character -->
   <div class="toolbar">
     <div class="left">
       <label for="preset">Preset:</label>
@@ -146,9 +157,10 @@
     </div>
   </div>
 
+  <!-- Cards container -->
   <div id="checklists"></div>
 
-  <!-- Delete confirm modal -->
+  <!-- Confirm delete modal -->
   <div id="confirm-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
       <h3 id="confirm-title">Confirm Delete</h3>
@@ -160,150 +172,144 @@
     </div>
   </div>
 
+  <!-- Hidden upload input for avatars -->
   <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
 
+  <!-- SortableJS for card drag-reorder -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
   <script>
-  const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/";
+  // ========= CONSTANTS / CONFIG =========
+  const PROXY_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/"; // your worker proxy
   const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
   const MAX_CHARACTERS = 20;
   const MAX_TASKS = 10;
 
+  // ========= SHORTCUTS =========
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
-  const todayUTC = () => {
-    const n=new Date();
-    const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0');
-    return \`\${y}-\${m}-\${d}\`;
-  };
+
+  // ========= UTC CLOCK (fixed) =========
   function tickUTC(){
     const n=new Date();
-    const y=n.getUTCFullYear(); const m=String(n.getUTCMonth()+1).padStart(2,'0'); const d=String(n.getUTCDate()).padStart(2,'0'); const hh=String(n.getUTCHours()).padStart(2,'0'); const mm=String(n.getUTCMinutes()).padStart(2,'0'); const ss=String(n.getUTCSeconds()).padStart(2,'0');
-    $("#utc-time").textContent = \`UTC Time: \${m}/\${d}/\${y} \${hh}:\${mm}:\${ss}\`;
+    const y=n.getUTCFullYear(), m=String(n.getUTCMonth()+1).padStart(2,'0'), d=String(n.getUTCDate()).padStart(2,'0');
+    const hh=String(n.getUTCHours()).padStart(2,'0'), mm=String(n.getUTCMinutes()).padStart(2,'0'), ss=String(n.getUTCSeconds()).padStart(2,'0');
+    $("#utc-time").textContent = `UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
   }
-  setInterval(tickUTC,1000); tickUTC();
+  setInterval(tickUTC, 1000); tickUTC();
+  const todayUTC = () => {
+    const n=new Date();
+    return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`;
+  };
 
+  // ========= THEME (fixed) =========
+  const themeSel = $("#theme");
+  const lastTheme = localStorage.getItem("mapleTheme") || "lavender";
+  document.body.className = lastTheme; themeSel.value = lastTheme;
+  themeSel.addEventListener("change",()=>{ document.body.className = themeSel.value; localStorage.setItem("mapleTheme", themeSel.value); });
+
+  // ========= DATA LAYER =========
   let currentPreset = parseInt(localStorage.getItem("maplePreset")||"1",10);
-  function dataKey(){ return \`mapleData_v2_preset\${currentPreset}\`; }
+  function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
   function safeParse(j){ try{ return JSON.parse(j); }catch{ return null; } }
   function loadData(){
     const raw = localStorage.getItem(dataKey());
-    const d = raw ? safeParse(raw) : { charCount: 0 };
+    const d = raw ? safeParse(raw) : { charCount: 0 }; // allow zero cards
     if(typeof d.charCount !== "number" || d.charCount < 0) d.charCount = 0;
     return d;
   }
   function saveData(d){ localStorage.setItem(dataKey(), JSON.stringify(d)); }
-  function exportJSON(){
-    const d = loadData();
-    const chars = [];
+  function dailyKey(i,t){ return `check_${todayUTC()}_preset${currentPreset}_c${i}_t${t}`; }
+
+  // ========= PRESET SELECTOR =========
+  const presetSel=$("#preset");
+  presetSel.value = String(currentPreset);
+  presetSel.addEventListener("change",()=>{ currentPreset = parseInt(presetSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
+
+  // ========= SAVE / LOAD (fixed) =========
+  $("#save-btn").addEventListener("click", ()=>{
+    const d = loadData(), chars=[];
     for(let i=0;i<d.charCount;i++){
-      const ct = Math.max(1, d[\`char_\${i}_taskCount\`]||1);
-      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[\`char_\${i}_task_\${t}\`]||"");
-      chars.push({ name:d[\`char_\${i}_name\`]||"", image:d[\`char_\${i}_image\`]||"", level:d[\`char_\${i}_level\`]||"", job:d[\`char_\${i}_job\`]||"", tasks });
+      const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
+      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      chars.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
     }
     const blob = new Blob([JSON.stringify({ version:1, preset: currentPreset, characters: chars }, null, 2)], {type:"application/json"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "maplestory-dailies.json";
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-  function importJSON(file){
-    const reader = new FileReader();
-    reader.onload = () => {
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="maplestory-dailies.json"; document.body.appendChild(a); a.click(); a.remove();
+  });
+  $("#load-btn").addEventListener("click", ()=> $("#import-file").click());
+  $("#import-file").addEventListener("change",(e)=>{
+    const f=e.target.files?.[0]; if(!f) return;
+    const reader=new FileReader();
+    reader.onload=()=>{
       const obj = safeParse(reader.result);
       if(!obj || !Array.isArray(obj.characters)){ alert("Invalid file."); return; }
       const chars = obj.characters.slice(0, MAX_CHARACTERS);
       const d = { charCount: chars.length };
       for(let i=0;i<chars.length;i++){
-        const c = chars[i];
-        d[\`char_\${i}_name\`] = c.name||""; d[\`char_\${i}_image\`]=c.image||""; d[\`char_\${i}_level\`]=c.level||""; d[\`char_\${i}_job\`]=c.job||"";
-        const tc = Math.max(1, Math.min(MAX_TASKS, (c.tasks||["",""]).length ));
-        d[\`char_\${i}_taskCount\`] = tc;
-        for(let t=0;t<tc;t++) d[\`char_\${i}_task_\${t}\`] = c.tasks[t]||"";
+        const c=chars[i];
+        d[`char_${i}_name`]=c.name||""; d[`char_${i}_image`]=c.image||""; d[`char_${i}_level`]=c.level||""; d[`char_${i}_job`]=c.job||"";
+        const tc=Math.max(1, Math.min(MAX_TASKS, (c.tasks||["",""]).length ));
+        d[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`]=c.tasks[t]||"";
       }
       saveData(d); build();
     };
-    reader.readAsText(file);
-  }
+    reader.readAsText(f); e.target.value="";
+  });
 
-  function dailyKey(i,t){ return \`check_\${todayUTC()}_preset\${currentPreset}_c\${i}_t\${t}\`; }
-
-  function flipReorder(container, reorderFn){
-    const cards = [...container.querySelectorAll('.character')];
-    const first = new Map(cards.map(el => [el, el.getBoundingClientRect()]));
-    reorderFn();
-    const lastCards = [...container.querySelectorAll('.character')];
-    lastCards.forEach(el => {
-      const firstRect = first.get(el);
-      if(!firstRect) return;
-      const lastRect = el.getBoundingClientRect();
-      const dx = firstRect.left - lastRect.left;
-      const dy = firstRect.top - lastRect.top;
-      if(dx || dy){
-        el.style.transform = \`translate(\${dx}px, \${dy}px)\`;
-        el.getBoundingClientRect();
-        el.style.transition = 'transform .22s ease';
-        el.style.transform = 'translate(0,0)';
-        el.addEventListener('transitionend', function cleanup(){
-          el.style.transition=''; el.style.transform=''; el.removeEventListener('transitionend', cleanup);
-        });
-      }
-    });
-  }
-
+  // ========= BUILD UI =========
   function build(){
-    const wrap = $("#checklists"); wrap.innerHTML = "";
-    const d = loadData();
-    for(let i=0;i<d.charCount;i++){
-      wrap.appendChild(buildCard(i, d));
-    }
-    attachCardDnD(wrap);
+    const wrap=$("#checklists"); wrap.innerHTML="";
+    const d=loadData();
+    for(let i=0;i<d.charCount;i++) wrap.appendChild(buildCard(i, d));
+    initSortable(); // enable card drag-reorder
   }
 
   function buildCard(i, d){
-    const card = document.createElement("div");
-    card.className = "character";
-    card.setAttribute("draggable","true");
-    card.dataset.index = i;
+    const card=document.createElement("div"); card.className="character"; card.dataset.index=i;
 
-    const left = document.createElement("div"); left.className="window-controls-left";
+    // Left: Up/Down arrows
+    const left=document.createElement("div"); left.className="window-controls-left";
     const upBtn = iconBtn("Move Up", arrowUpSVG(), ()=> moveCard(i, i-1));
     const downBtn = iconBtn("Move Down", arrowDownSVG(), ()=> moveCard(i, i+1));
-    left.append(upBtn, downBtn);
-    card.appendChild(left);
+    left.append(upBtn, downBtn); card.appendChild(left);
 
-    const ctrls = document.createElement("div");
-    ctrls.className = "window-controls-right";
-    const btnUpload = iconBtn("Upload Avatar", uploadSVG(), () => startUploadFor(i));
-    const btnDup = iconBtn("Duplicate", duplicateSVG(), () => duplicateCharacter(i));
-    const btnDel = iconBtn("Delete", "&times;", () => confirmDelete(i));
-    ctrls.append(btnUpload, btnDup, btnDel);
-    card.appendChild(ctrlls);
+    // Right: Upload / Duplicate / Delete
+    const right=document.createElement("div"); right.className="window-controls-right";
+    const uploadBtn = iconBtn("Upload Avatar", uploadSVG(), ()=> startUploadFor(i));
+    const dupBtn = iconBtn("Duplicate", duplicateSVG(), ()=> duplicateCharacter(i));
+    const delBtn = iconBtn("Delete", "&times;", ()=> confirmDelete(i));
+    right.append(uploadBtn, dupBtn, delBtn); card.appendChild(right);
 
-    const imgWrap = document.createElement("div"); imgWrap.className="char-image-wrap";
-    imgWrap.innerHTML = \`<img alt="Character image" src="\${(d[\`char_\${i}_image\`]||"") || BASE_MODEL_URL}">\`;
+    // Image + meta
+    const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
+    imgWrap.innerHTML = `<img alt="Character image" src="${(d[\`char_\${i}_image\`]||"") || BASE_MODEL_URL}">`;
     card.appendChild(imgWrap);
-    const meta = document.createElement("div"); meta.className="char-meta";
-    meta.textContent = metaText(d[\`char_\${i}_level\`], d[\`char_\${i}_job\`]); card.appendChild(meta);
+    const meta=document.createElement("div"); meta.className="char-meta";
+    meta.textContent = metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
 
-    const name = document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[\`char_\${i}_name\`]||"";
-    name.addEventListener("input",()=>{ const dd=loadData(); dd[\`char_\${i}_name\`]=name.value; saveData(dd); });
+    // Name (Enter/blur triggers MapleRanks proxy, left/right jumps cards)
+    const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
+    name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
     name.addEventListener("keydown", async (e)=>{
-      const atStart=name.selectionStart===0&&name.selectionEnd===0; const atEnd=name.selectionStart===name.value.length&&name.selectionEnd===name.value.length;
-      if(e.key==="Enter"){ e.preventDefault(); await fetchFromMapleRanks(i, name.value.trim()); focusFirstTask(card); }
+      const atStart=name.selectionStart===0&&name.selectionEnd===0;
+      const atEnd=name.selectionStart===name.value.length&&name.selectionEnd===name.value.length;
+      if(e.key==="Enter"){ e.preventDefault(); const v=name.value.trim(); if(v) await fetchFromMapleRanks(i, v); focusFirstTask(card); }
       else if(e.key==="ArrowRight"&&atEnd){ e.preventDefault(); focusCardByOffset(card,+1); }
       else if(e.key==="ArrowLeft"&&atStart){ e.preventDefault(); focusCardByOffset(card,-1); }
     });
-    name.addEventListener("blur", ()=>{ const v=name.value.trim(); if(v) fetchFromMapleRanks(i,v); });
+    name.addEventListener("blur", ()=>{ const v=name.value.trim(); if(v) fetchFromMapleRanks(i, v); });
     card.appendChild(name);
 
-    let count = d[\`char_\${i}_taskCount\`]; if(count==null) count=2; if(count<1) count=1;
-    d[\`char_\${i}_taskCount\`] = count; saveData(d);
-    for(let t=0;t<count;t++) card.appendChild(buildTask(i, t, d));
+    // Tasks (min 1, max 10)
+    let count=d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; d[`char_${i}_taskCount`]=count; saveData(d);
+    for(let t=0;t<count;t++) card.appendChild(buildTask(i,t,d));
 
-    const checkRow = document.createElement("div"); checkRow.className="check-all";
-    const checkAll = document.createElement("input"); checkAll.type="checkbox"; checkAll.title="Check/Uncheck all tasks";
-    const checkLbl = document.createElement("label"); checkLbl.textContent="Check All";
-    checkRow.append(checkAll, checkLbl); card.appendChild(checkRow);
+    // Check All at bottom
+    const checkRow=document.createElement("div"); checkRow.className="check-all";
+    const checkAll=document.createElement("input"); checkAll.type="checkbox"; checkAll.title="Check or uncheck all tasks";
+    const checkLbl=document.createElement("label"); checkLbl.textContent="Check All";
+    checkRow.append(checkAll,checkLbl); card.appendChild(checkRow);
     function refreshMaster(){
       const boxes = Array.from(card.querySelectorAll('.task input[type="checkbox"]'));
       checkAll.checked = boxes.length>0 && boxes.every(b=>b.checked);
@@ -314,137 +320,143 @@
     });
     setTimeout(refreshMaster,0);
 
+    // Task drag inside card
     attachTaskDnD(card, i);
+
     return card;
   }
 
-  function buildTask(i, t, d){
-    const row = document.createElement("div"); row.className="task"; row.setAttribute("draggable","true");
-    const box = document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked=(localStorage.getItem(dailyKey(i,t))==='true');
+  function buildTask(i,t,d){
+    const row=document.createElement("div"); row.className="task"; row.setAttribute("draggable","true");
+    const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked = (localStorage.getItem(dailyKey(i,t))==='true');
     box.onchange = ()=> localStorage.setItem(dailyKey(i,t), box.checked?'true':'false');
-    const input = document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value = d[\`char_\${i}_task_\${t}\`]||"";
-    const del = document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
-    const handle = document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
+    const input=document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value = d[`char_${i}_task_${t}`]||"";
+    const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
+    const handle=document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
 
+    // Keyboard: Enter/Tab inserts below current; Arrow nav
     input.addEventListener("keydown",(e)=>{
-      const atStart=input.selectionStart===0&&input.selectionEnd===0; const atEnd=input.selectionStart===input.value.length&&input.selectionEnd===input.value.length;
+      const atStart=input.selectionStart===0&&input.selectionEnd===0;
+      const atEnd=input.selectionStart===input.value.length&&input.selectionEnd===input.value.length;
       if(e.key==="Enter" || (e.key==="Tab"&&!e.shiftKey)){
-        e.preventDefault();
-        insertTaskAfter(i, t);
+        e.preventDefault(); insertTaskAfter(i,t);
         setTimeout(()=>{
-          const card = $(`#checklists .character[data-index="${i}"]`);
+          const card = document.querySelector(`#checklists .character[data-index="${i}"]`);
           const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
-          const nextIndex = Math.min(t+1, inputs.length-1);
-          inputs[nextIndex]?.focus();
+          inputs[Math.min(t+1, inputs.length-1)]?.focus();
         },0);
       }else if((e.key==="Tab"&&e.shiftKey)||(e.key==="ArrowUp"&&atStart)){
-        e.preventDefault(); focusPrevInput(i, row);
+        e.preventDefault(); focusPrevInput(i,row);
       }else if(e.key==="ArrowDown"&&atEnd){
-        e.preventDefault(); focusNextInput(i, row);
+        e.preventDefault(); focusNextInput(i,row);
       }else if(e.key==="ArrowRight"&&atEnd){
         e.preventDefault(); focusCardByOffset(row.closest('.character'), +1);
       }else if(e.key==="ArrowLeft"&&atStart){
         e.preventDefault(); focusCardByOffset(row.closest('.character'), -1);
       }
     });
+
+    // Update or delete blank line (keep min 1)
     input.addEventListener("input",()=>{
       const dd=loadData();
       if(input.value===""){
-        const ct = dd[\`char_\${i}_taskCount\`]||1;
+        const ct=dd[`char_${i}_taskCount`]||1;
         if(ct>1){
-          dd[\`char_\${i}_task_\${t}\`]="";
-          for(let k=t+1;k<ct;k++){ dd[\`char_\${i}_task_\${k-1}\`]=dd[\`char_\${i}_task_\${k}\`]||""; localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false"); }
-          delete dd[\`char_\${i}_task_\${ct-1}\`];
-          dd[\`char_\${i}_taskCount\`]=ct-1;
+          dd[`char_${i}_task_${t}`]="";
+          for(let k=t+1;k<ct;k++){
+            dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||"";
+            localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false");
+          }
+          delete dd[`char_${i}_task_${ct-1}`];
+          dd[`char_${i}_taskCount`]=ct-1;
           saveData(dd); build();
         }else{
-          dd[\`char_\${i}_task_\${t}\`]=""; saveData(dd);
+          dd[`char_${i}_task_${t}`]=""; saveData(dd);
         }
       }else{
-        dd[\`char_\${i}_task_\${t}\`]=input.value; saveData(dd);
+        dd[`char_${i}_task_${t}`]=input.value; saveData(dd);
       }
     });
-    del.onclick = ()=>{
-      const dd=loadData(); const ct=dd[\`char_\${i}_taskCount\`]||1;
+
+    del.onclick=()=>{
+      const dd=loadData(); const ct=dd[`char_${i}_taskCount`]||1;
       if(ct>1){
-        dd[\`char_\${i}_task_\${t}\`]="";
-        for(let k=t+1;k<ct;k++){ dd[\`char_\${i}_task_\${k-1}\`]=dd[\`char_\${i}_task_\${k}\`]||""; localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false"); }
-        delete dd[\`char_\${i}_task_\${ct-1}\`];
-        dd[\`char_\${i}_taskCount\`]=ct-1;
+        dd[`char_${i}_task_${t}`]="";
+        for(let k=t+1;k<ct;k++){
+          dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||"";
+          localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false");
+        }
+        delete dd[`char_${i}_task_${ct-1}`];
+        dd[`char_${i}_taskCount`]=ct-1;
         saveData(dd); build();
       }else{
-        input.value=""; dd[\`char_\${i}_task_\${t}\`]=""; saveData(dd);
+        input.value=""; dd[`char_${i}_task_${t}`]=""; saveData(dd);
       }
     };
 
-    row.append(box, input, del, handle);
+    row.append(box,input,del,handle);
     return row;
   }
 
-  function metaText(level, job){
-    const parts=[]; if(level) parts.push(\`Lv. \${level}\`); if(job) parts.push(job); return parts.join(" ");
-  }
-
-  function focusFirstTask(card){
-    const el = card.querySelector('.task input[type="text"]') || card.querySelector('.char-name');
-    if(el){ el.focus(); const e=el.value.length; el.setSelectionRange?.(e,e); }
-  }
-  function focusNextInput(i, row){
-    const card = $(`#checklists .character[data-index="${i}"]`);
-    const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
-    const idx = inputs.indexOf(row.querySelector('input[type="text"]'));
+  function metaText(level, job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
+  function focusFirstTask(card){ (card.querySelector('.task input[type="text"]') || card.querySelector('.char-name'))?.focus(); }
+  function focusNextInput(i,row){
+    const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
+    const inputs=Array.from(card.querySelectorAll('.task input[type="text"]'));
+    const idx=inputs.indexOf(row.querySelector('input[type="text"]'));
     if(idx>=0 && idx<inputs.length-1) inputs[idx+1].focus();
   }
-  function focusPrevInput(i, row){
-    const card = $(`#checklists .character[data-index="${i}"]`);
-    const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
-    const idx = inputs.indexOf(row.querySelector('input[type="text"]'));
+  function focusPrevInput(i,row){
+    const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
+    const inputs=Array.from(card.querySelectorAll('.task input[type="text"]'));
+    const idx=inputs.indexOf(row.querySelector('input[type="text"]'));
     if(idx>0) inputs[idx-1].focus(); else (card.querySelector('.char-name')||{}).focus?.();
   }
+  function focusCardByOffset(card,dir){
+    const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")];
+    const idx=cards.indexOf(card); const next=idx+dir; if(next>=0 && next<cards.length) (cards[next].querySelector('.char-name')||cards[next]).focus?.();
+  }
 
-  function insertTaskAfter(i, t){
-    const d=loadData();
-    const ct = Math.max(1, d[\`char_\${i}_taskCount\`]||1);
+  // ========= Insert task beneath current =========
+  function insertTaskAfter(i,t){
+    const d=loadData(); const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
     if(ct>=MAX_TASKS) return;
-    for(let k=ct-1;k>t;k--){ d[\`char_\${i}_task_\${k+1}\`]=d[\`char_\${i}_task_\${k}\`]||""; localStorage.setItem(dailyKey(i,k+1), localStorage.getItem(dailyKey(i,k))||"false"); }
-    d[\`char_\${i}_task_\${t+1}\`] = "";
-    d[\`char_\${i}_taskCount\`] = ct+1;
+    for(let k=ct-1;k>t;k--){
+      d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||"";
+      localStorage.setItem(dailyKey(i,k+1), localStorage.getItem(dailyKey(i,k))||"false");
+    }
+    d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskCount`]=ct+1;
     saveData(d); build();
   }
 
+  // ========= Drag reorder tasks within card =========
   function attachTaskDnD(card, i){
     let dragEl=null, startIdx=null;
     card.addEventListener("dragstart",(e)=>{
-      const row = e.target.closest(".task"); if(!row) return;
+      const row=e.target.closest(".task"); if(!row) return;
       if(e.target.classList.contains("handle") || e.target.closest(".handle")){
         dragEl=row; startIdx=[...card.querySelectorAll(".task")].indexOf(row);
         e.dataTransfer.effectAllowed="move";
-      }else{
-        e.preventDefault();
-      }
+      }else{ e.preventDefault(); }
     });
     card.addEventListener("dragover",(e)=>{
       if(!dragEl) return; e.preventDefault();
       const rows=[...card.querySelectorAll(".task")].filter(r=>r!==dragEl);
-      const y=e.clientY;
-      let after=null;
+      const y=e.clientY; let after=null;
       for(const r of rows){
-        const rect=r.getBoundingClientRect();
-        const mid=rect.top+rect.height/2;
+        const rect=r.getBoundingClientRect(); const mid=rect.top+rect.height/2;
         if(y<mid){ after=r; break; }
       }
-      if(after) card.insertBefore(dragEl, after);
-      else card.appendChild(dragEl);
+      if(after) card.insertBefore(dragEl, after); else card.appendChild(dragEl);
     });
     card.addEventListener("drop",(e)=>{
       if(!dragEl) return; e.preventDefault();
       const newIdx=[...card.querySelectorAll(".task")].indexOf(dragEl);
       if(newIdx!==startIdx && startIdx!=null){
-        const d=loadData();
-        const ct=d[\`char_\${i}_taskCount\`]||1;
-        const arr=[]; for(let k=0;k<ct;k++) arr.push(d[\`char_\${i}_task_\${k}\`]||"");
+        const d=loadData(); const ct=d[`char_${i}_taskCount`]||1;
+        const arr=[]; for(let k=0;k<ct;k++) arr.push(d[`char_${i}_task_${k}`]||"");
         const moved=arr.splice(startIdx,1)[0]; arr.splice(newIdx,0,moved);
-        for(let k=0;k<arr.length;k++) d[\`char_\${i}_task_\${k}\`]=arr[k]||"";
+        for(let k=0;k<arr.length;k++) d[`char_${i}_task_${k}`]=arr[k]||"";
         saveData(d);
       }
       dragEl=null; startIdx=null; build();
@@ -452,212 +464,144 @@
     card.addEventListener("dragend",()=>{ dragEl=null; startIdx=null; });
   }
 
-  function attachCardDnD(container){
-    let dragFrom = null;
-    container.addEventListener("dragstart",(e)=>{
-      const card=e.target.closest(".character"); if(!card) return;
-      dragFrom= indexOfCard(card);
-      card.classList.add("dragging");
-      e.dataTransfer.effectAllowed="move";
-    });
-    container.addEventListener("dragend",(e)=>{
-      const dragging=$(".character.dragging"); dragging?.classList.remove("dragging");
-      dragFrom=null;
-    });
-    container.addEventListener("dragover",(e)=>{
-      const dragging=$(".character.dragging"); if(!dragging) return;
-      e.preventDefault();
-      const cards=[...container.querySelectorAll(".character")].filter(c=>!c.classList.contains("dragging"));
-      const n = cards.length + 1;
-      const y=e.clientY;
-      let idx=n-1;
-      for(let j=0;j<cards.length;j++){
-        const r=cards[j].getBoundingClientRect();
-        const mid=r.top + r.height/2;
-        if(y<mid){ idx=j; break; }
+  // ========= SortableJS for card reorder (smooth motion) =========
+  let sortableInst=null;
+  function initSortable(){
+    const cont=$("#checklists");
+    if(sortableInst){ sortableInst.destroy(); sortableInst=null; }
+    sortableInst = new Sortable(cont, {
+      animation: 180,
+      ghostClass: "dragging",
+      draggable: ".character",
+      onEnd: (evt)=>{
+        const from=evt.oldIndex, to=evt.newIndex;
+        if(from==null || to==null || from===to) return;
+        moveCard(from, to);
       }
-      container.dataset.dropIndex = String(idx);
-    });
-    container.addEventListener("drop",(e)=>{
-      e.preventDefault();
-      const dragging=$(".character.dragging"); if(!dragging) return;
-      const from = dragFrom;
-      const idxAttr = container.dataset.dropIndex;
-      if(idxAttr==null) return;
-      const to = parseInt(idxAttr,10);
-      if(Number.isNaN(to)) return;
-      moveCard(from, to);
-      container.dataset.dropIndex = "";
     });
   }
 
-  function indexOfCard(card){
-    const cards=[...$("#checklists").querySelectorAll(".character")];
-    return cards.indexOf(card);
-  }
-
+  // Programmatic move (Up/Down arrows) with FLIP-like smoothness
   function moveCard(from, to){
-    const cont = $("#checklists");
-    const cards=[...cont.querySelectorAll(".character")];
-    const n = cards.length;
-    if(from<0||from>=n) return;
-    to = Math.max(0, Math.min(n-1, to));
-    if(from===to) return;
+    const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")]; const n=cards.length;
+    if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
 
-    const d=loadData();
-    const chars=[];
+    const d=loadData(), list=[];
     for(let i=0;i<d.charCount;i++){
-      const ct=Math.max(1, d[\`char_\${i}_taskCount\`]||1);
-      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[\`char_\${i}_task_\${t}\`]||"");
-      chars.push({ name:d[\`char_\${i}_name\`]||"", image:d[\`char_\${i}_image\`]||"", level:d[\`char_\${i}_level\`]||"", job:d[\`char_\${i}_job\`]||"", tasks });
+      const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
+      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      list.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
     }
-    const item=chars.splice(from,1)[0]; chars.splice(to,0,item);
-    const nd={ charCount: chars.length };
-    for(let i=0;i<chars.length;i++){
-      const c=chars[i];
-      nd[\`char_\${i}_name\`]=c.name||""; nd[\`char_\${i}_image\`]=c.image||""; nd[\`char_\${i}_level\`]=c.level||""; nd[\`char_\${i}_job\`]=c.job||"";
-      nd[\`char_\${i}_taskCount\`]=Math.max(1, Math.min(MAX_TASKS, c.tasks.length));
-      for(let t=0;t<c.tasks.length;t++) nd[\`char_\${i}_task_\${t}\`]=c.tasks[t]||"";
+    const item=list.splice(from,1)[0]; list.splice(to,0,item);
+    const nd={ charCount:list.length };
+    for(let i=0;i<list.length;i++){
+      const c=list[i];
+      nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job;
+      nd[`char_${i}_taskCount`]=Math.max(1, Math.min(MAX_TASKS, c.tasks.length));
+      for(let t=0;t<c.tasks.length;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
     }
-    flipReorder(cont, ()=>{
-      saveData(nd);
-      cont.innerHTML="";
-      const newData = loadData();
-      for(let i=0;i<newData.charCount;i++){
-        cont.appendChild(buildCard(i, newData));
-      }
-    });
+    saveData(nd); build();
   }
 
-  function addCharacter(){
-    const d=loadData();
-    if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
-    const i = d.charCount; d.charCount = i+1;
-    d[\`char_\${i}_name\`]=""; d[\`char_\${i}_image\`]=""; d[\`char_\${i}_level\`]=""; d[\`char_\${i}_job\`]="";
-    d[\`char_\${i}_taskCount\`]=2; d[\`char_\${i}_task_0\`]=""; d[\`char_\${i}_task_1\`]="";
+  // ========= Character add / duplicate / delete =========
+  $("#add-character-btn").addEventListener("click", ()=>{
+    const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
+    const i=d.charCount; d.charCount=i+1;
+    d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]="";
+    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]="";
     saveData(d); build();
-  }
+  });
+
   function duplicateCharacter(i){
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
-    const ct=d[\`char_\${i}_taskCount\`]||2; const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[\`char_\${i}_task_\${t}\`]||"");
-    const ins = d.charCount;
-    d.charCount = ins+1;
-    d[\`char_\${ins}_name\`]=d[\`char_\${i}_name\`]||""; d[\`char_\${ins}_image\`]=d[\`char_\${i}_image\`]||""; d[\`char_\${ins}_level\`]=d[\`char_\${i}_level\`]||""; d[\`char_\${ins}_job\`]=d[\`char_\${i}_job\`]||"";
-    d[\`char_\${ins}_taskCount\`]=ct; for(let t=0;t<ct;t++) d[\`char_\${ins}_task_\${t}\`]=tasks[t]||"";
+    const ct=d[`char_${i}_taskCount`]||2; const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+    const ins=d.charCount; d.charCount=ins+1;
+    d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||"";
+    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||"";
     saveData(d); build();
   }
+
   function confirmDelete(i){
+    // Per earlier requirement: warn if popups are blocked (even though we use an in-page modal).
     let w=null; try{ w=window.open('','_blank','width=1,height=1'); }catch(e){}
-    if(!w){
-      alert("This action requires pop ups. Please allow pop ups for this site and try again.");
-      return;
-    } else { try{ w.close(); }catch(e){} }
-    const d=loadData();
-    const nm = d[\`char_\${i}_name\`] || "Untitled";
-    $("#confirm-msg").textContent = \`Are you sure you want to delete the character: \${nm}?\`;
-    const overlay = $("#confirm-overlay");
+    if(!w){ alert("This action requires pop ups. Please allow pop ups for this site and try again."); return; }
+    else { try{ w.close(); }catch(e){} }
+
+    const d=loadData(); const nm=d[`char_${i}_name`]||"Untitled";
+    $("#confirm-msg").textContent=`Are you sure you want to delete the character: ${nm}?`;
+    const overlay=$("#confirm-overlay");
     overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
     $("#confirm-cancel").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
     $("#confirm-ok").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); doDelete(i); };
   }
+
   function doDelete(i){
-    const d=loadData();
-    const n=d.charCount; if(n<=0) return;
+    const d=loadData(); const n=d.charCount; if(n<=0) return;
     for(let k=i;k<n-1;k++){
-      d[\`char_\${k}_name\`]=d[\`char_\${k+1}_name\`]||"";
-      d[\`char_\${k}_image\`]=d[\`char_\${k+1}_image\`]||"";
-      d[\`char_\${k}_level\`]=d[\`char_\${k+1}_level\`]||"";
-      d[\`char_\${k}_job\`]=d[\`char_\${k+1}_job\`]||"";
-      const ct=d[\`char_\${k+1}_taskCount\`]||1;
-      d[\`char_\${k}_taskCount\`]=ct;
-      for(let t=0;t<ct;t++) d[\`char_\${k}_task_\${t}\`]=d[\`char_\${k+1}_task_\${t}\`]||"";
+      d[`char_${k}_name`]=d[`char_${k+1}_name`]||"";
+      d[`char_${k}_image`]=d[`char_${k+1}_image`]||"";
+      d[`char_${k}_level`]=d[`char_${k+1}_level`]||"";
+      d[`char_${k}_job`]=d[`char_${k+1}_job`]||"";
+      const ct=d[`char_${k+1}_taskCount`]||1;
+      d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
     }
     const last=n-1;
-    delete d[\`char_\${last}_name\`]; delete d[\`char_\${last}_image\`]; delete d[\`char_\${last}_level\`]; delete d[\`char_\${last}_job\`];
-    const lct=d[\`char_\${last}_taskCount\`]||1; delete d[\`char_\${last}_taskCount\`];
-    for(let t=0;t<lct;t++) delete d[\`char_\${last}_task_\${t}\`];
-    d.charCount = Math.max(0, n-1);
-    saveData(d); build();
+    delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`];
+    const lct=d[`char_${last}_taskCount`]||1; delete d[`char_${last}_taskCount`];
+    for(let t=0;t<lct;t++) delete d[`char_${last}_task_${t}`];
+    d.charCount=Math.max(0, n-1); saveData(d); build();
   }
 
+  // ========= Upload avatar (local only) =========
+  let uploadIndex=null;
+  function startUploadFor(i){ uploadIndex=i; $("#hidden-upload").click(); }
+  $("#hidden-upload").addEventListener("change",(e)=>{
+    const f=e.target.files?.[0]; if(!f) return;
+    const reader=new FileReader();
+    reader.onload=()=>{ const d=loadData(); d[`char_${uploadIndex}_image`]=reader.result; saveData(d); const card=document.querySelector(`#checklists .character[data-index="${uploadIndex}"]`); if(card) card.querySelector('.char-image-wrap img').src=reader.result; };
+    reader.readAsDataURL(f); e.target.value="";
+  });
+
+  // ========= MapleRanks fetch via proxy (on name enter/blur) =========
   async function fetchFromMapleRanks(i, name){
     if(!name) return;
     try{
-      const resp = await fetch(\`\${PROXY_URL}?name=\${encodeURIComponent(name)}\`);
-      const data = await resp.json();
+      const resp=await fetch(`${PROXY_URL}?name=${encodeURIComponent(name)}`);
+      const data=await resp.json();
       if(!resp.ok) throw new Error(data && data.error || "lookup failed");
       const { imageUrl, level, job } = data;
       const d=loadData();
-      d[\`char_\${i}_name\`]=name; d[\`char_\${i}_image\`]=imageUrl||""; d[\`char_\${i}_level\`]=level||""; d[\`char_\${i}_job\`]=job||""; saveData(d);
-      const card = $(`#checklists .character[data-index="${i}"]`);
+      d[`char_${i}_name`]=name; d[`char_${i}_image`]=imageUrl||""; d[`char_${i}_level`]=level||""; d[`char_${i}_job`]=job||""; saveData(d);
+      const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
       if(card){
-        card.querySelector('.char-name').value = name;
+        card.querySelector('.char-name').value=name;
         card.querySelector('.char-image-wrap img').src = (imageUrl||"") || BASE_MODEL_URL;
         card.querySelector('.char-meta').textContent = [level?`Lv. ${level}`:null, job||null].filter(Boolean).join(" ");
       }
     }catch(e){
-      const d=loadData();
-      d[\`char_\${i}_image\`]=""; d[\`char_\${i}_level\`]=""; d[\`char_\${i}_job\`]=""; saveData(d);
-      const card = $(`#checklists .character[data-index="${i}"]`);
-      if(card){ card.querySelector('.char-image-wrap img').src = BASE_MODEL_URL; card.querySelector('.char-meta').textContent=""; }
+      // fallback to base model
+      const d=loadData(); d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]=""; saveData(d);
+      const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
+      if(card){ card.querySelector('.char-image-wrap img').src=BASE_MODEL_URL; card.querySelector('.char-meta').textContent=""; }
     }
   }
 
-  let uploadIndex = null;
-  function startUploadFor(i){
-    uploadIndex = i;
-    $("#hidden-upload").click();
-  }
-  $("#hidden-upload").addEventListener("change",(e)=>{
-    const f=e.target.files?.[0]; if(!f) return;
-    const reader=new FileReader();
-    reader.onload = ()=>{
-      const d=loadData(); d[\`char_\${uploadIndex}_image\`]=reader.result; saveData(d);
-      const card = $(`#checklists .character[data-index="${uploadIndex}"]`);
-      if(card) card.querySelector('.char-image-wrap img').src = reader.result;
-    };
-    reader.readAsDataURL(f);
-    e.target.value="";
-  });
+  // ========= Instructions Hide/Unhide =========
+  (function initInstructions(){
+    const instr=$("#instructions"); const btn=$("#instr-toggle");
+    function set(min){ instr.classList.toggle("minimized", min); btn.textContent = min ? "Unhide" : "Hide"; localStorage.setItem("mapleInstrMin", min?"1":"0"); }
+    btn.onclick=()=> set(!instr.classList.contains("minimized"));
+    set(localStorage.getItem("mapleInstrMin")==="1");
+  })();
 
-  function iconBtn(title, svgOrHtml, onClick){
-    const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b;
-  }
+  // ========= ICON HELPERS =========
+  function iconBtn(title, svgOrHtml, onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
   function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
   function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
   function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
   function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
-  (function initControls(){
-    const thSel=$("#theme"); const prSel=$("#preset");
-    const addBtn=$("#add-character-btn");
-    const saveBtn=$("#save-btn"); const loadBtn=$("#load-btn"); const impFile=$("#import-file");
-    const lastTheme = localStorage.getItem("mapleTheme") || "lavender";
-    document.body.className = lastTheme; thSel.value = lastTheme;
-    thSel.addEventListener("change",()=>{ document.body.className=thSel.value; localStorage.setItem("mapleTheme", thSel.value); });
-    prSel.value = String(currentPreset);
-    prSel.addEventListener("change",()=>{ currentPreset = parseInt(prSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
-    addBtn.addEventListener("click", addCharacter);
-    saveBtn.addEventListener("click", exportJSON);
-    loadBtn.addEventListener("click", ()=> impFile.click());
-    impFile.addEventListener("change",(e)=>{ const f=e.target.files?.[0]; if(f) importJSON(f); e.target.value=""; });
-  })();
-
-  (function initInstructions(){
-    const instr=$("#instructions"); const btn=$("#instr-toggle");
-    function set(min){ instr.classList.toggle("minimized", min); btn.textContent = min ? "Unhide" : "Hide"; localStorage.setItem("mapleInstrMin", min?"1":"0"); }
-    btn.onclick = ()=> set(!instr.classList.contains("minimized"));
-    set(localStorage.getItem("mapleInstrMin")==="1");
-  })();
-
-  function focusCardByOffset(card, dir){
-    const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")];
-    const idx=cards.indexOf(card); const next=idx+dir; if(next>=0 && next<cards.length){
-      const el = cards[next].querySelector('.char-name') || cards[next];
-      el.focus?.();
-    }
-  }
-
+  // ========= INIT =========
   build();
   </script>
 </body>
