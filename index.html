@@ -51,11 +51,11 @@
 
     /* Grid + Card */
     #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
-    .character,.drop-placeholder{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); }
-    .character{ padding:48px 16px 12px; }
-    .drop-placeholder{ padding:48px 16px 12px; outline:2px dashed var(--icon); outline-offset:-6px; background:transparent; }
+    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:48px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
+    .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
 
     .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
+    .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
     .icon-btn{ width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:14px; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); transition:.15s background,.15s color,.15s border-color, transform .05s ease-in-out; font-family:inherit; }
     .icon-btn:hover{ background:var(--icon-hover); }
     .icon-btn:active{ transform:translateY(1px); }
@@ -76,23 +76,17 @@
     .handle:active{ cursor:grabbing; }
 
     .check-all{ display:flex; align-items:center; gap:8px; margin:6px 0 2px; font-size:12px; color:var(--meta-fg); }
+    .check-all input{ width:18px; height:18px; }
 
-    /* Modal (monochrome) */
+    /* Modal (monochrome, buttons bottom-right) */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show{ display:flex; }
     .modal{ background:#fff; color:#111; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
     .modal h3{ margin:0 0 12px; font-size:18px; font-weight:700; letter-spacing:.2px; }
-    .modal .row{ display:grid; grid-template-columns:1fr; gap:8px; margin:6px 0 10px; }
-    .modal label{ font-weight:600; font-size:12px; }
-    .modal input[type="text"]{ width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#111; font-family:inherit; font-size:var(--ui); }
-    .modal .error{ color:#b00020; min-height:18px; font-size:12px; margin-top:2px; }
-    .modal .actions{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:10px; }
-    .modal .left-actions{ display:flex; gap:8px; }
-    .modal .right-actions{ display:flex; gap:8px; }
-    .modal .actions .btn{ background:#111; color:#fff; border-color:#111; }
-    .modal .actions .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
-    .modal .actions .btn.ghost{ background:#fff; color:#111; border-color:#e0e0e0; }
-
+    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
+    .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
+    .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
+    .btn.ghost{ background:#fff; color:#111; border-color:#e0e0e0; }
   </style>
 </head>
 <body class="lavender">
@@ -106,7 +100,7 @@
       <li><strong>Themes & presets</strong>: Pick a Theme and one of 3 Presets (saved locally).</li>
       <li><strong>Add characters</strong>: Click <em>+ Add Character</em> (max 20). Starts with 2 tasks (min 1, max 10).</li>
       <li><strong>Keyboard</strong>: Enter/Tab/↓ to next task (inserts a line under current). ↑/Shift+Tab up. ←/→ switches cards.</li>
-      <li><strong>Reorder cards</strong>: Drag & drop anywhere in the grid (smooth, snap by row then column).</li>
+      <li><strong>Reorder cards</strong>: Drag & drop anywhere in the grid (limited to existing slots). Smooth slide animation.</li>
       <li><strong>Reorder tasks</strong>: Drag the handle ⋮⋮ or press Enter to insert under the current line.</li>
       <li><strong>Set avatar</strong>: Camera → Set Avatar (fetch from MapleRanks or upload). Shows Lv. + Class.</li>
       <li><strong>Import/Export</strong>: Export a JSON file and Import it on another device (no servers).</li>
@@ -144,19 +138,19 @@
 
   <div id="checklists"></div>
 
-  <!-- Delete confirm modal (monochrome) -->
+  <!-- Delete confirm modal -->
   <div id="confirm-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="confirm-title" aria-modal="true">
       <h3 id="confirm-title">Confirm Delete</h3>
       <p id="confirm-msg">Are you sure you want to delete this character?</p>
       <div class="actions">
-        <button id="confirm-cancel" type="button" class="btn ghost">No</button>
+        <button id="confirm-cancel" type="button" class="btn secondary">No</button>
         <button id="confirm-ok" type="button" class="btn">Yes</button>
       </div>
     </div>
   </div>
 
-  <!-- Avatar modal (monochrome) -->
+  <!-- Avatar modal -->
   <div id="avatar-modal-overlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="avatar-modal-title" aria-modal="true">
       <h3 id="avatar-modal-title">Set Avatar</h3>
@@ -166,14 +160,10 @@
       </div>
       <div class="error" id="avatar-error"></div>
       <div class="actions">
-        <div class="left-actions">
-          <button id="avatar-upload" type="button" class="btn ghost">Upload</button>
-          <button id="avatar-delete" type="button" class="btn secondary">Delete Avatar</button>
-        </div>
-        <div class="right-actions">
-          <button id="avatar-cancel" type="button" class="btn secondary">Cancel</button>
-          <button id="avatar-search" type="button" class="btn">Set Avatar</button>
-        </div>
+        <button id="avatar-upload" type="button" class="btn ghost">Upload</button>
+        <button id="avatar-delete" type="button" class="btn secondary">Delete Avatar</button>
+        <button id="avatar-cancel" type="button" class="btn secondary">Cancel</button>
+        <button id="avatar-search" type="button" class="btn">Set Avatar</button>
       </div>
     </div>
   </div>
@@ -249,6 +239,30 @@
 
   function dailyKey(i,t){ return `check_${todayUTC()}_preset${currentPreset}_c${i}_t${t}`; }
 
+  // === FLIP animation helper ===
+  function flipReorder(container, reorderFn){
+    const cards = [...container.querySelectorAll('.character')];
+    const first = new Map(cards.map(el => [el, el.getBoundingClientRect()]));
+    reorderFn();
+    const lastCards = [...container.querySelectorAll('.character')];
+    lastCards.forEach(el => {
+      const firstRect = first.get(el);
+      if(!firstRect) return;
+      const lastRect = el.getBoundingClientRect();
+      const dx = firstRect.left - lastRect.left;
+      const dy = firstRect.top - lastRect.top;
+      if(dx || dy){
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+        el.getBoundingClientRect(); // force reflow
+        el.style.transition = 'transform .22s ease';
+        el.style.transform = 'translate(0,0)';
+        el.addEventListener('transitionend', function cleanup(){
+          el.style.transition=''; el.style.transform=''; el.removeEventListener('transitionend', cleanup);
+        });
+      }
+    });
+  }
+
   // === UI builders ===
   function build(){
     const wrap = $("#checklists"); wrap.innerHTML = "";
@@ -265,7 +279,14 @@
     card.setAttribute("draggable","true");
     card.dataset.index = i;
 
-    // Top-right controls
+    // top-left arrows
+    const left = document.createElement("div"); left.className="window-controls-left";
+    const upBtn = iconButton("Move Up", arrowUpSVG(), ()=> moveCard(i, i-1));
+    const downBtn = iconButton("Move Down", arrowDownSVG(), ()=> moveCard(i, i+1));
+    left.append(upBtn, downBtn);
+    card.appendChild(left);
+
+    // top-right controls
     const ctrls = document.createElement("div");
     ctrls.className = "window-controls-right";
     const btnCam = iconButton("Set Avatar", cameraSVG(), () => openAvatarModal(i, d[`char_${i}_name`]||""));
@@ -293,18 +314,16 @@
     name.addEventListener("blur", ()=>{ const v=name.value.trim(); if(v) fetchFromMapleRanks(i,v); });
     card.appendChild(name);
 
-    // Check all
-    const checkRow = document.createElement("div"); checkRow.className="check-all";
-    const checkAll = document.createElement("input"); checkAll.type="checkbox"; checkAll.title="Check/Uncheck all tasks";
-    const checkLbl = document.createElement("label"); checkLbl.textContent="Check All";
-    checkRow.append(checkAll, checkLbl); card.appendChild(checkRow);
-
     // Tasks
     let count = d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1;
     d[`char_${i}_taskCount`] = count; saveData(d);
     for(let t=0;t<count;t++) card.appendChild(buildTask(i, t, d));
 
-    // Check-all behavior
+    // Check-all at bottom
+    const checkRow = document.createElement("div"); checkRow.className="check-all";
+    const checkAll = document.createElement("input"); checkAll.type="checkbox"; checkAll.title="Check/Uncheck all tasks";
+    const checkLbl = document.createElement("label"); checkLbl.textContent="Check All";
+    checkRow.append(checkAll, checkLbl); card.appendChild(checkRow);
     function refreshMaster(){
       const boxes = Array.from(card.querySelectorAll('.task input[type="checkbox"]'));
       checkAll.checked = boxes.length>0 && boxes.every(b=>b.checked);
@@ -327,13 +346,11 @@
     const del = document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
     const handle = document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
 
-    // Insert new task below current on Enter (even if tasks exist after)
     input.addEventListener("keydown",(e)=>{
       const atStart=input.selectionStart===0&&input.selectionEnd===0; const atEnd=input.selectionStart===input.value.length&&input.selectionEnd===input.value.length;
       if(e.key==="Enter" || (e.key==="Tab"&&!e.shiftKey)){
         e.preventDefault();
         insertTaskAfter(i, t);
-        // focus the newly inserted one
         setTimeout(()=>{
           const card = $(`#checklists .character[data-index="${i}"]`);
           const inputs = Array.from(card.querySelectorAll('.task input[type="text"]'));
@@ -353,11 +370,9 @@
     input.addEventListener("input",()=>{
       const dd=loadData();
       if(input.value===""){
-        // delete the row if blank (but keep at least 1)
         const ct = dd[`char_${i}_taskCount`]||1;
         if(ct>1){
           dd[`char_${i}_task_${t}`]="";
-          // Shift remaining tasks up
           for(let k=t+1;k<ct;k++){ dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||""; localStorage.setItem(dailyKey(i,k-1), localStorage.getItem(dailyKey(i,k))||"false"); }
           delete dd[`char_${i}_task_${ct-1}`];
           dd[`char_${i}_taskCount`]=ct-1;
@@ -411,7 +426,6 @@
     const d=loadData();
     const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
     if(ct>=MAX_TASKS) return;
-    // shift down from end
     for(let k=ct-1;k>t;k--){ d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||""; localStorage.setItem(dailyKey(i,k+1), localStorage.getItem(dailyKey(i,k))||"false"); }
     d[`char_${i}_task_${t+1}`] = "";
     d[`char_${i}_taskCount`] = ct+1;
@@ -461,62 +475,84 @@
 
   // === Drag & Drop: cards ===
   function attachCardDnD(container){
-    let placeholder = document.createElement("div");
-    placeholder.className = "drop-placeholder";
     let dragFrom = null;
 
     container.addEventListener("dragstart",(e)=>{
       const card=e.target.closest(".character"); if(!card) return;
-      dragFrom= +card.dataset.index;
+      dragFrom= indexOfCard(card);
       card.classList.add("dragging");
       e.dataTransfer.effectAllowed="move";
     });
     container.addEventListener("dragend",(e)=>{
       const dragging=$(".character.dragging"); dragging?.classList.remove("dragging");
-      placeholder.remove(); dragFrom=null;
+      dragFrom=null;
     });
     container.addEventListener("dragover",(e)=>{
       const dragging=$(".character.dragging"); if(!dragging) return;
       e.preventDefault();
-      const cards=[...container.querySelectorAll(".character:not(.dragging)")];
-      let idx=cards.length;
+      const cards=[...container.querySelectorAll(".character")].filter(c=>!c.classList.contains("dragging"));
+      // compute index based on vertical midpoints, clamp to 0..cards.length-1 (no "after last" slot)
+      const y=e.clientY;
+      let idx=cards.length-1;
       for(let j=0;j<cards.length;j++){
         const r=cards[j].getBoundingClientRect();
         const mid=r.top + r.height/2;
-        if(e.clientY<mid){ idx=j; break; }
+        if(y<mid){ idx=j; break; }
       }
-      if(idx===0) container.insertBefore(placeholder, cards[0]||dragging.nextSibling);
-      else if(idx>=cards.length) container.appendChild(placeholder);
-      else container.insertBefore(placeholder, cards[idx]);
+      container.dataset.dropIndex = String(idx);
     });
     container.addEventListener("drop",(e)=>{
       e.preventDefault();
       const dragging=$(".character.dragging"); if(!dragging) return;
-      // compute target index
-      let to=0;
-      for(const node of [...container.children]){
-        if(node===placeholder) break;
-        if(node.classList.contains("character")) to++;
-      }
-      const from = +dragging.dataset.index;
-      placeholder.remove();
-      if(from===to) return;
-      const d=loadData();
-      const chars=[];
-      for(let i=0;i<d.charCount;i++){
-        const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
-        const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-        chars.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
-      }
-      const item=chars.splice(from,1)[0]; chars.splice(to,0,item);
-      const nd={ charCount: chars.length };
-      for(let i=0;i<chars.length;i++){
-        const c=chars[i];
-        nd[`char_${i}_name`]=c.name||""; nd[`char_${i}_image`]=c.image||""; nd[`char_${i}_level`]=c.level||""; nd[`char_${i}_job`]=c.job||"";
-        nd[`char_${i}_taskCount`]=Math.max(1, Math.min(MAX_TASKS, c.tasks.length));
-        for(let t=0;t<c.tasks.length;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
-      }
-      saveData(nd); build();
+      const from = dragFrom;
+      const idxAttr = container.dataset.dropIndex;
+      if(idxAttr==null) return;
+      const to = parseInt(idxAttr,10);
+      if(Number.isNaN(to)) return;
+      moveCard(from, to);
+      container.dataset.dropIndex = "";
+    });
+  }
+
+  function indexOfCard(card){
+    const cards=[...$("#checklists").querySelectorAll(".character")];
+    return cards.indexOf(card);
+  }
+
+  function moveCard(from, to){
+    const cont = $("#checklists");
+    const cards=[...cont.querySelectorAll(".character")];
+    const n = cards.length;
+    if(from<0||from>=n) return;
+    to = Math.max(0, Math.min(n-1, to)); // limit to first N slots
+    if(from===to) return;
+
+    // storage reorder
+    const d=loadData();
+    const chars=[];
+    for(let i=0;i<d.charCount;i++){
+      const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
+      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      chars.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
+    }
+    const item=chars.splice(from,1)[0]; chars.splice(to,0,item);
+    const nd={ charCount: chars.length };
+    for(let i=0;i<chars.length;i++){
+      const c=chars[i];
+      nd[`char_${i}_name`]=c.name||""; nd[`char_${i}_image`]=c.image||""; nd[`char_${i}_level`]=c.level||""; nd[`char_${i}_job`]=c.job||"";
+      nd[`char_${i}_taskCount`]=Math.max(1, Math.min(MAX_TASKS, c.tasks.length));
+      for(let t=0;t<c.tasks.length;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
+    }
+    saveData(nd);
+
+    // DOM reorder with FLIP animation and without placeholder or dashed guidance
+    flipReorder(cont, ()=>{
+      const node = cards[from];
+      const ref = cont.querySelectorAll(".character")[to];
+      if(to===0) cont.insertBefore(node, cont.firstElementChild);
+      else cont.insertBefore(node, ref);
+      // update dataset.index sequentially
+      [...cont.querySelectorAll(".character")].forEach((el, idx)=> el.dataset.index = idx);
     });
   }
 
@@ -559,7 +595,6 @@
       d[`char_${k}_taskCount`]=ct;
       for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
     }
-    // cleanup last
     const last=n-1;
     delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`];
     const lct=d[`char_${last}_taskCount`]||1; delete d[`char_${last}_taskCount`];
@@ -581,7 +616,7 @@
       if(card){
         card.querySelector('.char-name').value = name;
         card.querySelector('.char-image-wrap img').src = (imageUrl||"") || BASE_MODEL_URL;
-        card.querySelector('.char-meta').textContent = metaText(level, job);
+        card.querySelector('.char-meta').textContent = [level?`Lv. ${level}`:null, job||null].filter(Boolean).join(" ");
       }
     }catch(e){
       const d=loadData();
@@ -591,34 +626,32 @@
     }
   }
 
-  // === Icon helpers ===
+  // Icons
   function iconButton(title, svgOrHtml, onClick){
     const b=document.createElement("button"); b.className="icon-btn"; b.title=title;
-    if(svgOrHtml.startsWith("<svg")) b.innerHTML=svgOrHtml; else b.innerHTML=svgOrHtml;
-    b.onclick=onClick; return b;
+    b.innerHTML=svgOrHtml; b.onclick=onClick; return b;
   }
   function cameraSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9 3l-1.5 2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2.5L15 3H9zm3 4a5 5 0 1 1 0 10a5 5 0 0 1 0-10z"/></svg>'; }
   function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
+  function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
+  function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
-  // === Controls wiring ===
+  // Controls
   (function initControls(){
     const thSel=$("#theme"); const prSel=$("#preset");
     const addBtn=$("#add-character-btn"); const expBtn=$("#export-btn"); const impBtn=$("#import-btn"); const impFile=$("#import-file");
-    // theme
     const lastTheme = localStorage.getItem("mapleTheme") || "lavender";
     document.body.className = lastTheme; thSel.value = lastTheme;
     thSel.addEventListener("change",()=>{ document.body.className=thSel.value; localStorage.setItem("mapleTheme", thSel.value); });
-    // preset
     prSel.value = String(currentPreset);
     prSel.addEventListener("change",()=>{ currentPreset = parseInt(prSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
-    // buttons
     addBtn.addEventListener("click", addCharacter);
     expBtn.addEventListener("click", exportJSON);
     impBtn.addEventListener("click", ()=>impFile.click());
     impFile.addEventListener("change",(e)=>{ const f=e.target.files?.[0]; if(f) importJSON(f); e.target.value=""; });
   })();
 
-  // === Instructions toggle ===
+  // Instructions toggle
   (function initInstructions(){
     const instr=$("#instructions"); const btn=$("#instr-toggle");
     function set(min){ instr.classList.toggle("minimized", min); btn.textContent = min ? "Unhide" : "Hide"; localStorage.setItem("mapleInstrMin", min?"1":"0"); }
@@ -626,7 +659,48 @@
     set(localStorage.getItem("mapleInstrMin")==="1");
   })();
 
-  // === Boot ===
+  // Avatar modal wiring (minimal for existing flow)
+  function openAvatarModal(i, currentName){
+    $("#avatar-name").value = currentName || "";
+    const ov=$("#avatar-modal-overlay");
+    ov.classList.add("show"); ov.setAttribute("aria-hidden","false");
+    $("#avatar-cancel").onclick = ()=>{ ov.classList.remove("show"); ov.setAttribute("aria-hidden","true"); };
+    $("#avatar-delete").onclick = ()=>{
+      const d=loadData(); d[`char_${i}_image`]=""; saveData(d);
+      const card = $(`#checklists .character[data-index="${i}"]`);
+      if(card) card.querySelector('.char-image-wrap img').src = BASE_MODEL_URL;
+    };
+    $("#avatar-upload").onclick = ()=> $("#hidden-upload").click();
+    $("#hidden-upload").onchange = (e)=>{
+      const f=e.target.files?.[0]; if(!f) return;
+      const reader=new FileReader();
+      reader.onload = ()=>{
+        const d=loadData(); d[`char_${i}_image`]=reader.result; saveData(d);
+        const card = $(`#checklists .character[data-index="${i}"]`);
+        if(card) card.querySelector('.char-image-wrap img').src = reader.result;
+      };
+      reader.readAsDataURL(f);
+      e.target.value="";
+    };
+    $("#avatar-search").onclick = async ()=>{
+      const nm=$("#avatar-name").value.trim(); if(!nm){ $("#avatar-error").textContent="Please enter a character name."; return; }
+      $("#avatar-error").textContent="";
+      await fetchFromMapleRanks(i, nm);
+      ov.classList.remove("show"); ov.setAttribute("aria-hidden","true");
+    };
+    $("#avatar-name").onkeydown = (e)=>{ if(e.key==="Enter"){ e.preventDefault(); $("#avatar-search").click(); } };
+  }
+
+  // Card-to-card focus
+  function focusCardByOffset(card, dir){
+    const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")];
+    const idx=cards.indexOf(card); const next=idx+dir; if(next>=0 && next<cards.length){
+      const el = cards[next].querySelector('.char-name') || cards[next];
+      el.focus?.();
+    }
+  }
+
+  // Boot
   build();
   </script>
 </body>
