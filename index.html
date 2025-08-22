@@ -16,8 +16,7 @@
       --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14);
       --task-underline:1px dotted currentColor;
       --name-underline:1px solid currentColor;
-      --meta-fg:#6b7280;
-      --handle-fg: var(--meta-fg);
+      --meta-fg:#6b7280; --handle-fg: var(--meta-fg);
     }
     /* Themes */
     body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190;}
@@ -45,10 +44,10 @@
     #instr-toggle{ position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); border-radius:8px; cursor:pointer; font-family:inherit; }
     #instructions ul{ margin:0; padding-left:18px; }
 
-    /* Toolbar: center left group, keep Add Character at right */
-    .toolbar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; width:100%; max-width:1000px; }
-    .toolbar .left{ display:flex; align-items:center; gap:10px; margin:0 auto; } /* centered group */
-    .toolbar .right{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+    /* Toolbar now stacks: centered controls then Add button on next row aligned right */
+    .toolbar{ display:flex; flex-direction:column; gap:8px; width:100%; max-width:1000px; margin-bottom:12px; }
+    .toolbar .left{ display:flex; align-items:center; gap:10px; justify-content:center; }
+    .toolbar .right{ display:flex; align-items:center; gap:10px; justify-content:flex-end; }
 
     .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
     .btn:hover{ filter:brightness(1.02); }
@@ -61,20 +60,20 @@
 
     /* Grid of cards */
     #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
-    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:64px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
+    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:48px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
     .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
 
     /* Top control rows */
     .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
     .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
 
-    /* Card drag handle */
+    /* Card drag handle – now in normal flow, above the name */
     .card-drag-handle{
-      position:absolute; left:14px; right:14px; top:34px;
       display:flex; align-items:center; justify-content:center;
       font-size:12px; color:var(--handle-fg);
       border-bottom:1px dashed var(--handle-fg);
-      padding-bottom:4px; cursor:grab; user-select:none;
+      padding-bottom:4px; margin:6px 0 6px;
+      cursor:grab; user-select:none;
     }
     .card-drag-handle:active{ cursor:grabbing; }
 
@@ -92,20 +91,20 @@
     .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .task input[type="text"]:focus{ outline:none; box-shadow:none; border-bottom:var(--task-underline); }
     .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; cursor:pointer; }
-    .task input[type="checkbox"]{ width:16px; height:12px; } /* ↓ reduced by ~2px */
+    .task input[type="checkbox"]{ width:16px; height:16px; }
     .handle{ cursor:grab; user-select:none; opacity:.7; }
     .handle:active{ cursor:grabbing; }
 
-    /* Check All */
-    .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); }
-    .check-all input{ width:16px; height:12px; }
+    /* Check All (bold line) */
+    .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); font-weight:600; }
+    .check-all input{ width:16px; height:16px; }
 
     /* Monochrome confirm dialog */
     .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
     .modal-overlay.show{ display:flex; }
     .modal{ background:#fff; color:#111; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
     .modal h3{ margin:0 0 12px; font-size:18px; font-weight:700; }
-    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; } /* Yes/No bottom-right */
+    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
     .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
   </style>
 </head>
@@ -128,7 +127,7 @@
     </div>
   </div>
 
-  <!-- How to use (with Hide toggle) -->
+  <!-- How to use -->
   <div id="instructions">
     <button id="instr-toggle" type="button" class="btn">Hide</button>
     <strong>How to use:</strong>
@@ -144,7 +143,7 @@
     </ul>
   </div>
 
-  <!-- Toolbar: centered left group, Add Character on right -->
+  <!-- Toolbar: centered preset row, then Add Character on next line (right-aligned) -->
   <div class="toolbar">
     <div class="left">
       <label for="preset">Preset:</label>
@@ -212,9 +211,7 @@
   const presetSel=$("#preset"); presetSel.value=String(currentPreset);
   presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
 
-  function todayUTC(){
-    const n=new Date(); return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`;
-  }
+  function todayUTC(){ const n=new Date(); return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`; }
   function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
   function safeParse(j){ try{ return JSON.parse(j); }catch{ return null; } }
   function loadData(){ const raw=localStorage.getItem(dataKey()); const d=raw?safeParse(raw):{charCount:0}; if(typeof d.charCount!=="number"||d.charCount<0) d.charCount=0; return d; }
@@ -251,7 +248,7 @@
     const wrap=$("#checklists"); wrap.innerHTML="";
     const d=loadData();
     for(let i=0;i<d.charCount;i++) wrap.appendChild(buildCard(i,d));
-    initCardSortable(); // card drag by handle only
+    initCardSortable(); // drag by handle only
   }
 
   function buildCard(i,d){
@@ -268,12 +265,6 @@
     const delBtn = iconBtn("Delete", "&times;", ()=> confirmDelete(i));
     right.append(uploadBtn,dupBtn,delBtn); card.appendChild(right);
 
-    // Card drag handle (only this area should start drag)
-    const dragHandle=document.createElement("div");
-    dragHandle.className="card-drag-handle";
-    dragHandle.textContent="Click and Drag Character Tile";
-    card.appendChild(dragHandle);
-
     const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
     imgWrap.innerHTML=`<img alt="Character image" src="${(d[`char_${i}_image`]||"") || BASE_MODEL_URL}">`;
     card.appendChild(imgWrap);
@@ -281,17 +272,21 @@
     const meta=document.createElement("div"); meta.className="char-meta";
     meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
 
+    /* Drag handle now appears ABOVE the Character Name line */
+    const dragHandle=document.createElement("div");
+    dragHandle.className="card-drag-handle";
+    dragHandle.textContent="Click and Drag Character Tile";
+    card.appendChild(dragHandle);
+
     const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
     name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
     card.appendChild(name);
 
-    // Tasks wrapper for Sortable (within card)
     const tasksWrap=document.createElement("div"); tasksWrap.className="tasks";
     let count=d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; d[`char_${i}_taskCount`]=count; saveData(d);
     for(let t=0;t<count;t++) tasksWrap.appendChild(buildTask(i,t,d));
     card.appendChild(tasksWrap);
 
-    // Check All at bottom (same size as tasks)
     const checkRow=document.createElement("div"); checkRow.className="check-all";
     const checkAll=document.createElement("input"); checkAll.type="checkbox";
     const checkLbl=document.createElement("label"); checkLbl.textContent="Check All";
@@ -306,13 +301,13 @@
     });
     setTimeout(refreshMaster,0);
 
-    attachTaskSortable(tasksWrap, i); // enable handle-based reordering
+    attachTaskSortable(tasksWrap, i);
     return card;
   }
 
   function buildTask(i,t,d){
     const row=document.createElement("div"); row.className="task";
-    row.dataset.idx = t; // for sortable mapping
+    row.dataset.idx = t;
     const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked = (localStorage.getItem(dailyKey(i,t))==='true');
     box.onchange = ()=> localStorage.setItem(dailyKey(i,t), box.checked?'true':'false');
     const input=document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value = d[`char_${i}_task_${t}`]||"";
@@ -327,10 +322,7 @@
       const dd=loadData();
       if(input.value===""){
         const ct=dd[`char_${i}_taskCount`]||1;
-        if(ct>1){
-          // delete this line and shift left, also shift checkbox keys for this card
-          shiftDeleteTask(i,t,ct,dd);
-        }else{ dd[`char_${i}_task_${t}`]=""; saveData(dd); }
+        if(ct>1){ shiftDeleteTask(i,t,ct,dd); } else { dd[`char_${i}_task_${t}`]=""; saveData(dd); }
       }else{ dd[`char_${i}_task_${t}`]=input.value; saveData(dd); }
     });
 
@@ -350,24 +342,20 @@
     (inputs[tNew]||inputs[inputs.length-1])?.focus();
   }
 
-  // ====== Insert task under current (preserve checkbox ordering) ======
   function insertTaskAfter(i,t){
     const d=loadData(); const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
     if(ct>=MAX_TASKS) return;
-    // Shift text
     for(let k=ct-1;k>t;k--) d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||"";
     d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskCount`]=ct+1;
-    // Shift checkbox keys for this card only (today)
     for(let k=ct-1;k>t;k--){
       const from = localStorage.getItem(dailyKey(i,k));
       if(from!==null) localStorage.setItem(dailyKey(i,k+1), from);
       localStorage.removeItem(dailyKey(i,k));
     }
-    localStorage.removeItem(dailyKey(i,t+1)); // new row defaults unchecked
+    localStorage.removeItem(dailyKey(i,t+1));
     saveData(d); build();
   }
 
-  // Delete a task line (shift left) + migrate checkbox keys within card
   function shiftDeleteTask(i,t,ct,dd){
     dd[`char_${i}_task_${t}`]="";
     for(let k=t+1;k<ct;k++){
@@ -382,31 +370,26 @@
     saveData(dd); build();
   }
 
-  // ====== Sortable task reordering (within card, handle=".handle") ======
+  /* Sortable for tasks (within card, handle=".handle") */
   function attachTaskSortable(tasksWrap, cardIndex){
-    // Destroy previous if any (optional: tracked map), here we re-init on rebuild
     Sortable.create(tasksWrap, {
       animation: 160,
       handle: ".handle",
       draggable: ".task",
       ghostClass: "dragging",
-      onEnd: (evt)=>{
+      onEnd: ()=>{
         const d=loadData();
         const ct=d[`char_${cardIndex}_taskCount`]||1;
-        // Snapshot original arrays
         const texts=[]; const checks=[];
         for(let t=0;t<ct;t++){
           texts.push(d[`char_${cardIndex}_task_${t}`]||"");
           checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true');
         }
-        // New order based on DOM
         const order = Array.from(tasksWrap.querySelectorAll(".task")).map(row => +row.dataset.idx);
-        // Rebuild data/keys in new order
         for(let p=0;p<order.length;p++){
           const tOld = order[p];
           d[`char_${cardIndex}_task_${p}`]=texts[tOld]||"";
         }
-        // Reset all keys for this card (today), then set new mapping
         for(let t=0;t<ct;t++) localStorage.removeItem(dailyKey(cardIndex,t));
         for(let p=0;p<order.length;p++){
           const tOld=order[p];
@@ -417,7 +400,7 @@
     });
   }
 
-  // ====== Add / Duplicate / Delete Cards ======
+  // Add / Duplicate / Delete Cards
   $("#add-character-btn").addEventListener("click", ()=>{
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
     const i=d.charCount; d.charCount=i+1;
@@ -432,7 +415,6 @@
     const ins=d.charCount; d.charCount=ins+1;
     d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||"";
     d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||"";
-    // Duplicate does not copy checkbox state (consistent with earlier behavior)
     saveData(d); build();
   }
 
@@ -448,13 +430,10 @@
   function doDelete(i){
     const d=loadData(); const n=d.charCount; if(n<=0) return;
 
-    // 1) Remove all checkbox keys for deleted card (today)
     const ctDel = d[`char_${i}_taskCount`]||0;
     for(let t=0;t<ctDel;t++) localStorage.removeItem(dailyKey(i,t));
 
-    // 2) Shift data + migrate checkbox keys for subsequent cards down by 1
     for(let k=i;k<n-1;k++){
-      // Move checkbox keys for card k+1 -> k
       const ctNext = d[`char_${k+1}_taskCount`]||0;
       for(let t=0;t<ctNext;t++){
         const from = localStorage.getItem(dailyKey(k+1,t));
@@ -462,7 +441,6 @@
         if(from!==null) localStorage.setItem(toKey, from);
         localStorage.removeItem(dailyKey(k+1,t));
       }
-      // Shift text/image/meta + tasks
       d[`char_${k}_name`]=d[`char_${k+1}_name`]||"";
       d[`char_${k}_image`]=d[`char_${k+1}_image`]||"";
       d[`char_${k}_level`]=d[`char_${k+1}_level`]||"";
@@ -471,7 +449,6 @@
       d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
     }
 
-    // 3) Clean up last card keys and fields
     const last=n-1;
     const lastCt=d[`char_${last}_taskCount`]||0;
     for(let t=0;t<lastCt;t++) localStorage.removeItem(dailyKey(last,t));
@@ -481,7 +458,7 @@
     saveData(d); build();
   }
 
-  // ====== Card Sortable (drag only by handle) ======
+  // Card Sortable (drag only by the handle)
   let sortableCards=null;
   function initCardSortable(){
     const cont=$("#checklists");
@@ -490,7 +467,7 @@
       animation: 180,
       ghostClass: "dragging",
       draggable: ".character",
-      handle: ".card-drag-handle",  // <- limit drag start to the labeled bar
+      handle: ".card-drag-handle",
       onEnd: (evt)=>{
         const from=evt.oldIndex, to=evt.newIndex;
         if(from==null || to==null || from===to) return;
@@ -504,36 +481,31 @@
     if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
 
     const d=loadData(), list=[];
-    // Build logical list of card data
     for(let i=0;i<d.charCount;i++){
       const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
       const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
       list.push({ name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", tasks });
     }
-    // Snapshot checkbox state for today per card
-    const checks=list.map((c,idx)=>{
-      const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a;
-    });
+    const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
 
     const moved=list.splice(from,1)[0]; const movedChecks=checks.splice(from,1)[0];
     list.splice(to,0,moved); checks.splice(to,0,movedChecks);
 
-    // Write back data with new indices
     const nd={charCount:list.length};
     for(let i=0;i<list.length;i++){
-      const c=list[i]; nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job;
+      const c=list[i];
+      nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job;
       const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc;
       for(let t=0;t<tc;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
     }
-    // Reset checkbox keys for today and set per new indices
     for(let i=0;i<checks.length;i++){
-      for(let t=0;t<MAX_TASKS;t++) localStorage.removeItem(dailyKey(i,t)); // clear possible leftovers
+      for(let t=0;t<MAX_TASKS;t++) localStorage.removeItem(dailyKey(i,t));
       for(let t=0;t<checks[i].length;t++) if(checks[i][t]) localStorage.setItem(dailyKey(i,t),'true');
     }
     saveData(nd); build();
   }
 
-  // ====== Upload avatar ======
+  // Upload avatar
   let uploadIndex=null;
   function startUploadFor(i){ uploadIndex=i; $("#hidden-upload").click(); }
   $("#hidden-upload").addEventListener("change",(e)=>{
@@ -547,7 +519,7 @@
     reader.readAsDataURL(f); e.target.value="";
   });
 
-  // ====== Instructions toggle ======
+  // Instructions toggle
   (function initInstructions(){
     const instr=$("#instructions"), btn=$("#instr-toggle");
     function set(min){ instr.classList.toggle("minimized", min); btn.textContent=min?"Unhide":"Hide"; localStorage.setItem("mapleInstrMin", min?"1":"0"); }
@@ -555,14 +527,14 @@
     set(localStorage.getItem("mapleInstrMin")==="1");
   })();
 
-  // ====== Icons ======
+  // Icons
   function iconBtn(title, svgOrHtml, onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
   function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
   function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
   function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
   function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
-  // ====== Init ======
+  // Init
   build();
   </script>
 </body>
