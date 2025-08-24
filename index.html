@@ -20,14 +20,17 @@
     --popover-bg:var(--card-bg); --popover-fg:var(--fg); --popover-border:var(--card-border);
     --kbd-focus: var(--icon);
     --danger:#E57373; /* soft themed error */
+    --accent:#7c5db0; /* theme accent for Important */
+    --accent-tint: rgba(124,93,176,.10);
+    --danger-tint: rgba(229,115,115,.12);
     --line-height:1.45; --letter-spacing:normal;
   }
-  body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#fff; --card-border:#e7e7ea; --control-bg:#fff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; --danger:#D46B6B; }
-  body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#fff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; --danger:#D36A6A; }
-  body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#fff; --card-border:#e6def6; --control-bg:#fff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; --danger:#E57373; }
-  body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; --danger:#D06E6E; }
-  body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; --danger:#FF8A80; }
-  body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; --danger:#FF9A8D; }
+  body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#fff; --card-border:#e7e7ea; --control-bg:#fff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; --danger:#D46B6B; --accent:#444; --accent-tint:rgba(0,0,0,.06); --danger-tint:rgba(212,107,107,.14); }
+  body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#fff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; --danger:#D36A6A; --accent:#5a86b5; --accent-tint:rgba(90,134,181,.12); --danger-tint:rgba(211,106,106,.14); }
+  body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#fff; --card-border:#e6def6; --control-bg:#fff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; --danger:#E57373; --accent:#7c5db0; --accent-tint:rgba(124,93,176,.12); --danger-tint:rgba(229,115,115,.14); }
+  body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; --danger:#D06E6E; --accent:#4a8c4a; --accent-tint:rgba(74,140,74,.12); --danger-tint:rgba(208,110,110,.14); }
+  body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; --danger:#FF8A80; --accent:#cfd3df; --accent-tint:rgba(207,211,223,.12); --danger-tint:rgba(255,138,128,.14); }
+  body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; --danger:#FF9A8D; --accent:#8bcf9b; --accent-tint:rgba(139,207,155,.14); --danger-tint:rgba(255,154,141,.14); }
 
   *{box-sizing:border-box}
   body{font-family:Quicksand,system-ui,sans-serif;margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;font-size:var(--ui);background:var(--bg);color:var(--fg);transition:.25s background,.25s color;line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
@@ -79,17 +82,44 @@
   .accents-btn:hover{background:var(--icon-hover)}
   .accents-btn .accents-icon{font-weight:700;font-size:14px;line-height:1;font-family:inherit}
 
+  .chips{display:flex;gap:6px;align-items:center;margin:4px 0 2px}
+  .chip{padding:4px 8px;border-radius:999px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+  .chip.active{background:var(--button-bg);}
+
   .tasks{margin-top:2px}
-  .task{display:grid;grid-template-columns:12px 1fr auto 14px;gap:8px;align-items:center;margin:6px 0}
+  /* Now includes priority button column */
+  .task{position:relative;display:grid;grid-template-columns:12px 1fr auto auto 14px;gap:8px;align-items:center;margin:6px 0}
+  .task .prio-bar{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px}
+  .task.normal .prio-bar{background:transparent}
+  .task.important .prio-bar{background:var(--accent)}
+  .task.urgent .prio-bar{background:var(--danger)}
+  .task.important{background:var(--accent-tint)}
+  .task.urgent{background:var(--danger-tint)}
+  .task.important .task-text{font-weight:600}
+  .task.urgent .task-text{font-weight:700}
+
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(229,115,115,0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(229,115,115,0.0); }
+    100% { box-shadow: 0 0 0 0 rgba(229,115,115,0.0); }
+  }
+  .prio-bar.glow{ animation: pulseGlow .4s ease-out 2; border-radius:4px }
+
   .task input[type="text"]{border:none;border-bottom:var(--task-underline);background:transparent;padding:2px 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
-  /* Remove any focus border/outline from the Daily Task text field only */
+  /* Remove focus border from Daily Task text field only */
   .task input[type="text"]:focus,
   .task input[type="text"]:focus-visible{outline:none !important; box-shadow:none !important;}
   .task .task-delete{background:transparent;border:none;font-size:16px;opacity:.7;color:var(--icon);width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:inherit;cursor:pointer}
+  .task .prio-btn{background:transparent;border:1px solid var(--control-border);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--control-fg);cursor:pointer}
+  .task .prio-btn:hover{background:var(--icon-hover)}
+  .task .prio-btn .i{font-size:13px;line-height:1}
   .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
+  .task .task-text{min-width:0}
   .handle{cursor:grab;user-select:none;opacity:.7}
   .handle:active{cursor:grabbing}
+
   .check-all{display:flex;align-items:center;gap:8px;margin:8px 0 0;font-size:12px;color:var(--meta-fg);font-weight:600}
+  .check-all label{color:var(--meta-fg); font-weight:700} /* softer & distinct from task text */
 
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:1000}
   .modal-overlay.show{display:flex}
@@ -98,11 +128,13 @@
   .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
   .btn.secondary{background:#f5f5f5;color:#111;border-color:#e5e5e5}
 
-  /* Accessible focus rings for everything EXCEPT the task text inputs (removed above) */
+  /* Accessible focus rings (keep for everything except task text inputs) */
   .task input[type="checkbox"]:focus-visible,
   .check-all input:focus-visible,
   .accents-btn:focus-visible,
   .icon-btn:focus-visible,
+  .task .prio-btn:focus-visible,
+  .chip:focus-visible,
   select:focus-visible,
   .btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
 
@@ -146,8 +178,8 @@
       <li><strong>Presets</strong>: Choose 1–3; each stores its own characters and tasks.</li>
       <li><strong>Save / Load</strong>: Save (💾) exports JSON; Load (📂) imports it—no servers needed.</li>
       <li><strong>Add characters</strong>: “+ Add Character” (max 20). Each starts with 2 tasks (min 1, max 10).</li>
-      <li><strong>Keyboard</strong>: Up/Down moves between tasks; Enter toggles; Tab inserts a new task below.</li>
-      <li><strong>Reorder cards</strong>: Drag from the invisible strip above the name; or use the Up/Down arrows.</li>
+      <li><strong>Keyboard</strong>: Up/Down moves between tasks; Enter toggles; Tab inserts a new task below; P cycles priority.</li>
+      <li><strong>Reorder cards</strong>: Drag from the invisible strip above the <u>Character Image</u>; or use the Up/Down arrows.</li>
       <li><strong>Reorder tasks</strong>: Drag the ⋮⋮ handle; checkbox state is preserved.</li>
       <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image (user uploads are never auto-replaced).</li>
       <li><strong>Auto-fill</strong>: Type a Character Name to fetch Level/Job and avatar from Maple Ranks via Worker.</li>
@@ -217,6 +249,7 @@
   const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
   const MAX_CHARACTERS=20, MAX_TASKS=10;
   const MIN_LOOKUP_LEN=4, DEBOUNCE_MS=500, CACHE_TTL_MS=5*60*1000;
+  const DEFAULT_PRIORITY_FIRST = true; // chips default
   const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 
   /* Accents open flag keeps lookups paused while panel is open */
@@ -254,10 +287,17 @@
     const d=loadData(), chars=[];
     for(let i=0;i<d.charCount;i++){
       const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
-      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      const tasks=[];
+      for(let t=0;t<ct;t++){
+        tasks.push({
+          text: d[`char_${i}_task_${t}`]||"",
+          done: (localStorage.getItem(dailyKey(i,t))==='true'),
+          priority: d[`char_${i}_taskp_${t}`]||"normal"
+        });
+      }
       chars.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks});
     }
-    const blob=new Blob([JSON.stringify({version:2,preset:currentPreset,characters:chars},null,2)],{type:"application/json"});
+    const blob=new Blob([JSON.stringify({version:3,preset:currentPreset,characters:chars},null,2)],{type:"application/json"});
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="maplestory-dailies.json"; document.body.appendChild(a); a.click(); a.remove();
   });
 
@@ -271,7 +311,15 @@
         const c=chars[i];
         d[`char_${i}_name`]=c.name||""; d[`char_${i}_image`]=c.image||""; d[`char_${i}_level`]=c.level||""; d[`char_${i}_job`]=c.job||""; d[`char_${i}_userImage`]=!!c.userImage;
         const tc=Math.max(1,Math.min(MAX_TASKS,(c.tasks||["",""]).length)); d[`char_${i}_taskCount`]=tc;
-        for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`]=c.tasks[t]||"";
+        for(let t=0;t<tc;t++){
+          const task=c.tasks[t];
+          const text=(typeof task==="object" && task)? (task.text||"") : (task||"");
+          const pr=(typeof task==="object" && task && task.priority)? task.priority : "normal";
+          d[`char_${i}_task_${t}`]=text;
+          d[`char_${i}_taskp_${t}`]=pr;
+          const done=(typeof task==="object" && task && task.done===true);
+          if(done) localStorage.setItem(dailyKey(i,t),'true'); else localStorage.removeItem(dailyKey(i,t));
+        }
       }
       saveData(d); build();
     }; r.readAsText(f); e.target.value="";
@@ -324,15 +372,34 @@
 
     nameRow.append(name,accBtn); card.appendChild(nameRow);
 
+    /* Priority chips (view only; don't change stored order) */
+    const chips=document.createElement("div"); chips.className="chips";
+    const chipFirst=document.createElement("button"); chipFirst.className="chip"; chipFirst.textContent="Show priority first";
+    const chipOnly=document.createElement("button"); chipOnly.className="chip"; chipOnly.textContent="Only priority";
+    chips.append(chipFirst,chipOnly); card.appendChild(chips);
+
+    // Load chip state (persist per card)
+    let chipStateFirst = (d[`char_${i}_chip_priorityFirst`] ?? null);
+    if(chipStateFirst === null){ chipStateFirst = DEFAULT_PRIORITY_FIRST; }
+    let chipStateOnly = !!d[`char_${i}_chip_onlyPriority`];
+    function syncChipClasses(){
+      chipFirst.classList.toggle("active", !!chipStateFirst);
+      chipOnly.classList.toggle("active", !!chipStateOnly);
+    }
+    syncChipClasses();
+    chipFirst.onclick=()=>{ const dd=loadData(); chipStateFirst=!chipStateFirst; dd[`char_${i}_chip_priorityFirst`]=chipStateFirst; saveData(dd); rebuildTasks(); };
+    chipOnly.onclick=()=>{ const dd=loadData(); chipStateOnly=!chipStateOnly; dd[`char_${i}_chip_onlyPriority`]=chipStateOnly; saveData(dd); rebuildTasks(); };
+
+    /* Tasks container */
     const tasksWrap=document.createElement("div"); tasksWrap.className="tasks";
-    let count=d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; d[`char_${i}_taskCount`]=count; saveData(d);
-    for(let t=0;t<count;t++) tasksWrap.appendChild(buildTask(i,t,d));
     card.appendChild(tasksWrap);
 
+    /* Check All (label softer) */
     const checkRow=document.createElement("div"); checkRow.className="check-all";
     const checkAll=document.createElement("input"); checkAll.type="checkbox";
     const checkLbl=document.createElement("label"); checkLbl.textContent="Check All";
     checkRow.append(checkAll,checkLbl); card.appendChild(checkRow);
+
     function refreshMaster(){
       const boxes=Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
       checkAll.checked=boxes.length>0 && boxes.every(b=>b.checked);
@@ -341,53 +408,137 @@
       const boxes=Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
       boxes.forEach(b=>{ const tIdx=+b.dataset.idx; b.checked=checkAll.checked; localStorage.setItem(dailyKey(i,tIdx), checkAll.checked?'true':'false'); });
     });
-    setTimeout(refreshMaster,0);
 
-    attachTaskSortable(tasksWrap,i);
+    /* Build tasks list with optional priority view */
+    function collectTasksData(){
+      const dd=loadData();
+      let count=dd[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; dd[`char_${i}_taskCount`]=count; saveData(dd);
+      const arr=[];
+      for(let t=0;t<count;t++){
+        arr.push({
+          idx: t,
+          text: dd[`char_${i}_task_${t}`]||"",
+          pr: dd[`char_${i}_taskp_${t}`]||"normal",
+          done: (localStorage.getItem(dailyKey(i,t))==='true')
+        });
+      }
+      return arr;
+    }
+    function viewSortFilter(list){
+      let out=[...list];
+      if(chipStateOnly){ out=out.filter(x=>x.pr!=="normal"); }
+      if(chipStateFirst){
+        const order={urgent:0,important:1,normal:2};
+        out.sort((a,b)=> (order[a.pr]-order[b.pr]) || (a.idx-b.idx)); // keep inner manual order
+      }
+      return out;
+    }
+
+    function rebuildTasks(){
+      tasksWrap.innerHTML="";
+      const data=collectTasksData();
+      const view=viewSortFilter(data);
+      view.forEach(item=> tasksWrap.appendChild(buildTaskRow(i,item.idx,data)));
+      setTimeout(refreshMaster,0);
+      attachTaskSortable(tasksWrap,i, /*enable*/ (!chipStateFirst && !chipStateOnly));
+    }
+
+    function cyclePriority(old){
+      if(old==="normal") return "important";
+      if(old==="important") return "urgent";
+      return "normal";
+    }
+
+    function buildTaskRow(cardIndex,tIdx,full){
+      const dd=loadData();
+      const row=document.createElement("div"); row.className="task"; row.dataset.idx=tIdx;
+      const pr=dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal";
+      row.classList.add(pr);
+
+      const leftBar=document.createElement("div"); leftBar.className="prio-bar"; row.appendChild(leftBar);
+
+      const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=tIdx; box.checked=(localStorage.getItem(dailyKey(cardIndex,tIdx))==='true');
+      box.onchange=()=> localStorage.setItem(dailyKey(cardIndex,tIdx), box.checked?'true':'false');
+
+      const input=document.createElement("input"); input.type="text"; input.className="task-text"; input.placeholder="Daily Task"; input.value=dd[`char_${cardIndex}_task_${tIdx}`]||"";
+      const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
+
+      const prBtn=document.createElement("button"); prBtn.className="prio-btn"; prBtn.title="Priority"; prBtn.setAttribute("aria-label","Task priority"); const ico=document.createElement("span"); ico.className="i"; prBtn.appendChild(ico);
+
+      function paintPriority(state, pulse=false){
+        row.classList.remove("normal","important","urgent");
+        row.classList.add(state);
+        ico.textContent = (state==="important") ? "★" : (state==="urgent" ? "!" : "•");
+        if(state==="urgent" && pulse){ leftBar.classList.add("glow"); leftBar.addEventListener("animationend",()=>leftBar.classList.remove("glow"),{once:true}); }
+        // polite announce
+        row.setAttribute("aria-live","polite");
+        row.setAttribute("aria-label",`Task priority ${state}`);
+      }
+      paintPriority(pr,false);
+
+      const handle=document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
+
+      /* events */
+      input.addEventListener("keydown",(e)=>{
+        if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(cardIndex,tIdx,-1); }
+        else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(cardIndex,tIdx,+1); }
+        else if(e.key==="Enter"){ e.preventDefault(); toggleRowCheckbox(cardIndex,tIdx); }
+        else if(e.key.toLowerCase()==="p" && !e.altKey && !e.metaKey && !e.ctrlKey){
+          e.preventDefault(); setPriority(cardIndex,tIdx, cyclePriority(dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal"), /*pulse*/true);
+        }
+        else if(e.key==="Tab" && !e.shiftKey){ e.preventDefault(); insertTaskAfter(cardIndex,tIdx); setTimeout(()=>focusNewTaskInput(cardIndex,tIdx+1),0); }
+      });
+      box.addEventListener("keydown",(e)=>{
+        if(e.key===" "||e.key==="Enter"){ e.preventDefault(); box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
+        else if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(cardIndex,tIdx,-1); }
+        else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(cardIndex,tIdx,+1); }
+        else if(e.key.toLowerCase()==="p" && !e.altKey && !e.metaKey && !e.ctrlKey){ e.preventDefault(); setPriority(cardIndex,tIdx, cyclePriority(dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal"), /*pulse*/true); }
+      });
+
+      input.addEventListener("input",()=>{
+        const d2=loadData();
+        if(input.value===""){
+          const ct=d2[`char_${cardIndex}_taskCount`]||1;
+          if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
+        }else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
+      });
+
+      del.onclick=()=>{
+        const d2=loadData(); const ct=d2[`char_${cardIndex}_taskCount`]||1;
+        if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { input.value=""; d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
+        rebuildTasks();
+      };
+
+      prBtn.onclick=()=>{
+        const next=cyclePriority(dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal");
+        setPriority(cardIndex,tIdx,next, /*pulse*/ next==="urgent");
+      };
+
+      row.append(box,input,del,prBtn,handle);
+      return row;
+    }
+
+    function setPriority(cardIndex,tIdx,state,pulse){
+      const dd=loadData(); dd[`char_${cardIndex}_taskp_${tIdx}`]=state; saveData(dd);
+      // announce via inline msg as well
+      const msg=card.querySelector(".inline-msg");
+      msg.style.display=""; msg.textContent = `Task marked ${state}.`;
+      setTimeout(()=>{ msg.style.display="none"; msg.textContent=""; }, 1200);
+      // Rebuild to apply chip view & visuals; pulse will show on urgent bar
+      rebuildTasks();
+      // If we want the glow immediately on the exact row, we could locate it after rebuild and add .glow:
+      const row=card.querySelector(`.task[data-idx="${tIdx}"] .prio-bar`);
+      if(row && state==="urgent"){ row.classList.add("glow"); row.addEventListener("animationend",()=>row.classList.remove("glow"),{once:true}); }
+    }
+
+    rebuildTasks();
     attachNameLookup(i,name,meta,msg,imgWrap.querySelector("img"));
     return card;
   }
 
   function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
 
-  /* Tasks */
-  function buildTask(i,t,d){
-    const row=document.createElement("div"); row.className="task"; row.dataset.idx=t;
-    const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked=(localStorage.getItem(dailyKey(i,t))==='true');
-    box.onchange=()=> localStorage.setItem(dailyKey(i,t), box.checked?'true':'false');
-
-    const input=document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value=d[`char_${i}_task_${t}`]||"";
-    const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
-    const handle=document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
-
-    input.addEventListener("keydown",(e)=>{
-      if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i,t,-1); }
-      else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i,t,+1); }
-      else if(e.key==="Enter"){ e.preventDefault(); toggleRowCheckbox(i,t); }
-      else if(e.key==="Tab" && !e.shiftKey){ e.preventDefault(); insertTaskAfter(i,t); setTimeout(()=>focusNewTaskInput(i,t+1),0); }
-    });
-    box.addEventListener("keydown",(e)=>{
-      if(e.key===" "||e.key==="Enter"){ e.preventDefault(); box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
-      else if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i,t,-1); }
-      else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i,t,+1); }
-    });
-
-    input.addEventListener("input",()=>{
-      const dd=loadData();
-      if(input.value===""){
-        const ct=dd[`char_${i}_taskCount`]||1;
-        if(ct>1){ shiftDeleteTask(i,t,ct,dd); } else { dd[`char_${i}_task_${t}`]=""; saveData(dd); }
-      }else{ dd[`char_${i}_task_${t}`]=input.value; saveData(dd); }
-    });
-
-    del.onclick=()=>{
-      const dd=loadData(); const ct=dd[`char_${i}_taskCount`]||1;
-      if(ct>1){ shiftDeleteTask(i,t,ct,dd); } else { input.value=""; dd[`char_${i}_task_${t}`]=""; saveData(dd); }
-    };
-
-    row.append(box,input,del,handle);
-    return row;
-  }
+  /* Tasks (shared helpers) */
   function focusNewTaskInput(i,tNew){
     const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
     const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
@@ -405,26 +556,40 @@
   }
   function insertTaskAfter(i,t){
     const d=loadData(); const ct=Math.max(1,d[`char_${i}_taskCount`]||1); if(ct>=MAX_TASKS) return;
-    for(let k=ct-1;k>t;k--) d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||""; d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskCount`]=ct+1;
+    for(let k=ct-1;k>t;k--){ d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||""; d[`char_${i}_taskp_${k+1}`]=d[`char_${i}_taskp_${k}`]||"normal"; }
+    d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskp_${t+1}`]="normal"; d[`char_${i}_taskCount`]=ct+1;
+
+    // shift checkbox states
     for(let k=ct-1;k>t;k--){ const from=localStorage.getItem(dailyKey(i,k)); if(from!==null) localStorage.setItem(dailyKey(i,k+1),from); localStorage.removeItem(dailyKey(i,k)); }
-    localStorage.removeItem(dailyKey(i,t+1)); saveData(d); build();
+    localStorage.removeItem(dailyKey(i,t+1));
+    saveData(d); build();
   }
   function shiftDeleteTask(i,t,ct,dd){
-    dd[`char_${i}_task_${t}`]="";
-    for(let k=t+1;k<ct;k++){ dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||""; const from=localStorage.getItem(dailyKey(i,k)); if(from!==null) localStorage.setItem(dailyKey(i,k-1),from); localStorage.removeItem(dailyKey(i,k)); }
-    delete dd[`char_${i}_task_${ct-1}`]; localStorage.removeItem(dailyKey(i,ct-1)); dd[`char_${i}_taskCount`]=ct-1; saveData(dd); build();
+    dd[`char_${i}_task_${t}`]=""; dd[`char_${i}_taskp_${t}`]="normal";
+    for(let k=t+1;k<ct;k++){
+      dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||"";
+      dd[`char_${i}_taskp_${k-1}`]=dd[`char_${i}_taskp_${k}`]||"normal";
+      const from=localStorage.getItem(dailyKey(i,k));
+      if(from!==null) localStorage.setItem(dailyKey(i,k-1),from);
+      localStorage.removeItem(dailyKey(i,k));
+    }
+    delete dd[`char_${i}_task_${ct-1}`]; delete dd[`char_${i}_taskp_${ct-1}`];
+    localStorage.removeItem(dailyKey(i,ct-1));
+    dd[`char_${i}_taskCount`]=ct-1; saveData(dd);
   }
 
-  /* Sortable tasks */
-  function attachTaskSortable(tasksWrap,cardIndex){
-    Sortable.create(tasksWrap,{
+  /* Sortable tasks (disabled when viewing priority-first or only-priority) */
+  function attachTaskSortable(tasksWrap,cardIndex,enable=true){
+    if(tasksWrap._sortable){ tasksWrap._sortable.destroy(); tasksWrap._sortable=null; }
+    if(!enable) return;
+    tasksWrap._sortable = Sortable.create(tasksWrap,{
       animation:160, handle:".handle", draggable:".task", ghostClass:"dragging",
       onEnd:()=>{
         const d=loadData(); const ct=d[`char_${cardIndex}_taskCount`]||1;
-        const texts=[], checks=[];
-        for(let t=0;t<ct;t++){ texts.push(d[`char_${cardIndex}_task_${t}`]||""); checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true'); }
+        const texts=[], checks=[], prios=[];
+        for(let t=0;t<ct;t++){ texts.push(d[`char_${cardIndex}_task_${t}`]||""); prios.push(d[`char_${cardIndex}_taskp_${t}`]||"normal"); checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true'); }
         const order=Array.from(tasksWrap.querySelectorAll(".task")).map(r=>+r.dataset.idx);
-        for(let p=0;p<order.length;p++){ const tOld=order[p]; d[`char_${cardIndex}_task_${p}`]=texts[tOld]||""; }
+        for(let p=0;p<order.length;p++){ const tOld=order[p]; d[`char_${cardIndex}_task_${p}`]=texts[tOld]||""; d[`char_${cardIndex}_taskp_${p}`]=prios[tOld]||"normal"; }
         for(let t=0;t<ct;t++) localStorage.removeItem(dailyKey(cardIndex,t));
         for(let p=0;p<order.length;p++){ const tOld=order[p]; if(checks[tOld]) localStorage.setItem(dailyKey(cardIndex,p),'true'); }
         saveData(d); build();
@@ -435,15 +600,20 @@
   /* Cards add/dup/delete/reorder */
   $("#add-character-btn").addEventListener("click",()=>{
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
-    const i=d.charCount; d.charCount=i+1; d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]=""; d[`char_${i}_userImage`]=false;
-    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]=""; saveData(d); build();
+    const i=d.charCount; d.charCount=i+1; d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`] =""; d[`char_${i}_job`] =""; d[`char_${i}_userImage`]=false;
+    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]=""; d[`char_${i}_taskp_${0}`]="normal"; d[`char_${i}_taskp_${1}`]="normal";
+    d[`char_${i}_chip_priorityFirst`]=DEFAULT_PRIORITY_FIRST; d[`char_${i}_chip_onlyPriority`]=false;
+    saveData(d); build();
   });
   function duplicateCharacter(i){
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
-    const ct=d[`char_${i}_taskCount`]||2; const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+    const ct=d[`char_${i}_taskCount`]||2; const tasks=[], prios=[];
+    for(let t=0;t<ct;t++){ tasks.push(d[`char_${i}_task_${t}`]||""); prios.push(d[`char_${i}_taskp_${t}`]||"normal"); }
     const ins=d.charCount; d.charCount=ins+1;
     d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||""; d[`char_${ins}_userImage`]=!!d[`char_${i}_userImage`];
-    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||""; saveData(d); build();
+    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++){ d[`char_${ins}_task_${t}`]=tasks[t]||""; d[`char_${ins}_taskp_${t}`]=prios[t]||"normal"; }
+    d[`char_${ins}_chip_priorityFirst`]=d[`char_${i}_chip_priorityFirst`]; d[`char_${ins}_chip_onlyPriority`]=d[`char_${i}_chip_onlyPriority`];
+    saveData(d); build();
   }
   function confirmDelete(i){
     const d=loadData(); const nm=d[`char_${i}_name`]||"Untitled";
@@ -460,11 +630,13 @@
       const ctNext=d[`char_${k+1}_taskCount`]||0;
       for(let t=0;t<ctNext;t++){ const from=localStorage.getItem(dailyKey(k+1,t)); const toKey=dailyKey(k,t); if(from!==null) localStorage.setItem(toKey,from); localStorage.removeItem(dailyKey(k+1,t)); }
       d[`char_${k}_name`]=d[`char_${k+1}_name`]||""; d[`char_${k}_image`]=d[`char_${k+1}_image`]||""; d[`char_${k}_level`]=d[`char_${k+1}_level`]||""; d[`char_${k}_job`]=d[`char_${k+1}_job`]||""; d[`char_${k}_userImage`]=!!d[`char_${k+1}_userImage`];
-      const ct=d[`char_${k+1}_taskCount`]||1; d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
+      const ct=d[`char_${k+1}_taskCount`]||1; d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++){ d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||""; d[`char_${k}_taskp_${t}`]=d[`char_${k+1}_taskp_${t}`]||"normal"; }
+      d[`char_${k}_chip_priorityFirst`]=d[`char_${k+1}_chip_priorityFirst`]; d[`char_${k}_chip_onlyPriority`]=d[`char_${k+1}_chip_onlyPriority`];
     }
     const last=n-1; const lastCt=d[`char_${last}_taskCount`]||0; for(let t=0;t<lastCt;t++) localStorage.removeItem(dailyKey(last,t));
     delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`]; delete d[`char_${last}_userImage`];
-    delete d[`char_${last}_taskCount`]; for(let t=0;t<lastCt;t++) delete d[`char_${last}_task_${t}`];
+    delete d[`char_${last}_taskCount`]; for(let t=0;t<lastCt;t++){ delete d[`char_${last}_task_${t}`]; delete d[`char_${last}_taskp_${t}`]; }
+    delete d[`char_${last}_chip_priorityFirst`]; delete d[`char_${last}_chip_onlyPriority`];
     d.charCount=Math.max(0,n-1); saveData(d); build();
   }
 
@@ -479,12 +651,16 @@
   function moveCard(from,to){
     const cont=$("#checklists"); const n=[...cont.querySelectorAll(".character")].length; if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
     const d=loadData(), list=[]; for(let i=0;i<d.charCount;i++){ const ct=Math.max(1,d[`char_${i}_taskCount`]||1); const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-      list.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks}); }
+      const prios=[]; for(let t=0;t<ct;t++) prios.push(d[`char_${i}_taskp_${t}`]||"normal");
+      list.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks, prios,
+        chipFirst:d[`char_${i}_chip_priorityFirst`], chipOnly:d[`char_${i}_chip_onlyPriority`]}); }
     const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
     const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
     const nd={charCount:list.length};
     for(let i=0;i<list.length;i++){ const c=list[i]; nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
-      const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||""; }
+      const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++){ nd[`char_${i}_task_${t}`]=c.tasks[t]||""; nd[`char_${i}_taskp_${t}`]=c.prios[t]||"normal"; }
+      nd[`char_${i}_chip_priorityFirst`]=c.chipFirst; nd[`char_${i}_chip_onlyPriority`]=c.chipOnly;
+    }
     for(let i=0;i<checks.length;i++){ for(let t=0;t<MAX_TASKS;t++) localStorage.removeItem(dailyKey(i,t)); for(let t=0;t<checks[i].length;t++) if(checks[i][t]) localStorage.setItem(dailyKey(i,t),'true'); }
     saveData(nd); build();
   }
@@ -517,14 +693,14 @@
 
   function triggerLookupNow(cardIndex,nameInput,metaElem,msgElem,imgElem){
     const q=nameInput.value.trim();
-    if(accOpen) return;                       // pause while accents panel open
-    if(q.length<MIN_LOOKUP_LEN) return;       // optional min length
+    if(accOpen) return;
+    if(q.length<MIN_LOOKUP_LEN) return;
     scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,0);
   }
 
   function scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,delay=DEBOUNCE_MS){
     clearTimeout(nameTimers.get(cardIndex));
-    if(accOpen) return; // do not queue while accents panel is open
+    if(accOpen) return;
     const q=nameInput.value.trim();
     if(q.length<MIN_LOOKUP_LEN){ nameTimers.set(cardIndex, null); return; }
     const t=setTimeout(()=> doLookup(cardIndex,q,nameInput,metaElem,msgElem,imgElem), delay);
@@ -532,11 +708,9 @@
   }
 
   async function doLookup(cardIndex,query,nameInput,metaElem,msgElem,imgElem){
-    // Abort previous
     const prev=nameControllers.get(cardIndex);
     if(prev){ try{ prev.abort(); }catch{} }
 
-    // Cache first
     const cacheKey=query.toLowerCase();
     const cached=cacheGet(cacheKey);
     if(cached){
@@ -562,7 +736,7 @@
       if(noMatch){ renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem); return; }
       applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,data,false);
     }catch(err){
-      if(err?.name==="AbortError") return; // ignore stale
+      if(err?.name==="AbortError") return;
       renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem);
     }finally{
       nameControllers.delete(cardIndex);
@@ -571,7 +745,7 @@
 
   function renderNotFoundIfCurrent(cardIndex, requestQuery, nameInput, metaElem, msgElem){
     const current=nameInput.value.trim();
-    if(current.toLowerCase()!==requestQuery.toLowerCase()) return; // stale; ignore
+    if(current.toLowerCase()!==requestQuery.toLowerCase()) return;
     metaElem.textContent="Character not found on MapleRanks";
     metaElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373";
     msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373";
@@ -580,14 +754,11 @@
   }
 
   function applyLookupResult(cardIndex, requestQuery, nameInput, metaElem, msgElem, imgElem, data, fromCache){
-    // Ignore stale responses
     const current=nameInput.value.trim();
     if(current.length<MIN_LOOKUP_LEN || current.toLowerCase()!==requestQuery.toLowerCase()) return;
 
-    // Reset any prior error styling
     metaElem.style.color="";
 
-    // Suggest canonical without overwriting
     if(data.name && data.name.trim() && data.name.trim()!==current){
       msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.body).getPropertyValue('--meta-fg')||"#6b7280";
       msgElem.textContent=`Suggestion: ${data.name}`;
@@ -595,7 +766,7 @@
     }else{ msgElem.style.display="none"; msgElem.textContent=""; }
 
     const d=loadData();
-    d[`char_${cardIndex}_name`]=current; // keep user text
+    d[`char_${cardIndex}_name`]=current;
     d[`char_${cardIndex}_level`]=data.level || d[`char_${cardIndex}_level`] || "";
     d[`char_${cardIndex}_job`]=data.job || d[`char_${cardIndex}_job`] || "";
 
