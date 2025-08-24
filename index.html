@@ -1137,51 +1137,8 @@ const shortcutsBtn=$("#shortcuts-btn"), shortcutsOverlay=$("#shortcuts-overlay")
 shortcutsBtn.addEventListener("click",()=>{ shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
 shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});
-quickstartToggle.addEventListener("click",()=>{
-  const hidden=quickstartList.style.display==="none";
-  quickstartList.style.display=hidden?"":"none";
-  quickstartToggle.textContent = hidden ? "Hide" : "Show";
-});
-
+// (quickstart toggle removed)
 /* Contact modal logic moved to consolidated IIFE at end of file. */
-
-    document.addEventListener('keydown', onKey, true);
-  }
-  function closeContact(){
-    document.removeEventListener('keydown', onKey, true);
-    try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay?.classList.remove('show');
-    overlay?.setAttribute('aria-hidden','true');
-    overlay?.setAttribute('inert','');
-  }
-  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
-
-  btn?.addEventListener('click', ()=>{
-    if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
-  });
-
-  overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
-})();
-
-}, 0);
-    document.addEventListener('keydown', onKey, true);
-  }
-  function closeContact(){
-    document.removeEventListener('keydown', onKey, true);
-    try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay && overlay.classList.remove('show');
-    overlay && overlay.setAttribute('aria-hidden','true');
-    overlay && overlay.setAttribute('inert','');
-  }
-  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
-
-  btn && btn.addEventListener('click', ()=>{
-    if(overlay && overlay.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
-  });
-  overlay && overlay.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
-})();
-
-
 // Contact modal controls (X button, ESC, and backdrop)
 (function(){
   const overlay = document.getElementById('contact-overlay');
