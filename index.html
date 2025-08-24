@@ -17,21 +17,23 @@
       --task-underline:1px dotted currentColor;
       --name-underline:1px solid currentColor;
       --meta-fg:#6b7280; --handle-fg: var(--meta-fg);
+      --popover-bg:var(--card-bg); --popover-fg:var(--fg); --popover-border:var(--card-border);
+      --kbd-focus: var(--icon);
     }
     /* Themes */
-    body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190;}
-    body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#ffffff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5;}
-    body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#ffffff; --card-border:#e6def6; --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0;}
-    body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a;}
-    body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df;}
-    body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b;}
+    body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; }
+    body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#ffffff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; }
+    body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#ffffff; --card-border:#e6def6; --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; }
+    body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; }
+    body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; }
+    body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; }
 
     *{ box-sizing:border-box; }
     body{ font-family:Quicksand,system-ui,sans-serif; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; font-size:var(--ui); background:var(--bg); color:var(--fg); transition:.25s background,.25s color; }
     h1{ margin:0 0 6px; font-size:20px; text-align:center; }
     #utc-time{ font-size:13px; margin-bottom:8px; }
 
-    /* Theme top-left */
+    /* Theme row */
     .theme-row{ display:flex; justify-content:flex-start; gap:10px; align-items:center; width:100%; max-width:1000px; margin:4px 0 8px; }
     .select-wrap{ position:relative; display:inline-flex; align-items:center; }
     .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
@@ -53,33 +55,31 @@
     .btn:hover{ filter:brightness(1.02); }
     .btn:active{ transform:translateY(1px); }
 
-    .icon-btn{ width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); transition:.15s background,.15s color,.15s border-color, transform .05s ease-in-out; font-family:inherit; }
+    .icon-btn{ width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); transition:.15s; font-family:inherit; }
     .icon-btn:hover{ background:var(--icon-hover); }
     .icon-btn.small{ width:24px; height:24px; border-radius:6px; }
     .icon-btn svg{ width:16px; height:16px; }
 
-    /* Cards grid */
+    /* Cards */
     #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
-
     .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:40px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
     .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
-
     .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
     .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
-
-    /* Invisible drag handle above the name (active, no visuals) */
     .card-drag-handle{ position:absolute; left:14px; right:14px; top:30px; height:18px; cursor:grab; user-select:none; opacity:0; border:none; }
     .card-drag-handle:active{ cursor:grabbing; }
 
-    /* Image/meta */
     .char-image-wrap{ text-align:center; margin:2px auto 2px; min-height:24px; }
     .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
     .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 2px; font-family:inherit; min-height:16px; }
-
     .inline-msg{ text-align:center; font-size:12px; margin:2px 0 0; color:#a94442; display:none; }
 
+    /* Name row with Accents button */
+    .name-row{ display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
     .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:0 0 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
+    .accents-btn{ width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); cursor:pointer; }
+    .accents-btn:hover{ background:var(--icon-hover); }
 
     /* Tasks */
     .tasks{ margin-top:2px; }
@@ -87,10 +87,8 @@
     .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
     .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; cursor:pointer; }
     .task input[type="checkbox"]{ width:12px; height:12px; vertical-align:middle; }
-
     .handle{ cursor:grab; user-select:none; opacity:.7; }
     .handle:active{ cursor:grabbing; }
-
     .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); font-weight:600; }
     .check-all input{ width:12px; height:12px; vertical-align:middle; }
 
@@ -102,10 +100,29 @@
     .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
     .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
 
-    /* NEW: clearer focus ring for tasks */
-    .task input[type="text"]:focus-visible{ outline:2px solid var(--icon); outline-offset:2px; }
+    /* Focus rings for a11y */
+    .task input[type="text"]:focus-visible,
     .task input[type="checkbox"]:focus-visible,
-    .check-all input:focus-visible{ outline:2px solid var(--icon); outline-offset:2px; }
+    .check-all input:focus-visible,
+    .accents-btn:focus-visible,
+    .icon-btn:focus-visible,
+    select:focus-visible,
+    .btn:focus-visible { outline:2px solid var(--kbd-focus); outline-offset:2px; }
+
+    /* Accents popover */
+    .acc-pop{ position:absolute; z-index:2000; min-width:260px; max-width:min(92vw,420px);
+      background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border);
+      border-radius:12px; box-shadow:var(--shadow); padding:10px; display:none; }
+    .acc-pop.show{ display:block; }
+    .acc-head{ display:flex; align-items:center; gap:8px; justify-content:space-between; margin-bottom:6px; }
+    .acc-title{ font-weight:700; }
+    .acc-case-toggle{ border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); border-radius:8px; padding:2px 8px; font-size:12px; }
+    .acc-close{ border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); border-radius:8px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; }
+    .acc-section-label{ font-size:12px; opacity:.8; margin:4px 0 4px; }
+    .acc-base, .acc-variants{ display:flex; flex-wrap:wrap; gap:6px; }
+    .acc-btn{ border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); border-radius:8px; padding:6px 8px; font-weight:600; cursor:pointer; }
+    .acc-btn:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; }
+    .acc-hint{ font-size:12px; color:#a94442; margin-top:6px; }
   </style>
 </head>
 <body class="lavender">
@@ -142,6 +159,7 @@
       <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image (user uploads are never auto-replaced).</li>
       <li><strong>Auto-fill</strong>: Type a Character Name to fetch Level/Job and avatar from Maple Ranks via Worker.</li>
       <li><strong>Reset</strong>: All checkboxes reset daily at 00:00 UTC.</li>
+      <li><strong>Accents</strong>: Use the “Â” button next to the name to insert accented characters; Alt+A opens it for the focused field.</li>
     </ul>
   </div>
 
@@ -186,6 +204,22 @@
   <!-- Hidden upload input -->
   <input id="hidden-upload" type="file" accept="image/*" style="display:none" />
 
+  <!-- Accents popover (single shared panel) -->
+  <div id="accents-popover" class="acc-pop" role="dialog" aria-label="Accented characters" aria-modal="false">
+    <div class="acc-head">
+      <span class="acc-title">Accents</span>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <button id="acc-case" class="acc-case-toggle" type="button" aria-pressed="false" title="Toggle case">Aa</button>
+        <button id="acc-close" class="acc-close" type="button" aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="acc-section-label">Letters</div>
+    <div id="acc-base" class="acc-base" role="listbox" aria-label="Base letters"></div>
+    <div class="acc-section-label" id="acc-var-label" style="display:none;">Variants</div>
+    <div id="acc-variants" class="acc-variants" role="grid" aria-label="Variants"></div>
+    <div id="acc-hint" class="acc-hint" style="display:none;">Click into a text box first.</div>
+  </div>
+
   <!-- SortableJS -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
@@ -204,11 +238,13 @@
   }
   setInterval(tickUTC, 1000); tickUTC();
 
+  // Themes
   const themeSel = $("#theme");
   const lastTheme = localStorage.getItem("mapleTheme") || "lavender";
   document.body.className = lastTheme; themeSel.value = lastTheme;
   themeSel.addEventListener("change",()=>{ document.body.className = themeSel.value; localStorage.setItem("mapleTheme", themeSel.value); });
 
+  // Presets
   let currentPreset = parseInt(localStorage.getItem("maplePreset")||"1",10);
   const presetSel=$("#preset"); presetSel.value=String(currentPreset);
   presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
@@ -294,9 +330,16 @@
 
     const msg=document.createElement("div"); msg.className="inline-msg"; card.appendChild(msg);
 
+    // Name row + Accents button
+    const nameRow = document.createElement("div"); nameRow.className="name-row";
     const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
     name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
-    card.appendChild(name);
+    const accBtn = document.createElement("button");
+    accBtn.className="accents-btn"; accBtn.type="button"; accBtn.title="Accents"; accBtn.setAttribute('aria-label','Accents');
+    accBtn.innerHTML = accentSVG();
+    accBtn.addEventListener("click",(e)=> openAccentsPanel(name, accBtn));
+    nameRow.append(name, accBtn);
+    card.appendChild(nameRow);
 
     const tasksWrap=document.createElement("div"); tasksWrap.className="tasks";
     let count=d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; d[`char_${i}_taskCount`]=count; saveData(d);
@@ -322,7 +365,7 @@
     return card;
   }
 
-  // NEW: keyboard helpers
+  // Keyboard helpers for tasks (existing)
   function focusTaskInput(cardIndex, tNew){
     const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
     const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
@@ -355,17 +398,15 @@
     const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
     const handle=document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
 
-    // NEW: keyboard behavior on text input
+    // Keyboard behavior on text input
     input.addEventListener("keydown",(e)=>{
       if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i, t, -1); }
       else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i, t, +1); }
       else if(e.key==="Enter"){ e.preventDefault(); toggleRowCheckbox(i, t); }
-      else if(e.key==="Tab" && !e.shiftKey){ // keep Tab-to-insert
-        e.preventDefault(); insertTaskAfter(i,t); setTimeout(()=> focusNewTaskInput(i,t+1),0);
-      }
+      else if(e.key==="Tab" && !e.shiftKey){ e.preventDefault(); insertTaskAfter(i,t); setTimeout(()=> focusNewTaskInput(i,t+1),0); }
     });
 
-    // NEW: keyboard behavior on checkbox (space/enter toggle, arrows move)
+    // Keyboard behavior on checkbox
     box.addEventListener("keydown",(e)=>{
       if(e.key===" " || e.key==="Spacebar" || e.key==="Enter"){ e.preventDefault(); box.checked = !box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
       else if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i, t, -1); }
@@ -454,7 +495,7 @@
     });
   }
 
-  // Cards: add / duplicate / delete
+  // Cards add / duplicate / delete
   $("#add-character-btn").addEventListener("click", ()=>{
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
     const i=d.charCount; d.charCount=i+1;
@@ -514,7 +555,7 @@
     saveData(d); build();
   }
 
-  // Sortable cards (drag only by invisible handle)
+  // Sortable cards
   let sortableCards=null;
   function initCardSortable(){
     const cont=$("#checklists");
@@ -621,10 +662,8 @@
         d[`char_${cardIndex}_job`]   = data.job   || d[`char_${cardIndex}_job`]   || "";
 
         const userHasUpload = !!d[`char_${cardIndex}_userImage`];
-        const prevSrc = d[`char_${cardIndex}_image`] || "";
-        // NEW: if not user-uploaded and worker supplies avatar, always update image (even if old non-placeholder exists)
         if(!userHasUpload && data.avatar){
-          d[`char_${cardIndex}_image`] = data.avatar;
+          d[`char_${cardIndex}_image`] = data.avatar; // always update auto-image when name changes
         }
 
         saveData(d);
@@ -632,7 +671,7 @@
         nameInput.value = d[`char_${cardIndex}_name`];
         metaElem.textContent = metaText(d[`char_${cardIndex}_level`], d[`char_${cardIndex}_job`]);
 
-        // Update image only if it changed (prevents flicker)
+        // Update image if changed (no flicker)
         const newSrc = d[`char_${cardIndex}_image`] || BASE_MODEL_URL;
         if(imgElem && imgElem.src !== newSrc){
           const old = imgElem.src;
@@ -640,7 +679,6 @@
           imgElem.decoding = "async";
           imgElem.alt = `Avatar for ${d[`char_${cardIndex}_name`] || "character"}`;
           imgElem.onerror = () => {
-            // Revert if the image fails to load and notify briefly
             imgElem.onerror = null;
             imgElem.src = old;
             msgElem.style.display=""; msgElem.style.color="#a94442";
@@ -671,13 +709,186 @@
     });
   }
 
-  // Icons
+  // ===== Accented character keyboard =====
+  const ACCENTS = {
+    a:['á','à','â','ä','ã','å','ā','ă','ą'],
+    e:['é','è','ê','ë','ē','ĕ','ė','ę','ě'],
+    i:['í','ì','î','ï','ī','ĭ','į','ı'],
+    o:['ó','ò','ô','ö','õ','ō','ŏ','ő','ø'],
+    u:['ú','ù','û','ü','ũ','ū','ŭ','ů','ű','ų'],
+    c:['ç','ć','ĉ','ċ','č'],
+    n:['ñ','ń','ņ','ň'],
+    s:['ß','ś','ŝ','ş','š'],
+    y:['ý','ÿ','ŷ'],
+    z:['ź','ż','ž'],
+    g:['ğ'],
+    l:['ł'],
+    r:['ř'],
+    t:['ţ','ť']
+  };
+  const BASES = Object.keys(ACCENTS);
+
+  const accPop = $("#accents-popover");
+  const accBase = $("#acc-base");
+  const accVars = $("#acc-variants");
+  const accVarLabel = $("#acc-var-label");
+  const accHint = $("#acc-hint");
+  const accClose = $("#acc-close");
+  const accCaseBtn = $("#acc-case");
+
+  let accUpper = false;
+  let accAnchorEl = null;     // button or input used to position
+  let accTargetEl = null;     // field that receives characters
+  let accOpen = false;
+
+  function accentSVG(){
+    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3c-3.9 0-7 3.1-7 7c0 3.9 3.1 7 7 7s7-3.1 7-7c0-3.9-3.1-7-7-7m0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5s5 2.2 5 5s-2.2 5-5 5m-2-5h4v2h-4v-2m.9-3.4l1.1-1.6l1.1 1.6l-1.1.8l-1.1-.8z"/></svg>';
+  }
+
+  function accentButtonSVG(){ return accentSVG(); }
+
+  function isTextField(el){
+    return el && ((el.tagName==='INPUT' && (/^(text|search|email|url|tel|password)$/i).test(el.type)) || el.tagName==='TEXTAREA');
+  }
+
+  function buildBaseButtons(){
+    accBase.innerHTML = "";
+    BASES.forEach((b,i)=>{
+      const label = accUpper ? b.toUpperCase() : b;
+      const btn = document.createElement("button");
+      btn.type = "button"; btn.className = "acc-btn"; btn.textContent = label;
+      btn.setAttribute("role","option"); btn.setAttribute("aria-label", `Base ${label}`);
+      btn.addEventListener("click", ()=> showVariants(b));
+      btn.addEventListener("keydown",(e)=>{
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showVariants(b); (accVars.querySelector('button')||btn).focus(); }
+      });
+      accBase.appendChild(btn);
+    });
+  }
+
+  function showVariants(base){
+    const list = ACCENTS[base] || [];
+    const variants = accUpper ? list.map(c=>c.toUpperCase()) : list;
+    accVars.innerHTML = "";
+    accVarLabel.style.display = variants.length ? "" : "none";
+    variants.forEach((ch, idx)=>{
+      const vb = document.createElement("button");
+      vb.type="button"; vb.className="acc-btn"; vb.textContent=ch;
+      vb.setAttribute("role","gridcell");
+      vb.setAttribute("aria-label", `Insert ${ch}`);
+      vb.addEventListener("click", ()=> insertAccent(ch, /*close*/true));
+      vb.addEventListener("keydown",(e)=>{
+        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); insertAccent(ch, true); }
+        else if(e.key==="ArrowLeft"){ e.preventDefault(); focusVariant(idx-1); }
+        else if(e.key==="ArrowRight"){ e.preventDefault(); focusVariant(idx+1); }
+        else if(e.key==="ArrowUp"||e.key==="ArrowDown"){ e.preventDefault(); /* simple rowless nav; ignore or add rows later */ }
+      });
+      accVars.appendChild(vb);
+    });
+  }
+
+  function focusVariant(idx){
+    const btns=[...accVars.querySelectorAll("button")];
+    if(!btns.length) return;
+    if(idx<0) idx=0; if(idx>=btns.length) idx=btns.length-1;
+    btns[idx].focus();
+  }
+
+  function openAccentsPanel(targetEl, anchorEl){
+    accTargetEl = isTextField(document.activeElement) ? document.activeElement : (isTextField(targetEl)? targetEl : null);
+    accAnchorEl = anchorEl || targetEl;
+
+    // Build content
+    buildBaseButtons();
+    accVars.innerHTML=""; accVarLabel.style.display="none";
+
+    // Position near anchor
+    const rect = accAnchorEl.getBoundingClientRect();
+    accPop.style.left = Math.min(window.innerWidth-20, Math.max(8, rect.right - 280)) + "px";
+    accPop.style.top = (rect.bottom + 8 + window.scrollY) + "px";
+
+    // Show hint if no target
+    accHint.style.display = accTargetEl ? "none" : "";
+    accPop.classList.add("show"); accOpen = true;
+  }
+
+  function closeAccentsPanel(){
+    accOpen=false; accPop.classList.remove("show");
+  }
+
+  function insertAccent(ch, closeAfter){
+    if(!accTargetEl || !isTextField(accTargetEl)){
+      accHint.style.display = "";
+      setTimeout(()=> accHint.style.display="none", 1500);
+      return;
+    }
+    const el = accTargetEl;
+    const start = el.selectionStart ?? el.value.length;
+    const end = el.selectionEnd ?? el.value.length;
+    let insertText = ch;
+
+    // Maxlength respect
+    const max = typeof el.maxLength === "number" ? el.maxLength : -1;
+    if(max > -1){
+      const remaining = max - el.value.length + (end - start);
+      if(remaining <= 0) return; // no room
+      if(insertText.length > remaining) insertText = insertText.slice(0, remaining);
+    }
+
+    // Use setRangeText to integrate with undo and fire input
+    el.setRangeText(insertText, start, end, "end");
+    el.dispatchEvent(new InputEvent("input", { bubbles:true, data:insertText, inputType:"insertText" }));
+    el.dispatchEvent(new Event("change", { bubbles:true }));
+
+    // Keep focus on field (do not steal)
+    el.focus();
+
+    if(closeAfter) closeAccentsPanel();
+  }
+
+  accClose.addEventListener("click", closeAccentsPanel);
+  accCaseBtn.addEventListener("click", ()=>{
+    accUpper = !accUpper;
+    accCaseBtn.setAttribute("aria-pressed", accUpper ? "true" : "false");
+    buildBaseButtons();
+    accVars.innerHTML=""; accVarLabel.style.display="none";
+  });
+
+  // Global key: Alt+A to open at focused field
+  document.addEventListener("keydown",(e)=>{
+    if(e.altKey && (e.key==="a" || e.key==="A")){
+      e.preventDefault();
+      const focusEl = document.activeElement;
+      if(isTextField(focusEl)){
+        // find card and its accents button for anchor
+        const card = focusEl.closest(".character");
+        const anchor = card ? card.querySelector(".accents-btn") : focusEl;
+        openAccentsPanel(focusEl, anchor || focusEl);
+      }else{
+        // show hint anchored to theme dropdown
+        openAccentsPanel(null, $("#theme"));
+      }
+    }else if(e.key==="Escape" && accOpen){
+      closeAccentsPanel();
+    }
+  });
+
+  // Click outside closes
+  document.addEventListener("mousedown",(e)=>{
+    if(accOpen && !accPop.contains(e.target) && !e.target.closest(".accents-btn")){
+      closeAccentsPanel();
+    }
+  });
+
+  // ===== Icons =====
   function iconBtn(title, svgOrHtml, onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
   function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
   function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
   function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
   function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
+  // Reuse accentSVG defined above
 
+  // Init
   build();
   </script>
 </body>
