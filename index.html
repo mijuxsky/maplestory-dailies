@@ -234,14 +234,12 @@
 
   .modal { position: relative; }
   .modal-x{
-    position:absolute; top:8px; right:8px;
-    width:28px; height:28px; line-height:28px; text-align:center;
-    border-radius:8px; border:1px solid var(--control-border);
-    background:var(--control-bg); color:var(--control-fg);
-    font-weight:700; font-size:16px; cursor:pointer; font-family:inherit;
+    position:absolute; top:8px; right:10px;
+    background:transparent; border:none; color:var(--popover-fg);
+    font-size:18px; line-height:1; padding:2px; cursor:pointer;
   }
-  .modal-x:hover{ background:var(--icon-hover); }
-  .modal-x:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; }
+  .modal-x:hover{ transform:scale(1.06); }
+  .modal-x:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; border-radius:6px; }
 
 </style>
 </head>
@@ -258,7 +256,7 @@
 <!-- Change: added inline preset rename with pencil icon, 12 char limit, unique validation. -->
 
 <!-- Heart “Contact” button -->
-<button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact &amp; Support" style="position:fixed;top:12px;right:48px;z-index:1200;">
+<button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact / Support" style="position:fixed;top:12px;right:48px;z-index:1200;">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <!-- Envelope outline (monochrome, inherits currentColor) -->
     <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -346,8 +344,9 @@
       <button class="btn" id="confirm-ok" type="button">Yes</button>
       <button class="btn secondary" id="confirm-cancel" type="button">No</button>
     </div>
+  </div>
 </div>
-</div>
+
 <!-- Accents popover -->
 <div class="acc-pop" id="accents-popover" role="dialog" aria-modal="false" aria-label="Accented characters">
   <div class="acc-head">
@@ -366,8 +365,7 @@
 
 <!-- Shortcuts & Quickstart Modal -->
 <div class="modal-overlay" id="shortcuts-overlay" aria-hidden="true">
-  <div class="modal" role="dialog"
-     aria-modal="true" aria-labelledby="shortcuts-title">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title">
     <button class="modal-x" id="shortcuts-x" type="button" aria-label="Close">×</button>
     <h3 id="shortcuts-title">Keyboard Shortcuts</h3>
     <ul style="margin:6px 0 12px 18px;padding:0;">
@@ -379,7 +377,9 @@
       <li>Esc - Close panels</li>
     </ul>
     <hr style="border:none;border-top:1px solid var(--popover-border);margin:10px 0 12px;">
-    <div style="margin-bottom:6px;"><strong>Quickstart</strong></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <strong>Quickstart</strong>
+    </div>
     <ol id="quickstart-list" style="margin:4px 0 0 18px;padding:0;">
       <li>Choose an existing preset or create a new one</li>
       <li>Enter Character Name. Use the Accents button if needed</li>
@@ -388,18 +388,20 @@
       <li>Save your changes to the current preset</li>
       <li>Load a different preset or manage presets to rename, duplicate, or delete</li>
     </ol>
-<div style="margin-top:10px;">
+    <div style="margin-top:10px;">
       <strong>Key features</strong>
       <ul style="margin:6px 0 0 18px;padding:0;">
         <li>Daily checkboxes reset at 00:00 UTC (midnight UTC).</li>
-        <li>Priority view: use “Show priority first” or “Only priority”.</li>
+        <li>Priority view: use "Show priority first" or "Only priority".</li>
         <li>Rename presets (3 total). IDs stay the same for saved data.</li>
         <li>Drag-and-drop to reorder tasks and characters.</li>
         <li>Accents helper (Â button) for names and tasks.</li>
         <li>Save/Load presets as JSON.</li>
       </ul>
     </div>
+  </div>
 </div>
+
 <!-- Contact Modal -->
 <div class="modal-overlay" id="contact-overlay" aria-hidden="true" inert>
   <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
@@ -413,16 +415,33 @@
       <span style="opacity:.8">Donate:</span>
       <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
     </div>
-</div>
   </div>
-</div>
+
 
 <input id="hidden-upload" type="file" accept="image/*" style="display:none"/>
 
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>Discord handle copied</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>}, 0);
+    document.addEventListener('keydown', onKey, true);
+  }
+  function closeContact(){
+    document.removeEventListener('keydown', onKey, true);
+    try{ (opener || btn || document.body).focus(); }catch(e){}
+    overlay?.classList.remove('show');
+    overlay?.setAttribute('aria-hidden','true');
+    overlay?.setAttribute('inert','');
+  }
+  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
 
+  btn?.addEventListener('click', ()=>{
+    if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
+  });
+  closeBtn?.addEventListener('click', closeContact);
+  overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
+})();
+</script>
 <script>
 /* ===== Config & helpers ===== */
 const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
@@ -763,8 +782,7 @@ function buildCard(i,d){
       else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(cardIndex,tIdx,+1); }
     });
 
-    input.addEventListener("input",()=>{
-      if(input.value.length>32) input.value = input.value.slice(0,32);
+    input.addEventListener("input",()=>{ if(input.value.length>32) input.value = input.value.slice(0,32);
 // Enforce one-line fit before saving
       fitInputToLine(input);
       const d2=loadData();
@@ -1136,80 +1154,96 @@ build();
 const shortcutsBtn=$("#shortcuts-btn"), shortcutsOverlay=$("#shortcuts-overlay"), shortcutsClose=$("#shortcuts-close"), quickstartToggle=$("#quickstart-toggle"), quickstartList=$("#quickstart-list");
 shortcutsBtn.addEventListener("click",()=>{ shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
 shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
-document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});
-// (quickstart toggle removed)
-/* Contact modal logic moved to consolidated IIFE at end of file. */
-// Contact modal controls (X button, ESC, and backdrop)
-(function(){
-  const overlay = document.getElementById('contact-overlay');
-  const btn = document.getElementById('contact-btn');
-  const x = document.getElementById('contact-x');
-  let opener = null;
-
-  function firstFocusable(root){
-    return root && root.querySelector('button, a, [tabindex]:not([tabindex="-1"])');
-  }
-  function openContact(){
-    opener = document.activeElement;
-    overlay && overlay.removeAttribute('inert');
-    overlay && overlay.classList.add('show');
-    overlay && overlay.setAttribute('aria-hidden','false');
-    setTimeout(()=>{
-      const f = firstFocusable(overlay);
-      (f || overlay)?.focus();
-    }, 0);
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});/* Contact modal logic moved to consolidated IIFE at end of file. */
+}, 0);
     document.addEventListener('keydown', onKey, true);
   }
   function closeContact(){
     document.removeEventListener('keydown', onKey, true);
     try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay && overlay.classList.remove('show');
-    overlay && overlay.setAttribute('aria-hidden','true');
-    overlay && overlay.setAttribute('inert','');
+    overlay?.classList.remove('show');
+    overlay?.setAttribute('aria-hidden','true');
+    overlay?.setAttribute('inert','');
   }
   function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
 
-  btn && btn.addEventListener('click', ()=>{
-    if(overlay && overlay.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
+  btn?.addEventListener('click', ()=>{
+    if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
   });
-  x && x.addEventListener('click', closeContact);
-  overlay && overlay.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
+  closeBtn?.addEventListener('click', closeContact);
+  overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
 })();
 
 
-// Shortcuts modal controls (X button, ESC, and backdrop)
+// Contact & Shortcuts modal controls (X button, ESC, backdrop; focus restore; null-guarded)
 (function(){
-  const overlay = document.getElementById('shortcuts-overlay');
-  const btn = document.getElementById('shortcuts-btn');
-  const x = document.getElementById('shortcuts-x');
-  let opener = null;
+  // Contact
+  const cOverlay = document.getElementById('contact-overlay');
+  const cBtn = document.getElementById('contact-btn');
+  const cX = document.getElementById('contact-x');
+  let cOpener = null;
 
   function firstFocusable(root){
     return root && root.querySelector('button, a, [tabindex]:not([tabindex="-1"])');
   }
-  function openM(){
-    opener = document.activeElement;
-    overlay && overlay.classList.add('show');
-    overlay && overlay.setAttribute('aria-hidden','false');
+  function cOpen(){
+    cOpener = document.activeElement;
+    cOverlay && cOverlay.removeAttribute('inert');
+    cOverlay && cOverlay.classList.add('show');
+    cOverlay && cOverlay.setAttribute('aria-hidden','false');
     setTimeout(()=>{
-      const f = firstFocusable(overlay);
-      (f || overlay)?.focus();
+      const f = firstFocusable(cOverlay);
+      (f || cOverlay)?.focus();
     }, 0);
-    document.addEventListener('keydown', onKey, true);
+    document.addEventListener('keydown', cOnKey, true);
   }
-  function closeM(){
-    document.removeEventListener('keydown', onKey, true);
-    try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay && overlay.classList.remove('show');
-    overlay && overlay.setAttribute('aria-hidden','true');
+  function cClose(){
+    document.removeEventListener('keydown', cOnKey, true);
+    try{ (cOpener || cBtn || document.body).focus(); }catch(e){}
+    cOverlay && cOverlay.classList.remove('show');
+    cOverlay && cOverlay.setAttribute('aria-hidden','true');
+    cOverlay && cOverlay.setAttribute('inert','');
   }
-  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeM(); } }
+  function cOnKey(e){ if(e.key === 'Escape'){ e.preventDefault(); cClose(); } }
 
-  btn && btn.addEventListener('click', ()=>{
-    if(overlay && overlay.getAttribute('aria-hidden') === 'true'){ openM(); } else { closeM(); }
+  cBtn && cBtn.addEventListener('click', ()=>{
+    if(cOverlay && cOverlay.getAttribute('aria-hidden') === 'true'){ cOpen(); } else { cClose(); }
   });
-  x && x.addEventListener('click', closeM);
-  overlay && overlay.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeM(); } });
-})();</script>
+  cX && cX.addEventListener('click', cClose);
+  cOverlay && cOverlay.addEventListener('mousedown', (e)=>{ if(e.target === cOverlay){ cClose(); } });
+
+  // Shortcuts
+  const sOverlay = document.getElementById('shortcuts-overlay');
+  const sBtn = document.getElementById('shortcuts-btn');
+  const sX = document.getElementById('shortcuts-x');
+  let sOpener = null;
+
+  function sOpen(){
+    sOpener = document.activeElement;
+    sOverlay && sOverlay.classList.add('show');
+    sOverlay && sOverlay.setAttribute('aria-hidden','false');
+    setTimeout(()=>{
+      const f = firstFocusable(sOverlay);
+      (f || sOverlay)?.focus();
+    }, 0);
+    document.addEventListener('keydown', sOnKey, true);
+  }
+  function sClose(){
+    document.removeEventListener('keydown', sOnKey, true);
+    try{ (sOpener || sBtn || document.body).focus(); }catch(e){}
+    sOverlay && sOverlay.classList.remove('show');
+    sOverlay && sOverlay.setAttribute('aria-hidden','true');
+  }
+  function sOnKey(e){ if(e.key === 'Escape'){ e.preventDefault(); sClose(); } }
+
+  sBtn && sBtn.addEventListener('click', ()=>{
+    if(sOverlay && sOverlay.getAttribute('aria-hidden') === 'true'){ sOpen(); } else { sClose(); }
+  });
+  sX && sX.addEventListener('click', sClose);
+  sOverlay && sOverlay.addEventListener('mousedown', (e)=>{ if(e.target === sOverlay){ sClose(); } });
+})();
+);
+})();
+</script>
 </body>
 </html>
