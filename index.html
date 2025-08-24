@@ -1,130 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MapleStory Dailies</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root{
-      --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.12);
-      --ui:14px; --overlay:rgba(0,0,0,.55);
-      --bg:#f4f0fa; --fg:#4b3b60;
-      --card-bg:#ffffff; --card-border:#e6def6;
-      --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea;
-      --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea;
-      --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14);
-      --task-underline:1px dotted currentColor;
-      --name-underline:1px solid currentColor;
-      --meta-fg:#6b7280; --handle-fg: var(--meta-fg);
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MapleStory Dailies</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.12);
+    --ui:14px; --overlay:rgba(0,0,0,.55);
+    --bg:#f4f0fa; --fg:#4b3b60;
+    --card-bg:#ffffff; --card-border:#e6def6;
+    --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea;
+    --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea;
+    --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14);
+    --task-underline:1px dotted currentColor;
+    --name-underline:1px solid currentColor;
+    --meta-fg:#6b7280; --handle-fg: var(--meta-fg);
+    --popover-bg:var(--card-bg); --popover-fg:var(--fg); --popover-border:var(--card-border);
+    --kbd-focus: var(--icon);
+    --line-height:1.45; --letter-spacing:normal;
+  }
+  body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#fff; --card-border:#e7e7ea; --control-bg:#fff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; }
+  body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#fff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; }
+  body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#fff; --card-border:#e6def6; --control-bg:#fff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; }
+  body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; }
+  body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; }
+  body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; }
 
-      /* Accents popover colors follow theme */
-      --popover-bg:var(--card-bg); --popover-fg:var(--fg); --popover-border:var(--card-border);
-      --kbd-focus: var(--icon);
-      --line-height: 1.45; --letter-spacing: normal;
-    }
-    /* Themes */
-    body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#ffffff; --card-border:#e7e7ea; --control-bg:#ffffff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; }
-    body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#ffffff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; }
-    body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#ffffff; --card-border:#e6def6; --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; }
-    body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; }
-    body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; }
-    body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; }
+  *{box-sizing:border-box}
+  body{font-family:Quicksand,system-ui,sans-serif;margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;font-size:var(--ui);background:var(--bg);color:var(--fg);transition:.25s background,.25s color;line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
+  h1{margin:0 0 6px;font-size:20px;text-align:center}
+  #utc-time{font-size:13px;margin-bottom:8px}
 
-    *{ box-sizing:border-box; }
-    body{ font-family:Quicksand,system-ui,sans-serif; margin:0; padding:20px; display:flex; flex-direction:column; align-items:center; font-size:var(--ui); background:var(--bg); color:var(--fg); transition:.25s background,.25s color; line-height:var(--line-height); letter-spacing:var(--letter-spacing); }
-    h1{ margin:0 0 6px; font-size:20px; text-align:center; }
-    #utc-time{ font-size:13px; margin-bottom:8px; }
+  .theme-row{display:flex;gap:10px;align-items:center;width:100%;max-width:1000px;margin:4px 0 8px}
+  .select-wrap{position:relative;display:inline-flex;align-items:center}
+  .select-wrap::after{content:'▾';position:absolute;right:10px;pointer-events:none;opacity:.8;color:var(--control-fg);font-size:12px}
+  select{appearance:none;padding:6px 28px 6px 10px;border-radius:10px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);outline:none;font-family:inherit;font-size:var(--ui)}
+  option{background:var(--control-bg);color:var(--control-fg)}
+  label{font-weight:600;font-size:var(--ui);opacity:.9;font-family:inherit}
 
-    .theme-row{ display:flex; justify-content:flex-start; gap:10px; align-items:center; width:100%; max-width:1000px; margin:4px 0 8px; }
-    .select-wrap{ position:relative; display:inline-flex; align-items:center; }
-    .select-wrap::after{ content:'▾'; position:absolute; right:10px; pointer-events:none; opacity:.8; color:var(--control-fg); font-size:12px; }
-    select{ appearance:none; padding:6px 28px 6px 10px; border-radius:10px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); outline:none; font-family:inherit; font-size:var(--ui); }
-    option{ background:var(--control-bg); color:var(--control-fg); }
-    label{ font-weight:600; font-size:var(--ui); opacity:.9; font-family:inherit; }
+  #instructions{position:relative;width:100%;max-width:1000px;margin:10px 0 10px;padding:12px 14px 12px;border-radius:12px;box-shadow:var(--shadow);background:var(--card-bg);border:1px solid var(--card-border)}
+  #instructions.minimized ul{display:none}
+  #instr-toggle{position:absolute;top:8px;right:10px;padding:4px 10px;font-size:12px;background:var(--button-bg);color:var(--button-fg);border:1px solid var(--button-border);border-radius:8px;cursor:pointer;font-family:inherit}
+  #instructions ul{margin:0;padding-left:18px}
 
-    #instructions{ position:relative; width:100%; max-width:1000px; margin:10px 0 10px; padding:12px 14px 12px; border-radius:12px; box-shadow:var(--shadow); background:var(--card-bg); border:1px solid var(--card-border); }
-    #instructions.minimized ul{ display:none; }
-    #instr-toggle{ position:absolute; top:8px; right:10px; padding:4px 10px; font-size:12px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); border-radius:8px; cursor:pointer; font-family:inherit; }
-    #instructions ul{ margin:0; padding-left:18px; }
+  .toolbar{display:flex;align-items:center;gap:12px;width:100%;max-width:1000px;margin:8px 0 12px}
+  .toolbar .left{display:flex;align-items:center;gap:10px;margin-right:auto}
+  .toolbar .right{display:flex;align-items:center;gap:10px;margin-left:auto}
 
-    .toolbar{ display:flex; align-items:center; gap:12px; width:100%; max-width:1000px; margin:8px 0 12px; }
-    .toolbar .left{ display:flex; align-items:center; gap:10px; margin-right:auto; }
-    .toolbar .right{ display:flex; align-items:center; gap:10px; margin-left:auto; }
+  .btn{padding:8px 12px;border-radius:10px;background:var(--button-bg);color:var(--button-fg);border:1px solid var(--button-border);font-weight:600;font-family:inherit;font-size:var(--ui);cursor:pointer}
+  .btn:hover{filter:brightness(1.02)}
+  .btn:active{transform:translateY(1px)}
 
-    .btn{ padding:8px 12px; border-radius:10px; background:var(--button-bg); color:var(--button-fg); border:1px solid var(--button-border); font-weight:600; font-family:inherit; font-size:var(--ui); cursor:pointer; }
-    .btn:hover{ filter:brightness(1.02); }
-    .btn:active{ transform:translateY(1px); }
+  .icon-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);transition:.15s;font-family:inherit}
+  .icon-btn:hover{background:var(--icon-hover)}
+  .icon-btn.small{width:24px;height:24px;border-radius:6px}
+  .icon-btn svg{width:16px;height:16px}
 
-    .icon-btn{ width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); transition:.15s; font-family:inherit; }
-    .icon-btn:hover{ background:var(--icon-hover); }
-    .icon-btn.small{ width:24px; height:24px; border-radius:6px; }
-    .icon-btn svg{ width:16px; height:16px; }
+  #checklists{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;width:100%;max-width:1000px;align-items:start}
+  .character{border-radius:12px;box-shadow:var(--shadow);min-height:120px;position:relative;user-select:none;font-size:var(--ui);background:var(--card-bg);border:1px solid var(--card-border);padding:40px 16px 12px;transition:transform .22s ease,box-shadow .22s ease}
+  .character.dragging{opacity:.9;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+  .window-controls-right{position:absolute;top:6px;right:8px;display:flex;gap:6px;align-items:center}
+  .window-controls-left{position:absolute;top:6px;left:8px;display:flex;gap:6px;align-items:center}
+  .card-drag-handle{position:absolute;left:14px;right:14px;top:30px;height:18px;cursor:grab;user-select:none;opacity:0;border:none}
+  .card-drag-handle:active{cursor:grabbing}
 
-    #checklists{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; width:100%; max-width:1000px; align-items:start; }
-    .character{ border-radius:12px; box-shadow:var(--shadow); min-height:120px; position:relative; user-select:none; font-size:var(--ui); background:var(--card-bg); border:1px solid var(--card-border); padding:40px 16px 12px; transition:transform .22s ease, box-shadow .22s ease; }
-    .character.dragging{ opacity:.9; box-shadow:0 10px 24px rgba(0,0,0,.18); }
-    .window-controls-right{ position:absolute; top:6px; right:8px; display:flex; gap:6px; align-items:center; }
-    .window-controls-left{ position:absolute; top:6px; left:8px; display:flex; gap:6px; align-items:center; }
-    .card-drag-handle{ position:absolute; left:14px; right:14px; top:30px; height:18px; cursor:grab; user-select:none; opacity:0; border:none; }
-    .card-drag-handle:active{ cursor:grabbing; }
+  .char-image-wrap{text-align:center;margin:2px auto 2px;min-height:24px}
+  .char-image-wrap img{max-width:150px;max-height:110px;border-radius:8px;display:inline-block}
+  .char-meta{text-align:center;font-size:12px;color:var(--meta-fg);margin:0 0 2px;font-family:inherit;min-height:16px}
+  .inline-msg{text-align:center;font-size:12px;margin:2px 0 0;color:#a94442;display:none}
 
-    .char-image-wrap{ text-align:center; margin:2px auto 2px; min-height:24px; }
-    .char-image-wrap img{ max-width:150px; max-height:110px; border-radius:8px; display:inline-block; }
-    .char-meta{ text-align:center; font-size:12px; color:var(--meta-fg); margin:0 0 2px; font-family:inherit; min-height:16px; }
-    .inline-msg{ text-align:center; font-size:12px; margin:2px 0 0; color:#a94442; display:none; }
+  .name-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .char-name{width:100%;border:none;background:transparent;border-bottom:var(--name-underline);text-align:center;font-weight:600;margin:0 0 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
+  .char-name:focus{outline:none;box-shadow:none;border-bottom:var(--name-underline)}
+  .accents-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);cursor:pointer;font-family:inherit}
+  .accents-btn:hover{background:var(--icon-hover)}
+  .accents-btn .accents-icon{font-weight:700;font-size:14px;line-height:1;font-family:inherit}
 
-    /* Name row + Accents button */
-    .name-row{ display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
-    .char-name{ width:100%; border:none; background:transparent; border-bottom:var(--name-underline); text-align:center; font-weight:600; margin:0 0 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
-    .char-name:focus{ outline:none; box-shadow:none; border-bottom:var(--name-underline); }
-    .accents-btn{ width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; padding:0; border:1px solid var(--control-border); background:var(--control-bg); color:var(--icon); cursor:pointer; font-family:inherit; }
-    .accents-btn:hover{ background:var(--icon-hover); }
-    .accents-btn .accents-icon{ font-weight:700; font-size:14px; line-height:1; font-family:inherit; } /* “Â” */
+  .tasks{margin-top:2px}
+  .task{display:grid;grid-template-columns:12px 1fr auto 14px;gap:8px;align-items:center;margin:6px 0}
+  .task input[type="text"]{border:none;border-bottom:var(--task-underline);background:transparent;padding:2px 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
+  .task .task-delete{background:transparent;border:none;font-size:16px;opacity:.7;color:var(--icon);width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:inherit;cursor:pointer}
+  .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
+  .handle{cursor:grab;user-select:none;opacity:.7}
+  .handle:active{cursor:grabbing}
+  .check-all{display:flex;align-items:center;gap:8px;margin:8px 0 0;font-size:12px;color:var(--meta-fg);font-weight:600}
 
-    .tasks{ margin-top:2px; }
-    .task{ display:grid; grid-template-columns:12px 1fr auto 14px; gap:8px; align-items:center; margin:6px 0; }
-    .task input[type="text"]{ border:none; border-bottom:var(--task-underline); background:transparent; padding:2px 2px; font-size:var(--ui); color:var(--fg); font-family:inherit; }
-    .task .task-delete{ background:transparent; border:none; font-size:16px; opacity:.7; color:var(--icon); width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-family:inherit; cursor:pointer; }
-    .task input[type="checkbox"]{ width:12px; height:12px; vertical-align:middle; }
-    .handle{ cursor:grab; user-select:none; opacity:.7; }
-    .handle:active{ cursor:grabbing; }
-    .check-all{ display:flex; align-items:center; gap:8px; margin:8px 0 0; font-size:12px; color:var(--meta-fg); font-weight:600; }
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:1000}
+  .modal-overlay.show{display:flex}
+  .modal{background:#fff;color:#111;border:1px solid #ddd;border-radius:12px;padding:16px 16px 14px;min-width:320px;max-width:520px;width:min(520px,92vw);box-shadow:0 10px 28px rgba(0,0,0,.22);font-family:inherit}
+  .modal h3{margin:0 0 12px;font-size:18px;font-weight:700}
+  .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+  .btn.secondary{background:#f5f5f5;color:#111;border-color:#e5e5e5}
 
-    /* Dialog */
-    .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
-    .modal-overlay.show{ display:flex; }
-    .modal{ background:#fff; color:#111; border:1px solid #ddd; border-radius:12px; padding:16px 16px 14px; min-width:320px; max-width:520px; width:min(520px,92vw); box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit; }
-    .modal h3{ margin:0 0 12px; font-size:18px; font-weight:700; }
-    .modal .actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:10px; }
-    .btn.secondary{ background:#f5f5f5; color:#111; border-color:#e5e5e5; }
+  .task input[type="text"]:focus-visible,
+  .task input[type="checkbox"]:focus-visible,
+  .check-all input:focus-visible,
+  .accents-btn:focus-visible,
+  .icon-btn:focus-visible,
+  select:focus-visible,
+  .btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
 
-    /* Focus rings for a11y */
-    .task input[type="text"]:focus-visible,
-    .task input[type="checkbox"]:focus-visible,
-    .check-all input:focus-visible,
-    .accents-btn:focus-visible,
-    .icon-btn:focus-visible,
-    select:focus-visible,
-    .btn:focus-visible { outline:2px solid var(--kbd-focus); outline-offset:2px; }
-
-    /* Accents popover — uses same typography as page/instructions */
-    .acc-pop{ position:absolute; z-index:2000; min-width:260px; max-width:min(92vw,420px);
-      background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border);
-      border-radius:12px; box-shadow:var(--shadow); padding:10px; display:none;
-      font-family:inherit; font-size:var(--ui); line-height:var(--line-height); letter-spacing:var(--letter-spacing);
-    }
-    .acc-pop.show{ display:block; }
-    .acc-head{ display:flex; align-items:center; gap:8px; justify-content:space-between; margin-bottom:6px; }
-    .acc-title{ font-weight:700; font-family:inherit; }
-    .acc-case-toggle{ border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); border-radius:8px; padding:2px 8px; font-size:12px; font-family:inherit; }
-    .acc-close{ border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); border-radius:8px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-family:inherit; }
-    .acc-section-label{ font-size:12px; opacity:.8; margin:4px 0 4px; font-family:inherit; }
-    .acc-base, .acc-variants{ display:flex; flex-wrap:wrap; gap:6px; }
-    .acc-btn{ border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); border-radius:8px; padding:6px 8px; font-weight:600; cursor:pointer; font-family:inherit; }
-    .acc-btn:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; }
-    .acc-hint{ font-size:12px; color:#a94442; margin-top:6px; font-family:inherit; }
-  </style>
+  .acc-pop{position:absolute;z-index:2000;min-width:260px;max-width:min(92vw,420px);background:var(--popover-bg);color:var(--popover-fg);border:1px solid var(--popover-border);border-radius:12px;box-shadow:var(--shadow);padding:10px;display:none;font-family:inherit;font-size:var(--ui);line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
+  .acc-pop.show{display:block}
+  .acc-head{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:6px}
+  .acc-title{font-weight:700;font-family:inherit}
+  .acc-case-toggle{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;padding:2px 8px;font-size:12px;font-family:inherit}
+  .acc-close{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .acc-section-label{font-size:12px;opacity:.8;margin:4px 0 4px;font-family:inherit}
+  .acc-base,.acc-variants{display:flex;flex-wrap:wrap;gap:6px}
+  .acc-btn{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;padding:6px 8px;font-weight:600;cursor:pointer;font-family:inherit}
+  .acc-btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
+  .acc-hint{font-size:12px;color:#a94442;margin-top:6px;font-family:inherit}
+</style>
 </head>
 <body class="lavender">
   <h1>MapleStory Dailies</h1>
@@ -158,7 +147,7 @@
       <li><strong>Upload avatar</strong>: Use the upload icon to set a custom image (user uploads are never auto-replaced).</li>
       <li><strong>Auto-fill</strong>: Type a Character Name to fetch Level/Job and avatar from Maple Ranks via Worker.</li>
       <li><strong>Reset</strong>: All checkboxes reset daily at 00:00 UTC.</li>
-      <li><strong>Accents</strong>: Use the “Â” button next to the name to insert accented characters; Alt+A opens it for the focused field.</li>
+      <li><strong>Accents</strong>: Use the “Â” button; Alt+A opens it for the focused field.</li>
     </ul>
   </div>
 
@@ -204,7 +193,7 @@
   <div id="accents-popover" class="acc-pop" role="dialog" aria-label="Accented characters" aria-modal="false">
     <div class="acc-head">
       <span class="acc-title">Accents</span>
-      <div style="display:flex; gap:6px; align-items:center;">
+      <div style="display:flex;gap:6px;align-items:center">
         <button id="acc-case" class="acc-case-toggle" type="button" aria-pressed="false" title="Toggle case">Aa</button>
         <button id="acc-close" class="acc-close" type="button" aria-label="Close">×</button>
       </div>
@@ -217,60 +206,57 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-
   <script>
-  // ====== Config ======
+  /* ===== Config & helpers ===== */
   const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
   const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
-  const MAX_CHARACTERS = 20, MAX_TASKS = 10;
-  const $ = s => document.querySelector(s), $$ = s => Array.from(document.querySelectorAll(s));
+  const MAX_CHARACTERS=20, MAX_TASKS=10;
+  const MIN_LOOKUP_LEN=4, DEBOUNCE_MS=500, CACHE_TTL_MS=5*60*1000;
+  const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+
+  /* Global accents open flag so lookups pause while panel is open */
+  let accOpen=false;
+  let lastEditedNameIndex=null;
 
   function tickUTC(){
     const n=new Date();
     const y=n.getUTCFullYear(), m=String(n.getUTCMonth()+1).padStart(2,'0'), d=String(n.getUTCDate()).padStart(2,'0');
     const hh=String(n.getUTCHours()).padStart(2,'0'), mm=String(n.getUTCMinutes()).padStart(2,'0'), ss=String(n.getUTCSeconds()).padStart(2,'0');
-    $("#utc-time").textContent = `UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+    $("#utc-time").textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
   }
-  setInterval(tickUTC, 1000); tickUTC();
+  setInterval(tickUTC,1000); tickUTC();
 
-  // Themes
-  const themeSel = $("#theme");
-  const lastTheme = localStorage.getItem("mapleTheme") || "lavender";
-  document.body.className = lastTheme; themeSel.value = lastTheme;
-  themeSel.addEventListener("change",()=>{ document.body.className = themeSel.value; localStorage.setItem("mapleTheme", themeSel.value); });
+  /* Themes */
+  const themeSel=$("#theme");
+  const lastTheme=localStorage.getItem("mapleTheme")||"lavender";
+  document.body.className=lastTheme; themeSel.value=lastTheme;
+  themeSel.addEventListener("change",()=>{ document.body.className=themeSel.value; localStorage.setItem("mapleTheme",themeSel.value); });
 
-  // Presets
-  let currentPreset = parseInt(localStorage.getItem("maplePreset")||"1",10);
+  /* Presets, storage */
+  let currentPreset=parseInt(localStorage.getItem("maplePreset")||"1",10);
   const presetSel=$("#preset"); presetSel.value=String(currentPreset);
-  presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset", String(currentPreset)); build(); });
+  presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset",String(currentPreset)); build(); });
 
   function todayUTC(){ const n=new Date(); return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`; }
   function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
-  function safeParse(j){ try{ return JSON.parse(j); }catch{ return null; } }
+  function safeParse(j){ try{return JSON.parse(j)}catch{return null} }
   function loadData(){ const raw=localStorage.getItem(dataKey()); const d=raw?safeParse(raw):{charCount:0}; if(typeof d.charCount!=="number"||d.charCount<0) d.charCount=0; return d; }
   function saveData(d){ localStorage.setItem(dataKey(), JSON.stringify(d)); }
   function dailyKey(i,t){ return `check_${todayUTC()}_preset${currentPreset}_c${i}_t${t}`; }
 
-  // Save/Load
+  /* Export/Import */
   $("#save-btn").addEventListener("click", ()=>{
     const d=loadData(), chars=[];
     for(let i=0;i<d.charCount;i++){
       const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
       const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-      chars.push({
-        name:d[`char_${i}_name`]||"",
-        image:d[`char_${i}_image`]||"",
-        level:d[`char_${i}_level`]||"",
-        job:d[`char_${i}_job`]||"",
-        userImage: !!d[`char_${i}_userImage`],
-        tasks
-      });
+      chars.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks});
     }
     const blob=new Blob([JSON.stringify({version:2,preset:currentPreset,characters:chars},null,2)],{type:"application/json"});
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="maplestory-dailies.json"; document.body.appendChild(a); a.click(); a.remove();
   });
 
-  $("#load-btn").addEventListener("click", ()=> $("#import-file").click());
+  $("#load-btn").addEventListener("click",()=>$("#import-file").click());
   $("#import-file").addEventListener("change",(e)=>{
     const f=e.target.files?.[0]; if(!f) return;
     const r=new FileReader(); r.onload=()=>{
@@ -278,19 +264,15 @@
       const chars=obj.characters.slice(0,MAX_CHARACTERS); const d={charCount:chars.length};
       for(let i=0;i<chars.length;i++){
         const c=chars[i];
-        d[`char_${i}_name`]=c.name||"";
-        d[`char_${i}_image`]=c.image||"";
-        d[`char_${i}_level`]=c.level||"";
-        d[`char_${i}_job`]=c.job||"";
-        d[`char_${i}_userImage`]=!!c.userImage;
-        const tc=Math.max(1,Math.min(MAX_TASKS,(c.tasks||["",""]).length));
-        d[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`]=c.tasks[t]||"";
+        d[`char_${i}_name`]=c.name||""; d[`char_${i}_image`]=c.image||""; d[`char_${i}_level`]=c.level||""; d[`char_${i}_job`]=c.job||""; d[`char_${i}_userImage`]=!!c.userImage;
+        const tc=Math.max(1,Math.min(MAX_TASKS,(c.tasks||["",""]).length)); d[`char_${i}_taskCount`]=tc;
+        for(let t=0;t<tc;t++) d[`char_${i}_task_${t}`]=c.tasks[t]||"";
       }
       saveData(d); build();
     }; r.readAsText(f); e.target.value="";
   });
 
-  // Build UI
+  /* Build UI */
   function build(){
     const wrap=$("#checklists"); wrap.innerHTML="";
     const d=loadData();
@@ -302,50 +284,39 @@
     const card=document.createElement("div"); card.className="character"; card.dataset.index=i;
 
     const left=document.createElement("div"); left.className="window-controls-left";
-    const upBtn = iconBtn("Move Up", arrowUpSVG(), ()=> moveCard(i, i-1));
-    const downBtn = iconBtn("Move Down", arrowDownSVG(), ()=> moveCard(i, i+1));
-    left.append(upBtn,downBtn); card.appendChild(left);
+    left.append(iconBtn("Move Up",arrowUpSVG(),()=>moveCard(i,i-1)), iconBtn("Move Down",arrowDownSVG(),()=>moveCard(i,i+1)));
+    card.appendChild(left);
 
     const right=document.createElement("div"); right.className="window-controls-right";
-    const uploadBtn = iconBtn("Upload Avatar", uploadSVG(), ()=> startUploadFor(i));
-    const dupBtn = iconBtn("Duplicate", duplicateSVG(), ()=> duplicateCharacter(i));
-    const delBtn = iconBtn("Delete", "&times;", ()=> confirmDelete(i));
-    right.append(uploadBtn,dupBtn,delBtn); card.appendChild(right);
+    right.append(iconBtn("Upload Avatar",uploadSVG(),()=>startUploadFor(i)), iconBtn("Duplicate",duplicateSVG(),()=>duplicateCharacter(i)), iconBtn("Delete","&times;",()=>confirmDelete(i)));
+    card.appendChild(right);
 
-    const dragHandle=document.createElement("div");
-    dragHandle.className="card-drag-handle"; card.appendChild(dragHandle);
+    const dragHandle=document.createElement("div"); dragHandle.className="card-drag-handle"; card.appendChild(dragHandle);
 
     const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
-    const imgSrc = (d[`char_${i}_image`]||"") || BASE_MODEL_URL;
+    const imgSrc=(d[`char_${i}_image`]||"")||BASE_MODEL_URL;
     imgWrap.innerHTML=`<img loading="lazy" decoding="async" alt="Character image" src="${imgSrc}">`;
     card.appendChild(imgWrap);
 
-    const meta=document.createElement("div"); meta.className="char-meta";
-    meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
-
+    const meta=document.createElement("div"); meta.className="char-meta"; meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
     const msg=document.createElement("div"); msg.className="inline-msg"; card.appendChild(msg);
 
-    /* Name row with Accents toggle button */
-    const nameRow = document.createElement("div"); nameRow.className="name-row";
+    const nameRow=document.createElement("div"); nameRow.className="name-row";
     const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
-    name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); });
+    name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); lastEditedNameIndex=i; });
+    name.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); }});
+    name.addEventListener("blur",()=>{ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); });
 
-    const accBtn = document.createElement("button");
-    accBtn.className="accents-btn"; accBtn.type="button"; accBtn.title="Accents"; accBtn.setAttribute('aria-label','Accents');
-    accBtn.innerHTML = '<span class="accents-icon" aria-hidden="true">Â</span>';
-
-    /* Prevent focus change when clicking the accents button (so we don’t steal focus) */
-    accBtn.addEventListener("mousedown", (e)=> e.preventDefault());
-
+    const accBtn=document.createElement("button");
+    accBtn.className="accents-btn"; accBtn.type="button"; accBtn.title="Accents"; accBtn.setAttribute("aria-label","Accents");
+    accBtn.innerHTML='<span class="accents-icon" aria-hidden="true">Â</span>';
+    accBtn.addEventListener("mousedown",(e)=>e.preventDefault()); // keep focus in input
     accBtn.addEventListener("click",()=>{
-      // Toggle: if open and anchored to this name input, close; otherwise open anchored to the name input
-      if(accOpen && accAnchorEl === name){ closeAccentsPanel(); return; }
-      openAccentsPanel(name, name);
-      // do NOT focus anything here to preserve current caret/selection in whatever field was active
+      if(accOpen && accAnchorEl===name){ closeAccentsPanel(); return; }
+      openAccentsPanel(name,name);
     });
 
-    nameRow.append(name, accBtn);
-    card.appendChild(nameRow);
+    nameRow.append(name,accBtn); card.appendChild(nameRow);
 
     const tasksWrap=document.createElement("div"); tasksWrap.className="tasks";
     let count=d[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; d[`char_${i}_taskCount`]=count; saveData(d);
@@ -357,45 +328,42 @@
     const checkLbl=document.createElement("label"); checkLbl.textContent="Check All";
     checkRow.append(checkAll,checkLbl); card.appendChild(checkRow);
     function refreshMaster(){
-      const boxes = Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
-      checkAll.checked = boxes.length>0 && boxes.every(b=>b.checked);
+      const boxes=Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
+      checkAll.checked=boxes.length>0 && boxes.every(b=>b.checked);
     }
-    checkAll.addEventListener("change", ()=>{
-      const boxes = Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
+    checkAll.addEventListener("change",()=>{
+      const boxes=Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
       boxes.forEach(b=>{ const tIdx=+b.dataset.idx; b.checked=checkAll.checked; localStorage.setItem(dailyKey(i,tIdx), checkAll.checked?'true':'false'); });
     });
     setTimeout(refreshMaster,0);
 
-    attachTaskSortable(tasksWrap, i);
-    attachNameLookup(i, name, meta, msg, imgWrap.querySelector("img"));
+    attachTaskSortable(tasksWrap,i);
+    attachNameLookup(i,name,meta,msg,imgWrap.querySelector("img"));
     return card;
   }
 
-  function metaText(level, job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
+  function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
 
-  /* Task building + keyboard nav (unchanged from your working build) */
+  /* Tasks (unchanged core behaviors) */
   function buildTask(i,t,d){
-    const row=document.createElement("div"); row.className="task"; row.dataset.idx = t;
+    const row=document.createElement("div"); row.className="task"; row.dataset.idx=t;
+    const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked=(localStorage.getItem(dailyKey(i,t))==='true');
+    box.onchange=()=> localStorage.setItem(dailyKey(i,t), box.checked?'true':'false');
 
-    const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked = (localStorage.getItem(dailyKey(i,t))==='true');
-    box.onchange = ()=> localStorage.setItem(dailyKey(i,t), box.checked?'true':'false');
-
-    const input=document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value = d[`char_${i}_task_${t}`]||"";
-
+    const input=document.createElement("input"); input.type="text"; input.placeholder="Daily Task"; input.value=d[`char_${i}_task_${t}`]||"";
     const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
     const handle=document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
 
     input.addEventListener("keydown",(e)=>{
-      if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i, t, -1); }
-      else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i, t, +1); }
-      else if(e.key==="Enter"){ e.preventDefault(); toggleRowCheckbox(i, t); }
-      else if(e.key==="Tab" && !e.shiftKey){ e.preventDefault(); insertTaskAfter(i,t); setTimeout(()=> focusNewTaskInput(i,t+1),0); }
+      if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i,t,-1); }
+      else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i,t,+1); }
+      else if(e.key==="Enter"){ e.preventDefault(); toggleRowCheckbox(i,t); }
+      else if(e.key==="Tab" && !e.shiftKey){ e.preventDefault(); insertTaskAfter(i,t); setTimeout(()=>focusNewTaskInput(i,t+1),0); }
     });
-
     box.addEventListener("keydown",(e)=>{
-      if(e.key===" " || e.key==="Spacebar" || e.key==="Enter"){ e.preventDefault(); box.checked = !box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
-      else if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i, t, -1); }
-      else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i, t, +1); }
+      if(e.key===" "||e.key==="Enter"){ e.preventDefault(); box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
+      else if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(i,t,-1); }
+      else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(i,t,+1); }
     });
 
     input.addEventListener("input",()=>{
@@ -414,470 +382,288 @@
     row.append(box,input,del,handle);
     return row;
   }
-
-  function focusTaskInput(cardIndex, tNew){
-    const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
-    const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
-    (inputs[tNew]||inputs[inputs.length-1]||inputs[0])?.focus();
-  }
-  function moveFocus(cardIndex, currentIdx, dir){
-    const d=loadData();
-    const ct = Math.max(1, d[`char_${cardIndex}_taskCount`]||1);
-    const next = Math.max(0, Math.min(ct-1, currentIdx + dir));
-    focusTaskInput(cardIndex, next);
-  }
-  function toggleRowCheckbox(cardIndex, tIdx){
-    const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
-    const row = card?.querySelector(`.tasks .task[data-idx="${tIdx}"]`);
-    const box = row?.querySelector('input[type="checkbox"]');
-    if(box){ box.checked = !box.checked; box.dispatchEvent(new Event('change', {bubbles:true})); }
-  }
   function focusNewTaskInput(i,tNew){
     const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
     const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
     (inputs[tNew]||inputs[inputs.length-1])?.focus();
   }
+  function moveFocus(cardIndex,currentIdx,dir){
+    const d=loadData(); const ct=Math.max(1,d[`char_${cardIndex}_taskCount`]||1);
+    const next=Math.max(0,Math.min(ct-1,currentIdx+dir)); const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
+    const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]')); (inputs[next]||inputs[0])?.focus();
+  }
+  function toggleRowCheckbox(cardIndex,tIdx){
+    const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
+    const row=card?.querySelector(`.tasks .task[data-idx="${tIdx}"]`); const box=row?.querySelector('input[type="checkbox"]');
+    if(box){ box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
+  }
   function insertTaskAfter(i,t){
-    const d=loadData(); const ct=Math.max(1, d[`char_${i}_taskCount`]||1);
-    if(ct>=MAX_TASKS) return;
-    for(let k=ct-1;k>t;k--) d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||"";
-    d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskCount`]=ct+1;
-    for(let k=ct-1;k>t;k--){
-      const from = localStorage.getItem(dailyKey(i,k));
-      if(from!==null) localStorage.setItem(dailyKey(i,k+1), from);
-      localStorage.removeItem(dailyKey(i,k));
-    }
-    localStorage.removeItem(dailyKey(i,t+1));
-    saveData(d); build();
+    const d=loadData(); const ct=Math.max(1,d[`char_${i}_taskCount`]||1); if(ct>=MAX_TASKS) return;
+    for(let k=ct-1;k>t;k--) d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||""; d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskCount`]=ct+1;
+    for(let k=ct-1;k>t;k--){ const from=localStorage.getItem(dailyKey(i,k)); if(from!==null) localStorage.setItem(dailyKey(i,k+1),from); localStorage.removeItem(dailyKey(i,k)); }
+    localStorage.removeItem(dailyKey(i,t+1)); saveData(d); build();
   }
   function shiftDeleteTask(i,t,ct,dd){
     dd[`char_${i}_task_${t}`]="";
-    for(let k=t+1;k<ct;k++){
-      dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||"";
-      const from = localStorage.getItem(dailyKey(i,k));
-      if(from!==null) localStorage.setItem(dailyKey(i,k-1), from);
-      localStorage.removeItem(dailyKey(i,k));
-    }
-    delete dd[`char_${i}_task_${ct-1}`];
-    localStorage.removeItem(dailyKey(i,ct-1));
-    dd[`char_${i}_taskCount`]=ct-1;
-    saveData(dd); build();
+    for(let k=t+1;k<ct;k++){ dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||""; const from=localStorage.getItem(dailyKey(i,k)); if(from!==null) localStorage.setItem(dailyKey(i,k-1),from); localStorage.removeItem(dailyKey(i,k)); }
+    delete dd[`char_${i}_task_${ct-1}`]; localStorage.removeItem(dailyKey(i,ct-1)); dd[`char_${i}_taskCount`]=ct-1; saveData(dd); build();
   }
 
-  // Sortable tasks
-  function attachTaskSortable(tasksWrap, cardIndex){
-    Sortable.create(tasksWrap, {
-      animation: 160,
-      handle: ".handle",
-      draggable: ".task",
-      ghostClass: "dragging",
-      onEnd: ()=>{
-        const d=loadData();
-        const ct=d[`char_${cardIndex}_taskCount`]||1;
-        const texts=[]; const checks=[];
-        for(let t=0;t<ct;t++){
-          texts.push(d[`char_${cardIndex}_task_${t}`]||"");
-          checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true');
-        }
-        const order = Array.from(tasksWrap.querySelectorAll(".task")).map(row => +row.dataset.idx);
-        for(let p=0;p<order.length;p++){
-          const tOld = order[p];
-          d[`char_${cardIndex}_task_${p}`]=texts[tOld]||"";
-        }
+  /* Sortable tasks */
+  function attachTaskSortable(tasksWrap,cardIndex){
+    Sortable.create(tasksWrap,{
+      animation:160, handle:".handle", draggable:".task", ghostClass:"dragging",
+      onEnd:()=>{
+        const d=loadData(); const ct=d[`char_${cardIndex}_taskCount`]||1;
+        const texts=[], checks=[];
+        for(let t=0;t<ct;t++){ texts.push(d[`char_${cardIndex}_task_${t}`]||""); checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true'); }
+        const order=Array.from(tasksWrap.querySelectorAll(".task")).map(r=>+r.dataset.idx);
+        for(let p=0;p<order.length;p++){ const tOld=order[p]; d[`char_${cardIndex}_task_${p}`]=texts[tOld]||""; }
         for(let t=0;t<ct;t++) localStorage.removeItem(dailyKey(cardIndex,t));
-        for(let p=0;p<order.length;p++){
-          const tOld=order[p];
-          if(checks[tOld]) localStorage.setItem(dailyKey(cardIndex,p),'true');
-        }
+        for(let p=0;p<order.length;p++){ const tOld=order[p]; if(checks[tOld]) localStorage.setItem(dailyKey(cardIndex,p),'true'); }
         saveData(d); build();
       }
     });
   }
 
-  // Cards add / duplicate / delete / reorder
-  $("#add-character-btn").addEventListener("click", ()=>{
+  /* Cards add/dup/delete/reorder */
+  $("#add-character-btn").addEventListener("click",()=>{
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
-    const i=d.charCount; d.charCount=i+1;
-    d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]=""; d[`char_${i}_userImage`]=false;
-    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]="";
-    saveData(d); build();
+    const i=d.charCount; d.charCount=i+1; d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`]=""; d[`char_${i}_job`]=""; d[`char_${i}_userImage`]=false;
+    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]=""; saveData(d); build();
   });
-
   function duplicateCharacter(i){
     const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
     const ct=d[`char_${i}_taskCount`]||2; const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
     const ins=d.charCount; d.charCount=ins+1;
-    d[`char_${ins}_name`]=d[`char_${i}_name`]||"";
-    d[`char_${ins}_image`]=d[`char_${i}_image`]||"";
-    d[`char_${ins}_level`]=d[`char_${i}_level`]||"";
-    d[`char_${ins}_job`]=d[`char_${i}_job`]||"";
-    d[`char_${ins}_userImage`]=!!d[`char_${i}_userImage`];
-    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||"";
-    saveData(d); build();
+    d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||""; d[`char_${ins}_userImage`]=!!d[`char_${i}_userImage`];
+    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${ins}_task_${t}`]=tasks[t]||""; saveData(d); build();
   }
-
   function confirmDelete(i){
     const d=loadData(); const nm=d[`char_${i}_name`]||"Untitled";
     $("#confirm-msg").textContent=`Delete the character: ${nm}?`;
     const overlay=$("#confirm-overlay");
     overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
-    $("#confirm-ok").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); doDelete(i); };
-    $("#confirm-cancel").onclick = ()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
+    $("#confirm-ok").onclick=()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); doDelete(i); };
+    $("#confirm-cancel").onclick=()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
   }
-
   function doDelete(i){
     const d=loadData(); const n=d.charCount; if(n<=0) return;
-    const ctDel = d[`char_${i}_taskCount`]||0;
-    for(let t=0;t<ctDel;t++) localStorage.removeItem(dailyKey(i,t));
+    const ctDel=d[`char_${i}_taskCount`]||0; for(let t=0;t<ctDel;t++) localStorage.removeItem(dailyKey(i,t));
     for(let k=i;k<n-1;k++){
-      const ctNext = d[`char_${k+1}_taskCount`]||0;
-      for(let t=0;t<ctNext;t++){
-        const from = localStorage.getItem(dailyKey(k+1,t));
-        const toKey = dailyKey(k,t);
-        if(from!==null) localStorage.setItem(toKey, from);
-        localStorage.removeItem(dailyKey(k+1,t));
-      }
-      d[`char_${k}_name`]=d[`char_${k+1}_name`]||"";
-      d[`char_${k}_image`]=d[`char_${k+1}_image`]||"";
-      d[`char_${k}_level`]=d[`char_${k+1}_level`]||"";
-      d[`char_${k}_job`]=d[`char_${k+1}_job`]||"";
-      d[`char_${k}_userImage`]=!!d[`char_${k+1}_userImage`];
-      const ct=d[`char_${k+1}_taskCount`]||1;
-      d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
+      const ctNext=d[`char_${k+1}_taskCount`]||0;
+      for(let t=0;t<ctNext;t++){ const from=localStorage.getItem(dailyKey(k+1,t)); const toKey=dailyKey(k,t); if(from!==null) localStorage.setItem(toKey,from); localStorage.removeItem(dailyKey(k+1,t)); }
+      d[`char_${k}_name`]=d[`char_${k+1}_name`]||""; d[`char_${k}_image`]=d[`char_${k+1}_image`]||""; d[`char_${k}_level`]=d[`char_${k+1}_level`]||""; d[`char_${k}_job`]=d[`char_${k+1}_job`]||""; d[`char_${k}_userImage`]=!!d[`char_${k+1}_userImage`];
+      const ct=d[`char_${k+1}_taskCount`]||1; d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++) d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||"";
     }
-    const last=n-1;
-    const lastCt=d[`char_${last}_taskCount`]||0;
-    for(let t=0;t<lastCt;t++) localStorage.removeItem(dailyKey(last,t));
+    const last=n-1; const lastCt=d[`char_${last}_taskCount`]||0; for(let t=0;t<lastCt;t++) localStorage.removeItem(dailyKey(last,t));
     delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`]; delete d[`char_${last}_userImage`];
     delete d[`char_${last}_taskCount`]; for(let t=0;t<lastCt;t++) delete d[`char_${last}_task_${t}`];
-    d.charCount=Math.max(0,n-1);
-    saveData(d); build();
+    d.charCount=Math.max(0,n-1); saveData(d); build();
   }
 
-  // Sortable cards
+  /* Sortable cards */
   let sortableCards=null;
   function initCardSortable(){
-    const cont=$("#checklists");
-    if(sortableCards){ sortableCards.destroy(); sortableCards=null; }
-    sortableCards = new Sortable(cont, {
-      animation: 180,
-      ghostClass: "dragging",
-      draggable: ".character",
-      handle: ".card-drag-handle",
-      onEnd: (evt)=>{
-        const from=evt.oldIndex, to=evt.newIndex;
-        if(from==null || to==null || from===to) return;
-        moveCard(from,to);
-      }
+    const cont=$("#checklists"); if(sortableCards){ sortableCards.destroy(); sortableCards=null; }
+    sortableCards=new Sortable(cont,{ animation:180, ghostClass:"dragging", draggable:".character", handle:".card-drag-handle",
+      onEnd:(evt)=>{ const from=evt.oldIndex,to=evt.newIndex; if(from==null||to==null||from===to) return; moveCard(from,to); }
     });
   }
-
   function moveCard(from,to){
-    const cont=$("#checklists"); const cards=[...cont.querySelectorAll(".character")]; const n=cards.length;
-    if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
-
-    const d=loadData(), list=[];
-    for(let i=0;i<d.charCount;i++){
-      const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
-      const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
-      list.push({
-        name:d[`char_${i}_name`]||"",
-        image:d[`char_${i}_image`]||"",
-        level:d[`char_${i}_level`]||"",
-        job:d[`char_${i}_job`]||"",
-        userImage: !!d[`char_${i}_userImage`],
-        tasks
-      });
-    }
+    const cont=$("#checklists"); const n=[...cont.querySelectorAll(".character")].length; if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
+    const d=loadData(), list=[]; for(let i=0;i<d.charCount;i++){ const ct=Math.max(1,d[`char_${i}_taskCount`]||1); const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      list.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks}); }
     const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
-
-    const moved=list.splice(from,1)[0]; const movedChecks=checks.splice(from,1)[0];
-    list.splice(to,0,moved); checks.splice(to,0,movedChecks);
-
+    const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
     const nd={charCount:list.length};
-    for(let i=0;i<list.length;i++){
-      const c=list[i];
-      nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
-      const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc;
-      for(let t=0;t<tc;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||"";
-    }
-    for(let i=0;i<checks.length;i++){
-      for(let t=0;t<MAX_TASKS;t++) localStorage.removeItem(dailyKey(i,t));
-      for(let t=0;t<checks[i].length;t++) if(checks[i][t]) localStorage.setItem(dailyKey(i,t),'true');
-    }
+    for(let i=0;i<list.length;i++){ const c=list[i]; nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
+      const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++) nd[`char_${i}_task_${t}`]=c.tasks[t]||""; }
+    for(let i=0;i<checks.length;i++){ for(let t=0;t<MAX_TASKS;t++) localStorage.removeItem(dailyKey(i,t)); for(let t=0;t<checks[i].length;t++) if(checks[i][t]) localStorage.setItem(dailyKey(i,t),'true'); }
     saveData(nd); build();
   }
 
-  // Upload avatar
+  /* Upload avatar (user override never auto-replaced) */
   let uploadIndex=null;
   function startUploadFor(i){ uploadIndex=i; $("#hidden-upload").click(); }
   $("#hidden-upload").addEventListener("change",(e)=>{
-    const f=e.target.files?.[0]; if(!f) return;
-    const reader=new FileReader();
-    reader.onload=()=>{
-      const d=loadData();
-      d[`char_${uploadIndex}_image`]=reader.result;
-      d[`char_${uploadIndex}_userImage`]=true;
-      saveData(d);
-      const card=document.querySelector(`#checklists .character[data-index="${uploadIndex}"]`);
-      if(card) card.querySelector('.char-image-wrap img').src=reader.result;
-    };
+    const f=e.target.files?.[0]; if(!f) return; const reader=new FileReader();
+    reader.onload=()=>{ const d=loadData(); d[`char_${uploadIndex}_image`]=reader.result; d[`char_${uploadIndex}_userImage`]=true; saveData(d);
+      const card=document.querySelector(`#checklists .character[data-index="${uploadIndex}"]`); if(card) card.querySelector('.char-image-wrap img').src=reader.result; };
     reader.readAsDataURL(f); e.target.value="";
   });
 
-  // Instructions toggle
-  (function initInstructions(){
-    const instr=$("#instructions"), btn=$("#instr-toggle");
-    function set(min){ instr.classList.toggle("minimized", min); btn.textContent=min?"Unhide":"Hide"; localStorage.setItem("mapleInstrMin", min?"1":"0"); }
-    btn.onclick=()=> set(!instr.classList.contains("minimized"));
-    set(localStorage.getItem("mapleInstrMin")==="1");
-  })();
+  /* Instructions toggle */
+  (function(){ const instr=$("#instructions"), btn=$("#instr-toggle"); function set(min){ instr.classList.toggle("minimized",min); btn.textContent=min?"Unhide":"Hide"; localStorage.setItem("mapleInstrMin",min?"1":"0"); }
+    btn.onclick=()=>set(!instr.classList.contains("minimized")); set(localStorage.getItem("mapleInstrMin")==="1"); })();
 
-  // Worker-backed Maple Ranks lookup (with avatar update when not user-uploaded)
-  const nameTimers = new Map();
-  const nameControllers = new Map();
+  /* ===== Worker-backed Maple Ranks lookup (non-blocking) ===== */
+  const nameTimers=new Map();          // cardIndex -> timeout id
+  const nameControllers=new Map();     // cardIndex -> AbortController
+  const nameCache=new Map();           // key(lower name) -> {ts,data}
 
-  function attachNameLookup(cardIndex, nameInput, metaElem, msgElem, imgElem){
-    const debounceMs = 500;
+  function cacheGet(key){
+    const v=nameCache.get(key); if(!v) return null;
+    if(Date.now()-v.ts>CACHE_TTL_MS){ nameCache.delete(key); return null; }
+    return v.data;
+  }
+  function cacheSet(key,data){ nameCache.set(key,{ts:Date.now(),data}); }
 
-    async function doLookup(query){
-      const prev = nameControllers.get(cardIndex);
-      if(prev){ try{ prev.abort(); }catch{} }
-      const controller = new AbortController();
-      nameControllers.set(cardIndex, controller);
+  function triggerLookupNow(cardIndex,nameInput,metaElem,msgElem,imgElem){
+    const q=nameInput.value.trim();
+    if(accOpen) return;                       // pause while accents panel open
+    if(q.length<MIN_LOOKUP_LEN) return;       // optional min length
+    scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,0);
+  }
 
-      try{
-        msgElem.style.display=""; msgElem.style.color="#6b7280";
-        msgElem.textContent="Searching…";
-        const url = `${WORKER_URL}?name=${encodeURIComponent(query)}`;
-        const res = await fetch(url, { signal: controller.signal, headers: { "accept":"application/json" }});
-        if(!res.ok){ throw new Error(`HTTP ${res.status}`); }
-        const data = await res.json();
-        if(!data || data.ok!==true){ throw new Error(data?.error || "Not found"); }
+  function scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,delay=DEBOUNCE_MS){
+    clearTimeout(nameTimers.get(cardIndex));
+    if(accOpen) return; // do not queue while accents panel is open
+    const q=nameInput.value.trim();
+    if(q.length<MIN_LOOKUP_LEN){ nameTimers.set(cardIndex, null); return; }
+    const t=setTimeout(()=> doLookup(cardIndex,q,nameInput,metaElem,msgElem,imgElem), delay);
+    nameTimers.set(cardIndex,t);
+  }
 
-        const d=loadData();
-        d[`char_${cardIndex}_name`]  = data.name || query;
-        d[`char_${cardIndex}_level`] = data.level || d[`char_${cardIndex}_level`] || "";
-        d[`char_${cardIndex}_job`]   = data.job   || d[`char_${cardIndex}_job`]   || "";
+  async function doLookup(cardIndex,query,nameInput,metaElem,msgElem,imgElem){
+    // Abort previous
+    const prev=nameControllers.get(cardIndex);
+    if(prev){ try{ prev.abort(); }catch{} }
+    // Use cache first
+    const cacheKey=query.toLowerCase();
+    const cached=cacheGet(cacheKey);
+    if(cached){ applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,cached,true); return; }
 
-        const userHasUpload = !!d[`char_${cardIndex}_userImage`];
-        if(!userHasUpload && data.avatar){
-          d[`char_${cardIndex}_image`] = data.avatar;
-        }
+    const controller=new AbortController(); nameControllers.set(cardIndex,controller);
+    try{
+      msgElem.style.display=""; msgElem.style.color="#6b7280"; msgElem.textContent="Searching…";
+      const url=`${WORKER_URL}?name=${encodeURIComponent(query)}`;
+      const res=await fetch(url,{signal:controller.signal,headers:{accept:"application/json"}});
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data=await res.json();
+      if(!data || data.ok!==true) throw new Error(data?.error||"Not found");
 
-        saveData(d);
+      cacheSet(cacheKey,data);
+      applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,data,false);
+    }catch(err){
+      if(err?.name==="AbortError") return; // ignore aborted
+      msgElem.style.display=""; msgElem.style.color="#a94442"; msgElem.textContent="Not found (or blocked).";
+      setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1800);
+    }finally{
+      nameControllers.delete(cardIndex);
+    }
+  }
 
-        nameInput.value = d[`char_${cardIndex}_name`];
-        metaElem.textContent = metaText(d[`char_${cardIndex}_level`], d[`char_${cardIndex}_job`]);
+  function applyLookupResult(cardIndex,requestQuery,nameInput,metaElem,msgElem,imgElem,data,fromCache){
+    // Ignore stale responses
+    const current=nameInput.value.trim();
+    if(current.length<MIN_LOOKUP_LEN || current.toLowerCase()!==requestQuery.toLowerCase()) return;
 
-        const newSrc = d[`char_${cardIndex}_image`] || BASE_MODEL_URL;
-        if(imgElem && imgElem.src !== newSrc){
-          const old = imgElem.src;
-          imgElem.loading = "lazy";
-          imgElem.decoding = "async";
-          imgElem.alt = `Avatar for ${d[`char_${cardIndex}_name`] || "character"}`;
-          imgElem.onerror = () => {
-            imgElem.onerror = null;
-            imgElem.src = old;
-            msgElem.style.display=""; msgElem.style.color="#a94442";
-            msgElem.textContent = "Image failed to load.";
-            setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1800);
-          };
-          imgElem.src = newSrc;
-        }
-
-        msgElem.style.display="none"; msgElem.textContent="";
-      }catch(err){
-        msgElem.style.display=""; msgElem.style.color="#a94442";
-        msgElem.textContent = "Not found (or blocked).";
-        setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
-      }
+    // Never overwrite the typed value; show suggestion if canonical differs
+    if(data.name && data.name.trim() && data.name.trim()!==current){
+      msgElem.style.display=""; msgElem.style.color="#6b7280";
+      msgElem.textContent=`Suggestion: ${data.name}`;
+      setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
+    }else{
+      msgElem.style.display="none"; msgElem.textContent="";
     }
 
-    nameInput.addEventListener("input", ()=>{
-      const q = nameInput.value.trim();
-      clearTimeout(nameTimers.get(cardIndex));
-      if(!q){
-        const prev = nameControllers.get(cardIndex); if(prev){ try{ prev.abort(); }catch{} }
-        msgElem.style.display="none"; msgElem.textContent="";
-        return;
-      }
-      const t = setTimeout(()=> doLookup(q), debounceMs);
-      nameTimers.set(cardIndex, t);
-    });
+    const d=loadData();
+    // Keep user's typed name in storage
+    d[`char_${cardIndex}_name`]=current;
+
+    // Job/Level always update when response matches current input
+    d[`char_${cardIndex}_level`]=data.level || d[`char_${cardIndex}_level`] || "";
+    d[`char_${cardIndex}_job`]=data.job || d[`char_${cardIndex}_job`] || "";
+
+    // Avatar: only if user has NOT uploaded one
+    const userHasUpload=!!d[`char_${cardIndex}_userImage`];
+    if(!userHasUpload && data.avatar){
+      d[`char_${cardIndex}_image`]=data.avatar;
+    }
+
+    saveData(d);
+
+    // Meta update
+    metaElem.textContent=metaText(d[`char_${cardIndex}_level`], d[`char_${cardIndex}_job`]);
+
+    // Image update (lazy, no layout shift)
+    const newSrc=(d[`char_${cardIndex}_image`]||"")||BASE_MODEL_URL;
+    if(imgElem && imgElem.src!==newSrc){
+      const old=imgElem.src;
+      imgElem.loading="lazy"; imgElem.decoding="async";
+      imgElem.alt=`Avatar for ${current||"character"}`;
+      imgElem.onerror=()=>{ imgElem.onerror=null; imgElem.src=old; msgElem.style.display=""; msgElem.style.color="#a94442"; msgElem.textContent="Image failed to load."; setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1500); };
+      imgElem.src=newSrc;
+    }
   }
 
-  // ===== Accented character keyboard =====
-  const ACCENTS = {
-    a:['á','à','â','ä','ã','å','ā','ă','ą'],
-    e:['é','è','ê','ë','ē','ĕ','ė','ę','ě'],
-    i:['í','ì','î','ï','ī','ĭ','į','ı'],
-    o:['ó','ò','ô','ö','õ','ō','ŏ','ő','ø'],
-    u:['ú','ù','û','ü','ũ','ū','ŭ','ů','ű','ų'],
-    c:['ç','ć','ĉ','ċ','č'],
-    n:['ñ','ń','ņ','ň'],
-    s:['ß','ś','ŝ','ş','š'],
-    y:['ý','ÿ','ŷ'],
-    z:['ź','ż','ž'],
-    g:['ğ'],
-    l:['ł'],
-    r:['ř'],
-    t:['ţ','ť']
-  };
-  const BASES = Object.keys(ACCENTS);
+  /* ===== Accented character keyboard (with pause/resume) ===== */
+  const ACCENTS={ a:['á','à','â','ä','ã','å','ā','ă','ą'], e:['é','è','ê','ë','ē','ĕ','ė','ę','ě'], i:['í','ì','î','ï','ī','ĭ','į','ı'], o:['ó','ò','ô','ö','õ','ō','ŏ','ő','ø'], u:['ú','ù','û','ü','ũ','ū','ŭ','ů','ű','ų'], c:['ç','ć','ĉ','ċ','č'], n:['ñ','ń','ņ','ň'], s:['ß','ś','ŝ','ş','š'], y:['ý','ÿ','ŷ'], z:['ź','ż','ž'], g:['ğ'], l:['ł'], r:['ř'], t:['ţ','ť'] };
+  const BASES=Object.keys(ACCENTS);
 
-  const accPop = $("#accents-popover");
-  const accBase = $("#acc-base");
-  const accVars = $("#acc-variants");
-  const accVarLabel = $("#acc-var-label");
-  const accHint = $("#acc-hint");
-  const accClose = $("#acc-close");
-  const accCaseBtn = $("#acc-case");
+  const accPop=$("#accents-popover"), accBase=$("#acc-base"), accVars=$("#acc-variants"), accVarLabel=$("#acc-var-label"), accHint=$("#acc-hint"), accClose=$("#acc-close"), accCaseBtn=$("#acc-case");
+  let accUpper=false, accAnchorEl=null, accTargetEl=null;
 
-  let accUpper = false;
-  let accAnchorEl = null;     // anchor element (Character Name input)
-  let accTargetEl = null;     // currently focused input/textarea
-  let accOpen = false;
-
-  function isTextField(el){
-    return el && ((el.tagName==='INPUT' && (/^(text|search|email|url|tel|password)$/i).test(el.type)) || el.tagName==='TEXTAREA');
-  }
-
-  function buildBaseButtons(){
-    accBase.innerHTML = "";
-    BASES.forEach((b)=>{
-      const label = accUpper ? b.toUpperCase() : b;
-      const btn = document.createElement("button");
-      btn.type = "button"; btn.className = "acc-btn"; btn.textContent = label;
-      btn.setAttribute("role","option"); btn.setAttribute("aria-label", `Base ${label}`);
-      btn.addEventListener("click", ()=> showVariants(b));
-      btn.addEventListener("keydown",(e)=>{
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showVariants(b); (accVars.querySelector('button')||btn).focus(); }
-      });
-      accBase.appendChild(btn);
-    });
-  }
-
-  function showVariants(base){
-    const list = ACCENTS[base] || [];
-    const variants = accUpper ? list.map(c=>c.toUpperCase()) : list;
-    accVars.innerHTML = "";
-    accVarLabel.style.display = variants.length ? "" : "none";
-    variants.forEach((ch, idx)=>{
-      const vb = document.createElement("button");
-      vb.type="button"; vb.className="acc-btn"; vb.textContent=ch;
-      vb.setAttribute("role","gridcell");
-      vb.setAttribute("aria-label", `Insert ${ch}`);
-      vb.addEventListener("click", ()=> insertAccent(ch, /*close*/true));
-      vb.addEventListener("keydown",(e)=>{
-        if(e.key==="Enter"||e.key===" "){ e.preventDefault(); insertAccent(ch, true); }
-        else if(e.key==="ArrowLeft"){ e.preventDefault(); focusVariant(idx-1); }
-        else if(e.key==="ArrowRight"){ e.preventDefault(); focusVariant(idx+1); }
-      });
+  function isTextField(el){ return el && ((el.tagName==='INPUT' && (/^(text|search|email|url|tel|password)$/i).test(el.type))|| el.tagName==='TEXTAREA'); }
+  function buildBaseButtons(){ accBase.innerHTML=""; BASES.forEach((b)=>{ const label=accUpper?b.toUpperCase():b; const btn=document.createElement("button"); btn.type="button"; btn.className="acc-btn"; btn.textContent=label; btn.setAttribute("role","option"); btn.setAttribute("aria-label",`Base ${label}`);
+    btn.addEventListener("click",()=>showVariants(b));
+    btn.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showVariants(b); (accVars.querySelector('button')||btn).focus(); }});
+    accBase.appendChild(btn);
+  });}
+  function showVariants(base){ const list=ACCENTS[base]||[]; const variants=accUpper?list.map(c=>c.toUpperCase()):list; accVars.innerHTML=""; accVarLabel.style.display=variants.length?"":"none";
+    variants.forEach((ch,idx)=>{ const vb=document.createElement("button"); vb.type="button"; vb.className="acc-btn"; vb.textContent=ch; vb.setAttribute("role","gridcell"); vb.setAttribute("aria-label",`Insert ${ch}`);
+      vb.addEventListener("click",()=>insertAccent(ch,true));
+      vb.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); insertAccent(ch,true); } else if(e.key==="ArrowLeft"){ e.preventDefault(); focusVariant(idx-1); } else if(e.key==="ArrowRight"){ e.preventDefault(); focusVariant(idx+1); }});
       accVars.appendChild(vb);
     });
   }
-
-  function focusVariant(idx){
-    const btns=[...accVars.querySelectorAll("button")];
-    if(!btns.length) return;
-    if(idx<0) idx=0; if(idx>=btns.length) idx=btns.length-1;
-    btns[idx].focus();
+  function focusVariant(idx){ const btns=[...accVars.querySelectorAll("button")]; if(!btns.length) return; if(idx<0) idx=0; if(idx>=btns.length) idx=btns.length-1; btns[idx].focus(); }
+  function positionPopover(anchor){ const rect=anchor.getBoundingClientRect(); accPop.style.left=Math.min(window.innerWidth-20,Math.max(8,rect.right-280))+"px"; accPop.style.top=(rect.bottom+8+window.scrollY)+"px"; }
+  function openAccentsPanel(targetEl,anchorEl){
+    // Pause any pending lookups
+    accOpen=true; clearTimeout(nameTimers.get(lastEditedNameIndex||0));
+    accTargetEl=isTextField(document.activeElement)?document.activeElement:(isTextField(targetEl)?targetEl:null);
+    accAnchorEl=anchorEl||targetEl; buildBaseButtons(); accVars.innerHTML=""; accVarLabel.style.display="none"; positionPopover(accAnchorEl);
+    accHint.style.display=accTargetEl?"none":""; accPop.classList.add("show");
   }
-
-  function positionPopover(anchor){
-    const rect = anchor.getBoundingClientRect();
-    accPop.style.left = Math.min(window.innerWidth-20, Math.max(8, rect.right - 280)) + "px";
-    accPop.style.top = (rect.bottom + 8 + window.scrollY) + "px";
-  }
-
-  function openAccentsPanel(targetEl, anchorEl){
-    accTargetEl = isTextField(document.activeElement) ? document.activeElement : (isTextField(targetEl)? targetEl : null);
-    accAnchorEl = anchorEl || targetEl;
-
-    buildBaseButtons();
-    accVars.innerHTML=""; accVarLabel.style.display="none";
-    positionPopover(accAnchorEl);
-
-    accHint.style.display = accTargetEl ? "none" : "";
-    accPop.classList.add("show"); accOpen = true;
-  }
-
   function closeAccentsPanel(){
     accOpen=false; accPop.classList.remove("show");
+    // Resume debounce shortly after closing to coalesce multiple inserts
+    if(lastEditedNameIndex!=null){
+      const card=document.querySelector(`.character[data-index="${lastEditedNameIndex}"]`);
+      const nameInput=card?.querySelector('.char-name'); const meta=card?.querySelector('.char-meta'); const msg=card?.querySelector('.inline-msg'); const img=card?.querySelector('.char-image-wrap img');
+      if(nameInput && meta && msg && img) scheduleLookup(lastEditedNameIndex,nameInput,meta,msg,img,300);
+    }
   }
-
-  function insertAccent(ch, closeAfter){
-    if(!accTargetEl || !isTextField(accTargetEl)){
-      accHint.style.display = "";
-      setTimeout(()=> accHint.style.display="none", 1500);
-      return;
-    }
-    const el = accTargetEl;
-    const start = el.selectionStart ?? el.value.length;
-    const end = el.selectionEnd ?? el.value.length;
-    let insertText = ch;
-
-    const max = typeof el.maxLength === "number" ? el.maxLength : -1;
-    if(max > -1){
-      const remaining = max - el.value.length + (end - start);
-      if(remaining <= 0) return;
-      if(insertText.length > remaining) insertText = insertText.slice(0, remaining);
-    }
-
-    el.setRangeText(insertText, start, end, "end");
-    el.dispatchEvent(new InputEvent("input", { bubbles:true, data:insertText, inputType:"insertText" }));
-    el.dispatchEvent(new Event("change", { bubbles:true }));
-    el.focus();
-
+  function insertAccent(ch,closeAfter){
+    if(!accTargetEl || !isTextField(accTargetEl)){ accHint.style.display=""; setTimeout(()=>accHint.style.display="none",1500); return; }
+    const el=accTargetEl; const start=el.selectionStart??el.value.length; const end=el.selectionEnd??el.value.length; let insertText=ch;
+    const max=typeof el.maxLength==="number"?el.maxLength:-1; if(max>-1){ const remaining=max-el.value.length+(end-start); if(remaining<=0) return; if(insertText.length>remaining) insertText=insertText.slice(0,remaining); }
+    el.setRangeText(insertText,start,end,"end"); el.dispatchEvent(new InputEvent("input",{bubbles:true,data:insertText,inputType:"insertText"})); el.dispatchEvent(new Event("change",{bubbles:true})); el.focus();
     if(closeAfter) closeAccentsPanel();
   }
+  accClose.addEventListener("click",closeAccentsPanel);
+  accCaseBtn.addEventListener("click",()=>{ accUpper=!accUpper; accCaseBtn.setAttribute("aria-pressed", accUpper?"true":"false"); buildBaseButtons(); accVars.innerHTML=""; accVarLabel.style.display="none"; });
+  document.addEventListener("keydown",(e)=>{ if(e.altKey&&(e.key==="a"||e.key==="A")){ e.preventDefault(); const focusEl=document.activeElement; if(isTextField(focusEl)){ openAccentsPanel(focusEl,focusEl); } else { openAccentsPanel(null,$("#theme")); } } else if(e.key==="Escape" && accOpen){ closeAccentsPanel(); }});
+  document.addEventListener("mousedown",(e)=>{ if(accOpen && !accPop.contains(e.target) && !e.target.closest(".accents-btn")) closeAccentsPanel(); });
 
-  accClose.addEventListener("click", closeAccentsPanel);
-  accCaseBtn.addEventListener("click", ()=>{
-    accUpper = !accUpper;
-    accCaseBtn.setAttribute("aria-pressed", accUpper ? "true" : "false");
-    buildBaseButtons();
-    accVars.innerHTML=""; accVarLabel.style.display="none";
-  });
+  /* Name lookup attachment (uses pause/resume rules) */
+  function attachNameLookup(cardIndex,nameInput,metaElem,msgElem,imgElem){
+    nameInput.addEventListener("input",()=>{ lastEditedNameIndex=cardIndex; // abort any in-flight request immediately
+      const prev=nameControllers.get(cardIndex); if(prev){ try{ prev.abort(); }catch{} }
+      scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,DEBOUNCE_MS);
+    });
+  }
 
-  // Alt+A opens (anchored to focused field if possible)
-  document.addEventListener("keydown",(e)=>{
-    if(e.altKey && (e.key==="a" || e.key==="A")){
-      e.preventDefault();
-      const focusEl = document.activeElement;
-      if(isTextField(focusEl)){
-        openAccentsPanel(focusEl, focusEl); // anchor to the focused field
-      }else{
-        // anchor to theme as a safe default and show hint
-        openAccentsPanel(null, $("#theme"));
-      }
-    }else if(e.key==="Escape" && accOpen){
-      closeAccentsPanel();
-    }
-  });
-
-  // Click outside closes
-  document.addEventListener("mousedown",(e)=>{
-    if(accOpen && !accPop.contains(e.target) && !e.target.closest(".accents-btn")){
-      closeAccentsPanel();
-    }
-  });
-
-  // ===== Icons =====
-  function iconBtn(title, svgOrHtml, onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
+  /* Icons */
+  function iconBtn(title,svgOrHtml,onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
   function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
   function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
   function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
   function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
-  // ===== Existing keyboard helpers for tasks =====
-  function focusTaskInput(cardIndex, tNew){
-    const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
-    const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
-    (inputs[tNew]||inputs[inputs.length-1]||inputs[0])?.focus();
-  }
-
+  /* Init */
   build();
   </script>
 </body>
