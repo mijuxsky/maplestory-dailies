@@ -226,8 +226,7 @@
 
   /* Contact modal rows and toast */
   .contact-row{ display:flex; align-items:center; gap:10px; padding:6px 2px; }
-  .contact-icon{ width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--control-fg); opacity:.9; }
-  .contact-icon svg{ width:18px; height:18px; display:block; overflow:visible; }
+  
   .contact-row a{ color:var(--popover-fg); text-decoration: none; font-weight:600; }
   .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
   .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
@@ -389,35 +388,14 @@
 <div class="modal-overlay" id="contact-overlay" aria-hidden="true">
   <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
     <h3 id="contact-title">Contact</h3>
-
     <div class="contact-row" style="margin-top:4px;">
-      <span class="contact-icon" aria-hidden="true">
-        <!-- Ko‑fi cup (monochrome) -->
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3 8a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8Zm13 1h1.5a2.5 2.5 0 0 1 0 5H16V9Z"/><path fill="currentColor" d="M9.5 10.25c-.83 0-1.5.67-1.5 1.5 0 1.57 2.18 2.9 2.88 3.33a.5.5 0 0 0 .52 0c.7-.43 2.88-1.76 2.88-3.33 0-.83-.67-1.5-1.5-1.5-.59 0-1.1.34-1.36.84a.5.5 0 0 1-.88 0 1.5 1.5 0 0 0-1.36-.84Z"/></svg>
-      </span>
       <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer"
          aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
     </div>
-
     <div class="contact-row">
-  
-<span class="contact-icon" aria-hidden="true">
-  <!-- Discord glyph (simple, padded, transparent background) -->
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <g transform="translate(1.5,2) scale(0.9)">
-      <rect x="3" y="4" width="18" height="12" rx="6" fill="currentColor"></rect>
-      <circle cx="10" cy="10" r="1.5" fill="var(--popover-bg)"></circle>
-      <circle cx="14" cy="10" r="1.5" fill="var(--popover-bg)"></circle>
-    </g>
-  </svg>
-</span>
-
-  <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
-</div>
-
-    <div class="actions">
-      <button class="btn secondary" id="contact-close" type="button" aria-label="Close contact modal">Close</button>
+      <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
     </div>
+  </div>
 </div>
     </div>
 
@@ -1163,9 +1141,7 @@ let lastFocusBeforeContact=null;
 
 function isOverlayOpen(overlay){ return overlay.classList.contains("show"); }
 
-function openContact(){
-  if(isOverlayOpen(contactOverlay)){ closeContact(); return; }
-  lastFocusBeforeContact = document.activeElement;
+lastFocusBeforeContact = document.activeElement;
   contactOverlay.classList.add("show");
   contactOverlay.setAttribute("aria-hidden","false");
   trapFocus(contactOverlay);
@@ -1174,12 +1150,7 @@ function openContact(){
     (kofiLink || contactClose || contactBtn).focus();
   }, 0);
 }
-function closeContact(){
-  releaseTrap(contactOverlay);
-  contactOverlay.classList.remove("show");
-  contactOverlay.setAttribute("aria-hidden","true");
-  // return focus to opener
-  setTimeout(()=>{ (lastFocusBeforeContact || contactBtn).focus(); }, 0);
+, 0);
 }
 
 contactBtn.addEventListener("click", openContact);
@@ -1246,6 +1217,43 @@ function showToast(msg){
     setTimeout(()=>{ toastEl.hidden=true; }, 200);
   }, 1400);
 }
+// Contact modal controls (icons removed from rows)
+(function(){
+  const overlay = document.getElementById('contact-overlay');
+  const btn = document.getElementById('contact-btn');
+  const closeBtn = document.getElementById('contact-close');
+  let opener = null;
+
+  function openContact(){
+    opener = document.activeElement;
+    overlay.removeAttribute('inert');
+    overlay.classList.add('show');
+    overlay.setAttribute('aria-hidden','false');
+    setTimeout(()=>{
+      (overlay.querySelector('#contact-close') || overlay).focus();
+    },0);
+    document.addEventListener('keydown', onKey, true);
+  }
+  function closeContact(){
+    document.removeEventListener('keydown', onKey, true);
+    try{ (opener || btn || document.body).focus(); }catch(e){}
+    overlay.classList.remove('show');
+    overlay.setAttribute('aria-hidden','true');
+    overlay.setAttribute('inert','');
+  }
+  function onKey(e){
+    if(e.key === 'Escape'){ e.preventDefault(); closeContact(); }
+  }
+
+  if(btn) btn.addEventListener('click', ()=>{
+    if(overlay.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
+  });
+  if(closeBtn) closeBtn.addEventListener('click', closeContact);
+  // Click-away (backdrop)
+  overlay?.addEventListener('mousedown', (e)=>{
+    if(e.target === overlay){ closeContact(); }
+  });
+})();
 </script>
 </body>
 </html>
