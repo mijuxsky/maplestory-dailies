@@ -897,7 +897,7 @@ function moveCard(from,to){
   }
   const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
   const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
-  const nd={charCount=list.length};
+  const nd={charCount: list.length};
   for(let i=0;i<list.length;i++){
     const c=list[i];
     nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
