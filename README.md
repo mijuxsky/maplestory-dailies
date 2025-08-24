@@ -1,165 +1,96 @@
 # MapleStory Dailies
 
-A minimal tracker for your dailies in MapleStory. Runs fully in the browser and stores data locally per preset.
+A single‑file, theme‑aware, keyboard‑friendly daily checklist for MapleStory characters. Everything lives in `index.html`—no build step required.
 
----
+## Quick start
+1. Download or clone this project.
+2. Open **index.html** in any modern browser (Chrome, Edge, Firefox, Safari).
+3. Pick a theme, add characters, and start tracking tasks.
+4. Use **Save** to export your data (JSON) and **Load** to import it later.
+
+> **Storage:** All changes are saved to your browser’s `localStorage` per preset. No backend.
 
 ## Features
+- **Character cards**
+  - Avatar (auto‑lookup or manual upload), Level/Class, centered **Character Name** line.
+  - Up to 10 tasks per character; drag to reorder.
+  - Task priorities: **normal / important / urgent** with subtle, theme‑aware highlighting.
+  - **Check All** per card.
+- **View chips** (centered below the name)
+  - **Show priority first** – groups urgent/important to the top (default).
+  - **Only priority** – hides normal tasks.
+- **Presets (rename‑only)**
+  - Exactly **three presets (1–3)** with stable IDs.
+  - Rename the current preset via the small **pencil** next to the Preset dropdown.
+  - Validation: **required**, **unique** among the three, **max 12 chars**, trims spaces.
+  - Names persist; IDs never change.
+- **Theming**
+  - Light: **Light Mode, Cloud, Lavender, Matcha, Milk Tea**  
+  - Dark: **Dark Mode, Nightshade (Dark Purple), Evergreen, Midnight Blue, Mocha**
+  - All controls use shared tokens for colors, borders, shadows, and focus rings.
+- **Contact & Support**
+  - Top‑right **Contact** button with a tiny **envelope + small heart** icon (cute, minimal).
+  - Modal (focus‑trapped, Esc/backdrop to close) with:
+    - **Ko‑fi:** `https://ko-fi.com/mijuxsky` (opens in new tab)
+    - **Discord:** `MijuxSky` + **Copy** button and brief toast (“Discord handle copied”).
+  - Icons are monochrome and inherit the current theme color.
+- **Accessibility**
+  - Keyboard focus rings on interactive controls.
+  - Modal has `role="dialog"`, `aria-modal="true"`, returns focus to opener.
+  - Screen reader announcements for preset rename and validation errors.
+  - Subtle status messages when priorities change or lookups run.
+- **Import/Export**
+  - Export saves `{version, preset, characters}` JSON.
+  - Import restores characters/tasks (up to the app’s limits).
 
-- **UTC clock**  
-  Shows current UTC time in `MM/DD/YYYY HH:MM:SS`.
+## Keyboard shortcuts
+> Open **?** (top‑right) to see these in‑app.
+- **Up/Down** – Move between tasks
+- **Enter** – Insert a new task below the focused task
+- **Tab** – Toggle the focused task’s checkbox
+- **Space** – Toggle a row when the checkbox or row is focused
+- **Alt + A** – Open **Accents** panel for the focused text input
+- **Esc** – Close panels/modals
 
-- **Daily reset**  
-  Task completion is keyed by UTC date so checkmarks reset each day automatically.
+## Data & persistence (overview)
+- Theme: `mapleTheme`
+- Current preset: `maplePreset`
+- Preset names: `maplePresetNames_v1` (object with keys `1`,`2`,`3`)
+- Per‑preset data: `mapleData_v2_preset{N}` stores character/task state
+- Daily checkbox state: stored separately per date/preset/character/task (keys derived like `check_YYYY-MM-DD_preset{N}_c{i}_t{t}`)
 
-- **Themes**  
-  Light themes first, then dark. All UI elements follow tokens for backgrounds, text, borders, focus rings, buttons, dialogs, tooltips, and panels.  
-  Light: Cloud, Lavender, Light Mode, Matcha, Milk Tea  
-  Dark: Dark Mode, Evergreen, Midnight Blue, Mocha, Nightshade
+> Tip: To “reset” the day, you can clear today’s `check_…` keys from DevTools > Application > Local Storage.
 
-- **Presets**  
-  Three starter presets selectable from the toolbar. All data is saved per preset.
-
-- **Save and Load**  
-  Save exports a JSON file. Load imports a JSON file. Works offline and keeps data per preset.
-
-- **Characters**  
-  Add, duplicate, delete with confirmation. Drag and drop cards to reorder. Use Up and Down arrows on each card as an alternative.
-
-- **Accents**  
-  Per card Accents button next to Character Name. Insert accented letters without losing focus. Alt + A opens accents for the focused field.
-
-- **Maple Ranks lookup**  
-  Type a Character Name and the app looks up Job and Level via the Worker proxy. If available and no uploaded avatar exists, the image is set automatically. If no match is found the Job shows “Character not found on MapleRanks” in a soft red. Level and image are not changed.
-
-- **Avatars**  
-  Upload a custom character image. User uploads are never overwritten by auto lookups.
-
-- **Tasks**  
-  Each card starts with two lines. Enter inserts a new task below the current line. Tab toggles the checkbox on the focused row. Up and Down move between rows.
-
-- **Priority**  
-  Click the small Priority button on a row to cycle Normal, Important, Urgent. Important uses the theme accent. Urgent uses the theme soft red and a brief glow on the left bar. Chips above the list let you show priority first or only priority. P is not used as a shortcut to avoid interrupting typing.
-
-- **Reorder tasks**  
-  Drag by the vertical handle at the end of the row. Reordering stays within the card and preserves state.
-
-- **Check All**  
-  A Check All control at the bottom of each card toggles all tasks in that card. The label uses a theme muted color distinct from task text.
-
-- **Keyboard shortcuts**  
-  A “?” button opens a centered modal with keyboard help and a Quickstart. Press “?” globally to open. Esc closes. Focus returns to the opener.
-
----
-
-## Quickstart
-
-1) **Choose preset**  
-   Use Preset on the toolbar.
-
-2) **Enter name**  
-   Type Character Name. Use Accents if needed.
-
-3) **Wait or upload**  
-   After a short pause Job and Level update. Upload an avatar if you prefer.
-
-4) **Review tasks**  
-   Check items and set priorities if useful.
-
-5) **Save**  
-   Click Save to export a backup JSON.
-
-6) **Load or manage**  
-   Load another preset file or switch presets.
-
----
-
-## Keyboard
-
-- **Open help**  
-  Click “?” or press “?” to open the Shortcuts modal. Esc closes.
-
-- **Move between tasks**  
-  Up and Down arrows.
-
-- **Toggle a task**  
-  Space or Tab on the focused row.
-
-- **Insert below**  
-  Enter creates a new task directly under the current row.
-
-- **Accents**  
-  Alt + A opens Accents for the focused input.
-
-Typing in task fields is never intercepted by global shortcuts.
-
----
-
-## Data and storage
-
-- **Local storage**  
-  All data is stored in the browser per preset and per UTC day for checkmarks.
-
-- **Export and import**  
-  Save exports JSON. Load imports JSON. No servers are used.
-
-- **Daily reset**  
-  Checkmarks reset with the new UTC date. Task text and ordering persist.
-
----
-
-## Maple Ranks lookup
-
-- **Source**  
-  Queries Maple Ranks through a Cloudflare Worker proxy.
-
-- **Fields**  
-  Updates Job and Level. If no user avatar exists and an image URL is returned, the avatar is set automatically.
-
-- **On failure**  
-  Job shows “Character not found on MapleRanks” in a soft red. Level and image are unchanged.
-
-- **Uploads win**  
-  User uploaded avatars are never overwritten by lookups.
-
----
-
-## Tips
-
-- **Reorder cards**  
-  Drag a card by the invisible strip above the Character Image or use the Up and Down arrows on the card.
-
-- **Reorder tasks**  
-  Drag by the vertical handle on each row.
-
-- **Insert quickly**  
-  Press Enter on a task to insert a new one right below.
-
-- **Check all**  
-  Use the Check All control at the bottom of the card.
-
----
-
-## Theming
-
-All themes define tokens for background, panel, card, border, text, text weak, accent and tint, soft red, focus ring, and tooltip or dialog surfaces. The app applies these tokens to cards, buttons, inputs, selects, icons, dialogs, tooltips, accents panel, and the Shortcuts modal. Focus rings meet contrast guidelines.
-
----
+## Customization
+- **Themes:** Adjust CSS variables in `:root` and theme body classes.
+- **Contact modal:** Update the Ko‑fi URL or Discord handle in the modal markup.
+- **Icons:** Inline SVGs inherit `currentColor`; swap paths to change pictograms.
+- **Accents:** The small accents helper can be extended in `renderAccents()`.
 
 ## Troubleshooting
+- **No layout shift, but a control looks off in one theme** – check theme tokens for border/background contrast.
+- **Discord icon looks clipped** – the modal uses `overflow:visible` on the icon SVG and a small internal transform to avoid clipping; clear cache if you still see it.
+- **Auto‑lookup is slow** – results are cached; give it a moment, or enter at least 4 characters before hitting Enter to force a lookup.
 
-- **UTC shows dashes**  
-  Wait a moment or refresh. The clock updates once per second.
+## What changed recently
+- Centered the **Character Name** row with a left spacer to mirror the Accents button.
+- **Centered** the “Show priority first” and “Only priority” chips.
+- **Contact** button now uses a **tiny envelope with a small heart** icon.
+- Contact modal redesigned to a **minimal** layout with **full Ko‑fi link** and **Discord** + **Copy** (toast).
+- Fixed a **Discord icon** clipping issue inside the modal.
+- Preset **Rename** added (pencil icon): required, unique, **12‑char** limit; IDs stay the same.
+- Small JS fixes (e.g., invalid object literal initializer) to resolve console errors.
 
-- **No image after typing a name**  
-  Either Maple Ranks had no avatar or the Worker returned no image. Upload your own or try again later.
+## Tech notes
+- Pure client‑side HTML/CSS/JS; uses **SortableJS** (CDN) for drag‑and‑drop.
+- Fonts: Google Fonts **Quicksand**.
+- No build tools, no framework—open `index.html` directly.
 
-- **Import fails**  
-  Make sure you load a JSON file exported by the app.
-
-- **Nothing saves**  
-  Check that your browser allows local storage.
+## License
+Add your preferred license here (e.g., MIT).
 
 ---
 
-#
+**Contact**  
+Ko‑fi: https://ko-fi.com/mijuxsky  
+Discord: MijuxSky
