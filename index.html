@@ -129,8 +129,7 @@
   .char-meta{text-align:center;font-size:12px;color:var(--checkall-fg);margin:0 0 2px;font-family:inherit;min-height:16px}
   .inline-msg{text-align:center;font-size:12px;margin:2px 0 0;color:var(--danger);display:none}
 
-  .name-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
-  .name-row::before{ content:""; width:28px; height:28px; border:1px solid transparent; border-radius:8px;}
+  .name-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
   .char-name{width:100%;border:none;background:transparent;border-bottom:var(--name-underline);text-align:center;font-weight:600;margin:0 0 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
   .char-name:focus{outline:none;box-shadow:none;border-bottom:var(--name-underline)}
   .accents-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);cursor:pointer;font-family:inherit}
@@ -181,6 +180,7 @@
     padding:16px 16px 14px; min-width:320px; max-width:560px; width:min(560px,92vw);
     box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit
   }
+  .modal--contact{ padding:14px 14px 12px; max-width:480px; width:min(480px,92vw); }
   .modal h3{margin:0 0 12px;font-size:18px;font-weight:700}
   .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
   .btn.secondary{background:var(--control-bg);color:var(--control-fg);border-color:var(--control-border)}
@@ -365,7 +365,7 @@
 
 <!-- Contact Modal -->
 <div class="modal-overlay" id="contact-overlay" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+  <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
     <h3 id="contact-title">Contact &amp; Support</h3>
 
     <div class="contact-row">
@@ -898,7 +898,7 @@ function moveCard(from,to){
   }
   const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
   const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
-  const nd={charCount: list.length};
+  const nd={charCount=list.length};
   for(let i=0;i<list.length;i++){
     const c=list[i];
     nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
