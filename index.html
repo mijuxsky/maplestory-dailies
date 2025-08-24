@@ -175,7 +175,7 @@
 
   .modal-overlay{position:fixed;inset:0;background:var(--overlay);display:none;align-items:center;justify-content:center;z-index:1000}
   .modal-overlay.show{display:flex}
-  .modal{
+  .modal{position:relative; 
     background:var(--popover-bg); color:var(--popover-fg);
     border:1px solid var(--popover-border); border-radius:12px;
     padding:16px 16px 14px; min-width:320px; max-width:560px; width:min(560px,92vw);
@@ -236,7 +236,7 @@
 
 <!-- Heart “Contact” button -->
 <button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact" style="position:fixed;top:12px;right:48px;z-index:1200;">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.1 8.64l-.1.1l-.11-.11C10.14 6.9 7.39 6.9 5.64 8.64c-1.75 1.75-1.75 4.5 0 6.25l5.67 5.67c.39.39 1.02.39 1.41 0l5.67-5.67c1.75-1.75 1.75-4.5 0-6.25c-1.75-1.75-4.5-1.75-6.25 0z"/></svg>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 5h18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v.2l9 6.2l9-6.2V7H3zm18 10V9.6l-8.5 5.8a1.5 1.5 0 0 1-1.6 0L3 9.6V17a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1z"/><path fill="currentColor" d="M12 9.1c-.6-.6-1.6-.6-2.2 0c-.6.6-.6 1.6 0 2.2l1.3 1.3c.2.2.6.2.8 0l1.3-1.3c.6-.6.6-1.6 0-2.2c-.6-.6-1.6-.6-2.2 0z" /></svg>
 </button>
 
 <!-- Top-right “?” button -->
@@ -334,21 +334,18 @@
 
 <!-- Shortcuts & Quickstart Modal -->
 <div class="modal-overlay" id="shortcuts-overlay" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title"><button id="shortcuts-close" class="acc-close" type="button" aria-label="Close" style="position:absolute;right:10px;top:10px;">×</button>
     <h3 id="shortcuts-title">Keyboard Shortcuts</h3>
     <ul style="margin:6px 0 12px 18px;padding:0;">
-      <li>Up / Down — Move between tasks</li>
-      <li>Enter — Insert a new task below</li>
-      <li>Tab — Toggle the checkbox on the focused task</li>
-      <li>Space — Toggle the checkbox (when the checkbox or row is focused)</li>
-      <li>Alt + A — Open Accents for the focused field</li>
-      <li>Esc — Close panels</li>
+      <li>Up / Down - Move between tasks</li>
+      <li>Enter - Insert a new task below</li>
+      <li>Tab - Toggle the checkbox on the focused task</li>
+      <li>Space - Toggle the checkbox (when the checkbox or row is focused)</li>
+      <li>Alt + A - Open Accents for the focused field</li>
+      <li>Esc - Close panels</li>
     </ul>
     <hr style="border:none;border-top:1px solid var(--popover-border);margin:10px 0 12px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-      <strong>Quickstart</strong>
-      <button id="quickstart-toggle" class="btn secondary" type="button" style="padding:4px 8px;font-size:12px;">Hide</button>
-    </div>
+    <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:6px;"><strong>Quickstart</strong></div>
     <ol id="quickstart-list" style="margin:4px 0 0 18px;padding:0;">
       <li>Choose an existing preset or create a new one</li>
       <li>Enter Character Name. Use the Accents button if needed</li>
@@ -357,10 +354,29 @@
       <li>Save your changes to the current preset</li>
       <li>Load a different preset or manage presets to rename, duplicate, or delete</li>
     </ol>
-    <div class="actions">
-      <button class="btn" id="shortcuts-close" type="button">Close</button>
+  
+    <hr style="border:none;border-top:1px solid var(--popover-border);margin:12px 0;">
+    <div style="margin:6px 0 6px;">
+      <strong>Features (Most → Least Important)</strong>
     </div>
-  </div>
+    <ol style="margin:4px 0 0 18px;padding:0;">
+      <li>Checkboxes reset daily at 0:00 UTC (midnight UTC).</li>
+      <li>Mark tasks as Important or Urgent; filter with “Show priority first” and “Only priority”.</li>
+      <li>Keyboard-friendly editing: Tab toggles a task, Enter inserts a new task, Up/Down move between tasks.</li>
+      <li>Save and Load Presets (with rename).</li>
+      <li>Export / Import all data as JSON (no server needed).</li>
+      <li>Per-character “Check All” to mark or clear all tasks at once.</li>
+      <li>Drag-and-drop to reorder tasks (when priority sorting is off).</li>
+      <li>Automatic character lookup (name → avatar, level, job) from Maple Ranks.</li>
+      <li>Theme support (light and dark themes).</li>
+      <li>Help and Contact popups with Esc or × to close.</li>
+      <li>Daily task inputs limited to 32 characters.</li>
+      <li>Priority-first and Only-priority modes apply across characters.</li>
+      <li>Persistent storage in your browser (tasks and settings retained).</li>
+      <li>Character images: user upload plus remote avatar fallback.</li>
+      <li>Accessible focus trap inside modals; click outside to close.</li>
+    </ol>
+</div>
 </div>
 
 <!-- Contact Modal -->
@@ -369,15 +385,14 @@
     <button id="contact-close" class="acc-close" type="button" aria-label="Close" style="position:absolute;right:10px;top:10px;">×</button>
     <h3 id="contact-title">Contact &amp; Support</h3>
 
-    <div class="contact-row">
-      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Ko-fi Donate Link">Donate</a>
-    </div>
-
-    <div class="contact-row">
+        <div class="contact-row">
       <span>Discord:</span> 
       <a id="discord-link" href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer">@MijuxSky</a>
     </div>
-  </div>
+    <div class="contact-row">
+      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Ko-fi Donate Link">Support me on Ko-Fi</a>
+    </div>
+</div>
 </div>
 
 </div>
@@ -1079,10 +1094,18 @@ build();
 
 /* ===== Keyboard Shortcuts & Quickstart modal ===== */
 const shortcutsBtn=$("#shortcuts-btn"), shortcutsOverlay=$("#shortcuts-overlay"), shortcutsClose=$("#shortcuts-close"), quickstartToggle=$("#quickstart-toggle"), quickstartList=$("#quickstart-list");
-shortcutsBtn.addEventListener("click",()=>{ shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
-shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
+function closeShortcuts(){
+  shortcutsOverlay.classList.remove("show");
+  shortcutsOverlay.setAttribute("aria-hidden","true");
+}
+
+shortcutsBtn.addEventListener("click",()=>{ try{ closeContact(); }catch(e){}
+  shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
+shortcutsOverlay.addEventListener("mousedown",(e)=>{ if(e.target===shortcutsOverlay) closeShortcuts(); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")) closeShortcuts(); });
+if (shortcutsClose) shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});
-quickstartToggle.addEventListener("click",()=>{
+if (quickstartToggle) quickstartToggle.addEventListener("click",()=>{
   const hidden=quickstartList.style.display==="none";
   quickstartList.style.display=hidden?"":"none";
   quickstartToggle.textContent = hidden ? "Hide" : "Show";
@@ -1101,6 +1124,7 @@ let lastFocusBeforeContact=null;
 function isOverlayOpen(overlay){ return overlay.classList.contains("show"); }
 
 function openContact(){
+  try{ closeShortcuts(); }catch(e){}
   if(isOverlayOpen(contactOverlay)){ closeContact(); return; }
   lastFocusBeforeContact = document.activeElement;
   contactOverlay.classList.add("show");

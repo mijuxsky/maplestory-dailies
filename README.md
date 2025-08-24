@@ -1,75 +1,115 @@
-# Maplestory Dailies
+# README
 
-A single‑file, theme‑aware, keyboard‑friendly daily checklist for MapleStory characters. Everything lives in `index.html`—no build step required.
+## What this is
+A single page tracker for daily tasks across multiple characters. It runs entirely in your browser and saves to local storage. No server required.
 
-> **Storage:** All changes are saved to your browser’s `localStorage` per preset. No backend.
+## Open it
+1. Download the HTML file.  
+2. Double click to open it in a modern browser.
 
-## Features
-- **Character cards**
-  - Avatar (auto‑lookup or manual upload), Level/Class, centered **Character Name** line.
-  - Up to 10 tasks per character; drag to reorder.
-  - Task priorities: **normal / important / urgent** with subtle, theme‑aware highlighting.
-  - **Check All** per card.
-- **View chips** (centered below the name)
-  - **Show priority first** – groups urgent/important to the top (default).
-  - **Only priority** – hides normal tasks.
-- **Presets (rename‑only)**
-  - Exactly **three presets (1–3)** with stable IDs.
-  - Rename the current preset via the small **pencil** next to the Preset dropdown.
-  - Validation: **required**, **unique** among the three, **max 12 chars**, trims spaces.
-  - Names persist; IDs never change.
-- **Theming**
-  - Light: **Light Mode, Cloud, Lavender, Matcha, Milk Tea**  
-  - Dark: **Dark Mode, Nightshade (Dark Purple), Evergreen, Midnight Blue, Mocha**
-  - All controls use shared tokens for colors, borders, shadows, and focus rings.
-- **Contact & Support**
-  - Top‑right **Contact** button with a tiny **envelope + small heart** icon (cute, minimal).
-  - Modal (focus‑trapped, Esc/backdrop to close) with:
-    - **Ko‑fi:** `https://ko-fi.com/mijuxsky` (opens in new tab)
-    - **Discord:** `MijuxSky` + **Copy** button and brief toast (“Discord handle copied”).
-  - Icons are monochrome and inherit the current theme color.
-- **Accessibility**
-  - Keyboard focus rings on interactive controls.
-  - Modal has `role="dialog"`, `aria-modal="true"`, returns focus to opener.
-  - Screen reader announcements for preset rename and validation errors.
-  - Subtle status messages when priorities change or lookups run.
-- **Import/Export**
-  - Export saves `{version, preset, characters}` JSON.
-  - Import restores characters/tasks (up to the app’s limits).
-
-## Keyboard shortcuts
-> Open **?** (top‑right) to see these in‑app.
-- **Up/Down** – Move between tasks
-- **Enter** – Insert a new task below the focused task
-- **Tab** – Toggle the focused task’s checkbox
-- **Space** – Toggle a row when the checkbox or row is focused
-- **Alt + A** – Open **Accents** panel for the focused text input
-- **Esc** – Close panels/modals
-
-> Tip: To “reset” the day, you can clear today’s `check_…` keys from DevTools > Application > Local Storage.
-
-## Customization
-- **Themes:** Adjust CSS variables in `:root` and theme body classes.
-- **Contact modal:** Update the Ko‑fi URL or Discord handle in the modal markup.
-- **Icons:** Inline SVGs inherit `currentColor`; swap paths to change pictograms.
-- **Accents:** The small accents helper can be extended in `renderAccents()`.
-
-## What changed recently
-- Centered the **Character Name** row with a left spacer to mirror the Accents button.
-- **Centered** the “Show priority first” and “Only priority” chips.
-- **Contact** button now uses a **tiny envelope with a small heart** icon.
-- Contact modal redesigned to a **minimal** layout with **full Ko‑fi link** and **Discord** + **Copy** (toast).
-- Fixed a **Discord icon** clipping issue inside the modal.
-- Preset **Rename** added (pencil icon): required, unique, **12‑char** limit; IDs stay the same.
-- Small JS fixes (e.g., invalid object literal initializer) to resolve console errors.
-
-## Tech notes
-- Pure client‑side HTML/CSS/JS; uses **SortableJS** (CDN) for drag‑and‑drop.
-- Fonts: Google Fonts **Quicksand**.
-- No build tools, no framework—open `index.html` directly.
+## Your data
+Everything is stored in your browser using local storage. You can export and import a JSON file at any time for backup or to move data to another device.
 
 ---
 
-**Contact**  
-Ko‑fi: https://ko-fi.com/mijuxsky  
-Discord: MijuxSky
+## Daily tasks
+* Checkboxes reset every day at 0:00 UTC  
+* Each task input is limited to 32 characters  
+* Typing is never interrupted by global shortcuts while a task field is focused  
+* Press Tab to toggle the checkbox for the focused task  
+* Press Enter to insert a new task below the focused task  
+* Press Up or Down to move between tasks  
+* You can drag and drop tasks to reorder them when priority sorting is off  
+* Per character Check All is available to mark or clear all tasks at once
+
+## Priorities and filters
+* Task priority states are Normal, Important, and Urgent  
+* Use Show priority first to sort with higher priority tasks at the top  
+* Use Only priority to hide normal tasks and show only Important and Urgent  
+* The two priority chips are centered above the task list
+
+## Characters
+* Add characters as cards  
+* Enter a character name to fetch avatar, job, and level from Maple Ranks  
+* You can upload an avatar to override the fetched image  
+* Reorder characters with the existing controls
+
+## Presets
+* Save writes changes to the current preset  
+* Load switches to a different preset  
+* Rename lets you change the preset name  
+* Use Export or Import to move all data between devices
+
+---
+
+## Keyboard Shortcuts
+Open the shortcuts from the question mark button in the top bar.  
+Close with Esc or the X in the top right. Clicking outside the popup also closes it.
+
+**While a task field is focused**
+* Tab toggles the task checkbox  
+* Enter inserts a new task  
+* Up and Down move between tasks
+
+**Global**
+* Esc closes any open popup  
+* The P key does not change priority while typing in a task field
+
+---
+
+## Quickstart
+1. Choose a theme if you like  
+2. Add a character and enter a name  
+3. Wait a moment for avatar, job, and level or upload an image  
+4. Enter daily tasks and set priorities where needed  
+5. Save to store changes in the current preset  
+6. Load a different preset or rename the current one  
+7. Export data for backup or to move to another device
+
+---
+
+## Features by importance
+1. Checkboxes reset daily at 0:00 UTC  
+2. Priority system with Important and Urgent plus Show priority first and Only priority filters  
+3. Keyboard friendly editing for tasks with Tab, Enter, Up, and Down  
+4. Save and Load presets with rename  
+5. Export and Import all data as JSON  
+6. Per character Check All to mark or clear tasks at once  
+7. Drag and drop to reorder tasks when priority sorting is off  
+8. Character lookup from name to fetch avatar, level, and job  
+9. Theming for light and dark styles  
+10. Help and Contact popups with Esc or X to close  
+11. Daily task inputs limited to 32 characters  
+12. Priority filters apply across characters  
+13. Persistent storage in your browser  
+14. Character images support both user upload and remote avatar fallback  
+15. Accessible focus trap in popups with click outside to close
+
+---
+
+## Contact and support
+Click the envelope button in the top bar.
+
+* Discord: @MijuxSky  
+  Link: https://discordapp.com/users/262661842902450176  
+* Support me on Ko Fi: https://ko-fi.com/mijuxsky
+
+When one popup opens the other closes. Opening Contact closes Keyboard Shortcuts. Opening Keyboard Shortcuts closes Contact.
+
+---
+
+## Accessibility and behavior
+* Popups trap focus and are fully keyboard operable  
+* Esc closes any open popup  
+* Click outside closes the Keyboard Shortcuts popup  
+* The X button is positioned at the top right inside each popup
+
+---
+
+## Troubleshooting
+* Avatar not updating  
+  Wait a moment after entering the character name or upload an image  
+* Tasks or layout look off  
+  Switch themes or refresh the page  
+* Need a reset  
+  Export your data first, then clear local storage for this page and reload
