@@ -1099,8 +1099,7 @@ function closeShortcuts(){
   shortcutsOverlay.setAttribute("aria-hidden","true");
 }
 
-shortcutsBtn.addEventListener("click",()=>{ try{ closeContact(); }catch(e){}
-  shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
+shortcutsBtn.addEventListener("click",()=>{ if(shortcutsOverlay.classList.contains("show")){ try{ closeShortcuts(); }catch(e){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); } return; } try{ closeContact(); }catch(e){} shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
 shortcutsOverlay.addEventListener("mousedown",(e)=>{ if(e.target===shortcutsOverlay) closeShortcuts(); });
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")) closeShortcuts(); });
 if (shortcutsClose) shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
