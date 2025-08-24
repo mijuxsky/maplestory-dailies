@@ -1,684 +1,919 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Maple Dailies</title>
-  <style>
-    :root {
-      --bg: #0b0c10;
-      --panel: #111317;
-      --muted: #8f9ba8;
-      --text: #e8ecf1;
-      --text-weak: #cdd6df;
-      --soft-red: #e57373;
-      --accent: #7aa2f7;
-      --accent-weak: rgba(122,162,247,0.15);
-      --border: #232833;
-      --focus: #98c379;
-      --card: #0f1216;
-      --ok: #7bd88f;
-    }
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>MapleStory Dailies</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
+  :root{--checkall-fg: var(--meta-fg); 
+    --radius:12px; --shadow:0 6px 16px rgba(0,0,0,.12);
+    --ui:14px; --overlay:rgba(0,0,0,.55);
+    --bg:#f4f0fa; --fg:#4b3b60;
+    --card-bg:#ffffff; --card-border:#e6def6;
+    --control-bg:#ffffff; --control-fg:#4b3b60; --control-border:#cfc4ea;
+    --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea;
+    --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14);
+    --task-underline:1px dotted currentColor;
+    --name-underline:1px solid currentColor;
+    --meta-fg:#6b7280; --handle-fg: var(--meta-fg);
+    --popover-bg:var(--card-bg); --popover-fg:var(--fg); --popover-border:var(--card-border);
+    --kbd-focus: var(--icon);
+    --danger:#E57373; /* soft themed error */
+    --accent:#7c5db0; /* theme accent for Important */
+    --accent-tint: rgba(124,93,176,.10);
+    --danger-tint: rgba(229,115,115,.12);
+    --line-height:1.45; --letter-spacing:normal;
+  }
+  body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#fff; --card-border:#e7e7ea; --control-bg:#fff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; --danger:#D46B6B; --accent:#444; --accent-tint:rgba(0,0,0,.06); --danger-tint:rgba(212,107,107,.14); }
+  body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#fff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; --danger:#D36A6A; --accent:#5a86b5; --accent-tint:rgba(90,134,181,.12); --danger-tint:rgba(211,106,106,.14); }
+  body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#fff; --card-border:#e6def6; --control-bg:#fff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; --danger:#E57373; --accent:#7c5db0; --accent-tint:rgba(124,93,176,.12); --danger-tint:rgba(229,115,115,.14); }
+  body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; --danger:#D06E6E; --accent:#4a8c4a; --accent-tint:rgba(74,140,74,.12); --danger-tint:rgba(208,110,110,.14); }
+  body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; --danger:#FF8A80; --accent:#cfd3df; --accent-tint:rgba(207,211,223,.12); --danger-tint:rgba(255,138,128,.14); }
+  body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; --danger:#FF9A8D; --accent:#8bcf9b; --accent-tint:rgba(139,207,155,.14); --danger-tint:rgba(255,154,141,.14); }
 
-    /* Light theme */
-    .theme-light {
-      --bg: #f6f7f9;
-      --panel: #ffffff;
-      --muted: #6b7280;
-      --text: #0f172a;
-      --text-weak: #334155;
-      --soft-red: #d26464;
-      --accent: #2563eb;
-      --accent-weak: rgba(37,99,235,0.12);
-      --border: #e5e7eb;
-      --focus: #059669;
-      --card: #ffffff;
-      --ok: #22c55e;
-    }
+  *{box-sizing:border-box}
+  body{font-family:Quicksand,system-ui,sans-serif;margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;font-size:var(--ui);background:var(--bg);color:var(--fg);transition:.25s background,.25s color;line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
+  h1{margin:0 0 6px;font-size:20px;text-align:center}
+  #utc-time{font-size:13px;margin-bottom:8px}
 
-    /* Nightshade (dark purple) theme */
-    .theme-nightshade {
-      --bg: #0a0710;           /* near-black plum */
-      --panel: #120e19;        /* deep eggplant */
-      --card: #0f0a16;         /* dark grape */
-      --border: #2a2037;       /* muted violet border */
-      --text: #ece7f5;         /* very light lavender text */
-      --text-weak: #c9bfe0;    /* muted lavender */
-      --muted: #a496c2;        /* desaturated purple */
-      --accent: #9d7cff;       /* bright amethyst */
-      --accent-weak: rgba(157,124,255,0.16);
-      --soft-red: #e78284;     /* error */
-      --focus: #7bd88f;        /* focus ring */
-      --ok: #7bd88f;
-    }
+  .theme-row{display:flex;gap:10px;align-items:center;width:100%;max-width:1000px;margin:4px 0 8px}
+  .select-wrap{position:relative;display:inline-flex;align-items:center}
+  .select-wrap::after{content:'▾';position:absolute;right:10px;pointer-events:none;opacity:.8;color:var(--control-fg);font-size:12px}
+  select{appearance:none;padding:6px 28px 6px 10px;border-radius:10px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);outline:none;font-family:inherit;font-size:var(--ui)}
+  option{background:var(--control-bg);color:var(--control-fg)}
+  label{font-weight:600;font-size:var(--ui);opacity:.9;font-family:inherit}
 
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-    }
+  #instructions{position:relative;width:100%;max-width:1000px;margin:10px 0 10px;padding:12px 14px 12px;border-radius:12px;box-shadow:var(--shadow);background:var(--card-bg);border:1px solid var(--card-border)}
+  #instructions.minimized ul{display:none}
+  #instr-toggle{position:absolute;top:8px;right:10px;padding:4px 10px;font-size:12px;background:var(--button-bg);color:var(--button-fg);border:1px solid var(--button-border);border-radius:8px;cursor:pointer;font-family:inherit}
+  #instructions ul{margin:0;padding-left:18px}
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 16px; position: relative; }
+  .toolbar{display:flex;align-items:center;gap:12px;width:100%;max-width:1000px;margin:8px 0 12px}
+  .toolbar .left{display:flex;align-items:center;gap:10px;margin-right:auto}
+  .toolbar .right{display:flex;align-items:center;gap:10px;margin-left:auto}
 
-    /* Header */
-    .header { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
-    .brand { font-size: 18px; font-weight: 700; }
-    .utc-time { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .btn{padding:8px 12px;border-radius:10px;background:var(--button-bg);color:var(--button-fg);border:1px solid var(--button-border);font-weight:600;font-family:inherit;font-size:var(--ui);cursor:pointer}
+  .btn:hover{filter:brightness(1.02)}
+  .btn:active{transform:translateY(1px)}
 
-    /* Global "?" shortcuts button (top-right) */
-    .qs-btn { position: fixed; top: 12px; right: 12px; z-index: 200; border: 1px solid var(--border); background: var(--panel); color: var(--text); width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-    .qs-btn:hover { background: rgba(255,255,255,0.05); }
-    .qs-btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-weak); }
+  .icon-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);transition:.15s;font-family:inherit}
+  .icon-btn:hover{background:var(--icon-hover)}
+  .icon-btn.small{width:24px;height:24px;border-radius:6px}
+  .icon-btn svg{width:16px;height:16px}
 
-    /* Shortcuts panel */
-    .shortcuts-panel { position: fixed; top: 56px; right: 12px; z-index: 210; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 12px; width: 260px; box-shadow: 0 12px 32px rgba(0,0,0,.35); }
-    .shortcuts-panel h4 { margin: 0 0 8px; font-size: 14px; color: var(--text-weak); }
-    .shortcuts-panel ul { margin: 0; padding-left: 16px; }
+  #checklists{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;width:100%;max-width:1000px;align-items:start}
+  .character{border-radius:12px;box-shadow:var(--shadow);min-height:120px;position:relative;user-select:none;font-size:var(--ui);background:var(--card-bg);border:1px solid var(--card-border);padding:40px 16px 12px;transition:transform .22s ease,box-shadow .22s ease}
+  .character.dragging{opacity:.9;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+  .window-controls-right{position:absolute;top:6px;right:8px;display:flex;gap:6px;align-items:center}
+  .window-controls-left{position:absolute;top:6px;left:8px;display:flex;gap:6px;align-items:center}
+  .card-drag-handle{position:absolute;left:14px;right:14px;top:30px;height:18px;cursor:grab;user-select:none;opacity:0;border:none}
+  .card-drag-handle:active{cursor:grabbing}
 
-    /* Theme row under UTC */
-    .theme-row { margin: 10px 0 16px; display: flex; align-items: center; gap: 10px; }
-    .theme-row label { color: var(--text-weak); }
-    select, input[type="text"], input[type="number"], textarea { 
-      background: var(--panel); color: var(--text); border: 1px solid var(--border); 
-      border-radius: 8px; padding: 8px 10px; outline: none; transition: box-shadow .15s ease; 
-    }
-    /* Keep strong focus visuals for inputs and textarea, but remove special focus border/glow from selects per request */
-    input:focus, textarea:focus { box-shadow: 0 0 0 3px var(--accent-weak), 0 0 0 1px var(--accent) inset; }
-    select:focus, select:focus-visible, select:active { outline: none; box-shadow: none; }
+  .char-image-wrap{text-align:center;margin:2px auto 2px;min-height:24px}
+  .char-image-wrap img{max-width:150px;max-height:110px;border-radius:8px;display:inline-block}
+  .char-meta{text-align:center;font-size:12px;color:var(--checkall-fg);margin:0 0 2px;font-family:inherit;min-height:16px}
+  .inline-msg{text-align:center;font-size:12px;margin:2px 0 0;color:var(--danger);display:none}
 
-    /* Toolbar */
-    .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin: 8px 0 16px; }
-    .preset-group { display: inline-flex; gap: 8px; align-items: center; background: var(--panel); padding: 8px; border: 1px solid var(--border); border-radius: 12px; }
-    .preset-name { min-width: 190px; }
-    .icon-btn { appearance: none; border: 1px solid var(--border); background: var(--panel); color: var(--text); padding: 8px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
-    .icon-btn:hover { background: rgba(255,255,255,0.04); }
-    .icon-btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-weak); }
-    .btn { appearance: none; border: 1px solid var(--border); background: var(--panel); color: var(--text); padding: 10px 12px; border-radius: 12px; cursor: pointer; }
-    .btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-weak); }
-    .toolbar-right { justify-self: end; }
+  .name-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .char-name{width:100%;border:none;background:transparent;border-bottom:var(--name-underline);text-align:center;font-weight:600;margin:0 0 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
+  .char-name:focus{outline:none;box-shadow:none;border-bottom:var(--name-underline)}
+  .accents-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);cursor:pointer;font-family:inherit}
+  .accents-btn:hover{background:var(--icon-hover)}
+  .accents-btn .accents-icon{font-weight:700;font-size:14px;line-height:1;font-family:inherit}
 
-    /* Cards */
-    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .row { display: flex; gap: 8px; align-items: center; }
-    .row.stretch { align-items: stretch; }
-    .grow { flex: 1; }
-    .muted { color: var(--muted); }
+  .chips{display:flex;gap:6px;align-items:center;margin:4px 0 2px}
+  .chip{padding:4px 8px;border-radius:999px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+  .chip.active{background:var(--button-bg);}
 
-    .avatar { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #000; border: 1px solid var(--border); }
-    .avatar-col { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-    .upload { display: inline-block; }
+  .tasks{margin-top:2px}
+  /* Now includes priority button column */
+  .task{position:relative;display:grid;grid-template-columns:12px 1fr auto auto 14px;gap:8px;align-items:center;margin:6px 0}
+  .task .prio-bar{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px}
+  .task.normal .prio-bar{background:transparent}
+  .task.important .prio-bar{background:var(--accent)}
+  .task.urgent .prio-bar{background:var(--danger)}
+  .task.important{background:var(--accent-tint)}
+  .task.urgent{background:var(--danger-tint)}
+  .task.important .task-text{font-weight:600}
+  .task.urgent .task-text{font-weight:700}
 
-    .name-input-wrap { position: relative; display: flex; align-items: center; gap: 6px; }
-    .accents-btn { border: 1px solid var(--border); background: var(--panel); color: var(--text); border-radius: 10px; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-    .accents-btn:hover { background: rgba(255,255,255,0.04); }
-    .accents-btn:focus-visible { box-shadow: 0 0 0 3px var(--accent-weak); }
-    .accents-btn .glyph { font-weight: 700; }
+  @keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(229,115,115,0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(229,115,115,0.0); }
+    100% { box-shadow: 0 0 0 0 rgba(229,115,115,0.0); }
+  }
+  .prio-bar.glow{ animation: pulseGlow .4s ease-out 2; border-radius:4px }
 
-    .meta { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
-    .meta .pill { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 6px 8px; min-height: 34px; display: flex; align-items: center; }
-    .pill .label { color: var(--muted); margin-right: 6px; }
+  .task input[type="text"]{border:none;border-bottom:var(--task-underline);background:transparent;padding:2px 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
+  /* Remove focus border from Daily Task text field only */
+  .task input[type="text"]:focus,
+  .task input[type="text"]:focus-visible{outline:none !important; box-shadow:none !important;}
+  .task .task-delete{background:transparent;border:none;font-size:16px;opacity:.7;color:var(--icon);width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:inherit;cursor:pointer}
+  .task .prio-btn{background:transparent;border:1px solid var(--control-border);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--control-fg);cursor:pointer}
+  .task .prio-btn:hover{background:var(--icon-hover)}
+  .task .prio-btn .i{font-size:13px;line-height:1}
+  .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
+  .task .task-text{min-width:0}
+  .handle{cursor:grab;user-select:none;opacity:.7}
+  .handle:active{cursor:grabbing}
 
-    /* Tasks */
-    .tasks { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
-    .task-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-    .task-item { display: grid; grid-template-columns: 20px 1fr; align-items: center; padding: 6px 8px; border-radius: 8px; outline: none; }
-    /* Selected line border removed (kept focus style) */
-    .task-item.selected { border: none !important; }
-    .task-item:focus-visible { box-shadow: 0 0 0 3px var(--accent-weak); }
-    .task-item .task-text { user-select: none; }
+  .check-all{display:flex;align-items:center;gap:8px;margin:8px 0 0;font-size:12px;color:var(--checkall-fg);font-weight:600}
+  .check-all label{color:var(--checkall-fg); font-weight:700} /* softer & distinct from task text */
 
-    .howto { margin-top: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
-    .howto h3 { margin: 0 0 8px; font-size: 14px; color: var(--text-weak); }
-    .howto ul { margin: 6px 0 0 18px; }
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:1000}
+  .modal-overlay.show{display:flex}
+  .modal{background:#fff;color:#111;border:1px solid #ddd;border-radius:12px;padding:16px 16px 14px;min-width:320px;max-width:520px;width:min(520px,92vw);box-shadow:0 10px 28px rgba(0,0,0,.22);font-family:inherit}
+  .modal h3{margin:0 0 12px;font-size:18px;font-weight:700}
+  .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+  .btn.secondary{background:#f5f5f5;color:#111;border-color:#e5e5e5}
 
-    /* Accents panel */
-    .accents-panel { position: absolute; z-index: 20; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.3); width: max-content; }
-    .accents-grid { display: grid; grid-template-columns: repeat(8, minmax(22px,auto)); gap: 6px; align-items: center; }
-    .accents-char, .accents-base { border: 1px solid var(--border); background: var(--card); padding: 6px 8px; border-radius: 8px; cursor: pointer; text-align: center; min-width: 28px; }
-    .accents-char:hover, .accents-base:hover { background: rgba(255,255,255,0.06); }
-    .accents-char:focus-visible, .accents-base:focus-visible { box-shadow: 0 0 0 3px var(--accent-weak); outline: none; }
-    .accents-variants { display: none; grid-column: 1/-1; }
-    .accents-variants.open { display: grid; grid-template-columns: repeat(10, minmax(22px,auto)); gap: 6px; margin-top: 4px; }
-    .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+  /* Accessible focus rings (keep for everything except task text inputs) */
+  .task input[type="checkbox"]:focus-visible,
+  .check-all input:focus-visible,
+  .accents-btn:focus-visible,
+  .icon-btn:focus-visible,
+  .task .prio-btn:focus-visible,
+  .chip:focus-visible,
+  select:focus-visible,
+  .btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
 
-    .soft-red { color: var(--soft-red); }
+  /* Accents popover */
+  .acc-pop{position:absolute;z-index:2000;min-width:260px;max-width:min(92vw,420px);background:var(--popover-bg);color:var(--popover-fg);border:1px solid var(--popover-border);border-radius:12px;box-shadow:var(--shadow);padding:10px;display:none;font-family:inherit;font-size:var(--ui);line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
+  .acc-pop.show{display:block}
+  .acc-head{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:6px}
+  .acc-title{font-weight:700;font-family:inherit}
+  .acc-case-toggle{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;padding:2px 8px;font-size:12px;font-family:inherit}
+  .acc-close{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .acc-section-label{font-size:12px;opacity:.8;margin:4px 0 4px;font-family:inherit}
+  .acc-base,.acc-variants{display:flex;flex-wrap:wrap;gap:6px}
+  .acc-btn{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;padding:6px 8px;font-weight:600;cursor:pointer;font-family:inherit}
+  .acc-btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
+  .acc-hint{font-size:12px;color:var(--danger);margin-top:6px;font-family:inherit}
 
-    /* Toast */
-    .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; box-shadow: 0 10px 30px rgba(0,0,0,.4); display: none; z-index: 100; }
+body.milktea{ /* Milk Tea (Light) */
+  --bg:#f6f1ea; --fg:#3a2e2a;
+  --card-bg:#ffffff; --card-border:#e6d8c9;
+  --control-bg:#fffaf3; --control-fg:#3a2e2a; --control-border:#e1d3c3;
+  --button-bg:#efe5d9; --button-fg:#2f2623; --button-border:#e1d3c3;
+  --icon:#7a5a3d; --icon-hover:rgba(122,90,61,.14);
+  --task-underline:1px dotted currentColor; --name-underline:1px solid currentColor;
+  --meta-fg:#6b615b; --handle-fg:#7a5a3d;
+  --popover-bg:#ffffff; --popover-fg:#2f2623; --popover-border:#e6d8c9;
+  --kbd-focus:#7a5a3d;
+  --danger:#C76565; --accent:#7a5a3d; --accent-tint:rgba(122,90,61,.12); --danger-tint:rgba(199,101,101,.14);
+  --checkall-fg: var(--meta-fg);
+}
 
-    /* Typography alignment for accents UI and How to Use */
-    .accents-panel, .howto { font-family: inherit; font-weight: 500; letter-spacing: .01em; }
+body.mocha{ /* Mocha (Dark) */
+  --bg:#1b1512; --fg:#efe6de;
+  --card-bg:#261d19; --card-border:#3a2a23;
+  --control-bg:#1f1916; --control-fg:#efe6de; --control-border:#3a2a23;
+  --button-bg:#2b211d; --button-fg:#efe6de; --button-border:#46352c;
+  --icon:#e0c7b5; --icon-hover:rgba(224,199,181,.14);
+  --task-underline:1px dotted currentColor; --name-underline:1px solid currentColor;
+  --meta-fg:#e2d6cd; --handle-fg:#e0c7b5;
+  --popover-bg:#201916; --popover-fg:#efe6de; --popover-border:#46352c;
+  --kbd-focus:#e6b890;
+  --danger:#FF8E7F; --accent:#c79a79; --accent-tint:rgba(199,154,121,.16); --danger-tint:rgba(255,142,127,.16);
+  --checkall-fg: var(--meta-fg);
+}
 
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,1px,1px); white-space: nowrap; border: 0; }
-  </style>
+body.darkpurple{ /* Dark Purple (Dark) */
+  --bg:#0f0b14; --fg:#ece9f8;
+  --card-bg:#1a1424; --card-border:#2b2140;
+  --control-bg:#130e1d; --control-fg:#ece9f8; --control-border:#2b2140;
+  --button-bg:#2a2140; --button-fg:#ece9f8; --button-border:#3a2f5d;
+  --icon:#cbb6ff; --icon-hover:rgba(203,182,255,.12);
+  --task-underline:1px dotted currentColor; --name-underline:1px solid currentColor;
+  --meta-fg:#d5d0e6; --handle-fg:#cbb6ff;
+  --popover-bg:#171126; --popover-fg:#ece9f8; --popover-border:#322954;
+  --kbd-focus:#b79cff;
+  --danger:#FF8AA3; --accent:#b79cff; --accent-tint:rgba(183,156,255,.14); --danger-tint:rgba(255,138,163,.14);
+  --checkall-fg: var(--meta-fg);
+}
+
+body.midnight{ /* Midnight Blue (Dark) */
+  --bg:#0b1220; --fg:#e3ecff;
+  --card-bg:#141d2b; --card-border:#22324a;
+  --control-bg:#101827; --control-fg:#e3ecff; --control-border:#22324a;
+  --button-bg:#1f2b42; --button-fg:#e3ecff; --button-border:#2a4066;
+  --icon:#9ccaff; --icon-hover:rgba(156,202,255,.14);
+  --task-underline:1px dotted currentColor; --name-underline:1px solid currentColor;
+  --meta-fg:#cfe0ff; --handle-fg:#9ccaff;
+  --popover-bg:#0f1726; --popover-fg:#e3ecff; --popover-border:#2a4066;
+  --kbd-focus:#73a7ff;
+  --danger:#FF8A80; --accent:#73a7ff; --accent-tint:rgba(115,167,255,.14); --danger-tint:rgba(255,138,128,.14);
+  --checkall-fg: var(--meta-fg);
+}
+
+/* Keep select borders steady when focused/active (outline remains via :focus-visible) */
+select:focus, select:active { border-color: var(--control-border) !important; box-shadow:none !important; outline:none; }
+</style>
 </head>
-<body class="theme-light">
-  <!-- Top-right keyboard shortcuts button -->
-  <button id="shortcutsBtn" class="qs-btn" title="Keyboard shortcuts" aria-label="Keyboard shortcuts">?</button>
-  <div id="shortcutsPanel" class="shortcuts-panel" role="dialog" aria-modal="true" hidden>
-    <h4>Keyboard Shortcuts</h4>
-    <ul>
-      <li>Up / Down – Move between tasks</li>
-      <li>Tab – Toggle the checkbox on the focused task</li>
-      <li>Space – Toggle the checkbox on the focused task</li>
-      <li>Enter – Add a new task line</li>
-      <li>Alt + A – Open Accents for the focused field</li>
-      <li>Esc – Close this panel or Accents</li>
-    </ul>
-  </div>
+<body class="lavender"><button aria-label="Keyboard shortcuts" class="icon-btn" id="shortcuts-btn" style="position:fixed;top:12px;right:12px;z-index:1200;" title="Keyboard shortcuts">?</button>
+<h1>MapleStory Dailies</h1>
+<div id="utc-time">UTC Time: --/--/---- --:--:--</div>
+<div class="theme-row">
+<label for="theme">Theme:</label>
+<div class="select-wrap">
+<select id="theme"><option value="cloud">Cloud (Light)</option><option selected="" value="lavender">Lavender (Light)</option><option value="light">Light Mode (Light)</option><option value="matcha">Matcha (Light)</option><option value="milktea">Milk Tea (Light)</option><option value="dark">Dark Mode (Dark)</option><option value="darkpurple">Nightshade (Dark)</option><option value="evergreen">Evergreen (Dark)</option><option value="midnight">Midnight Blue (Dark)</option><option value="mocha">Mocha (Dark)</option></select>
+</div>
+</div>
+<div id="instructions">
+<button class="btn" id="instr-toggle" type="button">Hide</button>
+<strong>How to use:</strong>
+<ul id="howto">
+<li><strong>Themes</strong>: Pick a theme (top-left). Your choice is saved locally.</li>
+<li><strong>Presets</strong>: Choose 1–3; each stores its own characters and tasks.</li>
+<li><strong>Save / Load</strong>: Save (💾) exports JSON; Load (📂) imports it—no servers needed.</li>
+<li><strong>Add characters</strong>: “+ Add Character” (max 20). Each starts with 2 tasks (min 1, max 10).</li>
+<li><strong>Keyboard</strong>: Up/Down moves between tasks; Enter toggles; Tab inserts a new task below; P cycles priority.</li>
+<li><strong>Reorder cards</strong>: Drag from the invisible strip above the <u>Character Image</u>; or use the Up/Down arrows.</li>
+<li><strong>Reorder tasks</strong>: Drag the ⋮⋮ handle; checkbox state is preserved.</li>
+<li><strong>Upload avatar</strong>: Use the upload icon to set a custom image (user uploads are never auto-replaced).</li>
+<li><strong>Auto-fill</strong>: Type a Character Name to fetch Level/Job and avatar from Maple Ranks via Worker.</li>
+<li><strong>Reset</strong>: All checkboxes reset daily at 00:00 UTC.</li>
+<li><strong>Accents</strong>: Use the “Â” button; Alt+A opens it for the focused field.</li>
+</ul><p id="quickstart" style="margin:8px 0 4px;font-weight:700;">Quick start:</p><ol style="margin:4px 0 0 18px;padding:0;"><li>Pick a theme.</li><li>Choose or create a Preset.</li><li>Add characters and enter tasks.</li><li>Type Character Name to auto-fill (or upload an avatar).</li><li>Save; Load later as needed.</li></ol>
+</div>
+<div class="toolbar">
+<div class="left">
+<button class="btn" id="add-character-btn" title="Add Character">+ Add Character</button>
+</div>
+<div class="right">
+<label for="preset">Preset:</label>
+<div class="select-wrap">
+<select id="preset">
+<option value="1">Preset 1</option>
+<option value="2">Preset 2</option>
+<option value="3">Preset 3</option>
+</select>
+</div>
+<button aria-label="Save" class="icon-btn" id="save-btn" title="Save">
+<svg viewbox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4ZM5 5h10v4H5V5Zm7 14H6v-6h6v6Z" fill="currentColor"></path></svg>
+</button>
+<button aria-label="Load" class="icon-btn" id="load-btn" title="Load">
+<svg viewbox="0 0 24 24"><path d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14v6.17l2.59-2.58L16 11l-4 4l-4-4l1.41-1.41L11 12.17V6h1Z" fill="currentColor"></path></svg>
+</button>
+<input accept="application/json" hidden="" id="import-file" type="file"/>
+</div>
+</div>
+<div id="checklists"></div>
+<div aria-hidden="true" class="modal-overlay" id="confirm-overlay">
+<div aria-labelledby="confirm-title" aria-modal="true" class="modal" role="dialog">
+<h3 id="confirm-title">Confirm Delete</h3>
+<p id="confirm-msg">Delete the character: Untitled?</p>
+<div class="actions">
+<button class="btn" id="confirm-ok" type="button">Yes</button>
+<button class="btn secondary" id="confirm-cancel" type="button">No</button>
+</div>
+</div>
+</div>
+<input accept="image/*" id="hidden-upload" style="display:none" type="file">
+<!-- Accents popover -->
+<div aria-label="Accented characters" aria-modal="false" class="acc-pop" id="accents-popover" role="dialog">
+<div class="acc-head">
+<span class="acc-title">Accents</span>
+<div style="display:flex;gap:6px;align-items:center">
+<button aria-pressed="false" class="acc-case-toggle" id="acc-case" title="Toggle case" type="button">Aa</button>
+<button aria-label="Close" class="acc-close" id="acc-close" type="button">×</button>
+</div>
+</div>
+<div class="acc-section-label">Letters</div>
+<div aria-label="Base letters" class="acc-base" id="acc-base" role="listbox"></div>
+<div class="acc-section-label" id="acc-var-label" style="display:none;">Variants</div>
+<div aria-label="Variants" class="acc-variants" id="acc-variants" role="grid"></div>
+<div class="acc-hint" id="acc-hint" style="display:none;">Click into a text box first.</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script>
+  /* ===== Config & helpers ===== */
+  const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
+  const BASE_MODEL_URL = "https://maplestory.io/api/character/%7B%22itemId%22%3A2000%2C%22version%22%3A%22250%22%7D%2C%7B%22itemId%22%3A12000%2C%22version%22%3A%22250%22%7D/stand1/0?showears=false&showLefEars=false&showHighLefEars=undefined&resize=1&name=&flipX=undefined";
+  const MAX_CHARACTERS=20, MAX_TASKS=10;
+  const MIN_LOOKUP_LEN=4, DEBOUNCE_MS=500, CACHE_TTL_MS=5*60*1000;
+  const DEFAULT_PRIORITY_FIRST = true; // chips default
+  const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 
-  <div class="container">
-    <div class="header">
-      <div class="brand">Maple Dailies</div>
-      <div class="utc-time" id="utcTime" aria-live="polite">UTC — --:--:--</div>
-    </div>
+  /* Accents open flag keeps lookups paused while panel is open */
+  let accOpen=false;
+  let lastEditedNameIndex=null;
 
-    <div class="theme-row">
-      <label for="themeSelect">Theme:</label>
-      <select id="themeSelect" aria-label="Theme selector">
-        <option value="theme-light">Light</option>
-        <option value="">Dark</option>
-        <option value="theme-nightshade">Nightshade (dark)</option>
-      </select>
-    </div>
+  function tickUTC(){
+    const n=new Date();
+    const y=n.getUTCFullYear(), m=String(n.getUTCMonth()+1).padStart(2,'0'), d=String(n.getUTCDate()).padStart(2,'0');
+    const hh=String(n.getUTCHours()).padStart(2,'0'), mm=String(n.getUTCMinutes()).padStart(2,'0'), ss=String(n.getUTCSeconds()).padStart(2,'0');
+    $("#utc-time").textContent=`UTC Time: ${m}/${d}/${y} ${hh}:${mm}:${ss}`;
+  }
+  setInterval(tickUTC,1000); tickUTC();
 
-    <div class="toolbar">
-      <div class="preset-group" role="group" aria-label="Presets">
-        <select id="presetSelect" class="preset-name" aria-label="Preset selector"></select>
-        <button id="renamePreset" class="icon-btn" title="Rename preset" aria-label="Rename preset">
-          <!-- pencil icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
-        </button>
-        <button id="savePreset" class="icon-btn" title="Save" aria-label="Save">
-          <!-- save icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        </button>
-        <button id="loadPreset" class="icon-btn" title="Load" aria-label="Load">
-          <!-- tray download icon -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </button>
-      </div>
+  /* Themes */
+  const themeSel=$("#theme");
+  const lastTheme=localStorage.getItem("mapleTheme")||"lavender";
+  document.body.className=lastTheme; themeSel.value=lastTheme;
+  themeSel.addEventListener("change",()=>{ document.body.className=themeSel.value; localStorage.setItem("mapleTheme",themeSel.value); });
 
-      <div class="toolbar-right">
-        <button id="addCharacter" class="btn">+ Add Character</button>
-      </div>
-    </div>
+  /* Presets & storage */
+  let currentPreset=parseInt(localStorage.getItem("maplePreset")||"1",10);
+  const presetSel=$("#preset"); presetSel.value=String(currentPreset);
+  presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset",String(currentPreset)); build(); });
 
-    <div id="cards" class="cards" aria-live="polite"></div>
+  function todayUTC(){ const n=new Date(); return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`; }
+  function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
+  function safeParse(j){ try{return JSON.parse(j)}catch{return null} }
+  function loadData(){ const raw=localStorage.getItem(dataKey()); const d=raw?safeParse(raw):{charCount:0}; if(typeof d.charCount!=="number"||d.charCount<0) d.charCount=0; return d; }
+  function saveData(d){ localStorage.setItem(dataKey(), JSON.stringify(d)); }
+  function dailyKey(i,t){ return `check_${todayUTC()}_preset${currentPreset}_c${i}_t${t}`; }
 
-    <div class="howto" id="howto">
-      <h3>How to Use</h3>
-      <ul>
-        <li>Pick a preset (or make a new one).</li>
-        <li>Type your Character Name. Use the Accents button if you need special letters.</li>
-        <li>Wait a moment for image, job, and level to fill in, or upload an avatar.</li>
-        <li>Check off your daily tasks.</li>
-        <li>Save your changes so everything is ready for next time.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <template id="accentsTemplate">
-    <div class="accents-panel" role="dialog" aria-label="Accented characters">
-      <div class="accents-grid" data-role="bases"></div>
-      <div class="accents-variants" data-role="variants"></div>
-      <div class="hint" data-role="hint" hidden>Click into a text box first</div>
-    </div>
-  </template>
-
-  <script>
-    // State
-    const state = {
-      theme: localStorage.getItem('theme') || 'theme-light',
-      presets: loadPresets(),
-      activePresetId: localStorage.getItem('activePresetId') || null,
-      accentsOpenFor: null, // cardId
-      nameLookupDebounce: null,
-      nameLookupVersion: 0,
-      pauseLookup: false,
-    };
-
-    const $ = (sel, el=document) => el.querySelector(sel);
-    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
-
-    function uid() { return Math.random().toString(36).slice(2, 10); }
-
-    function loadPresets() {
-      try { return JSON.parse(localStorage.getItem('presets')||'{}'); } catch { return {}; }
-    }
-
-    function savePresets() { localStorage.setItem('presets', JSON.stringify(state.presets)); }
-
-    function ensureDefaultPreset() {
-      if (!state.activePresetId || !state.presets[state.activePresetId]) {
-        const id = uid();
-        state.presets[id] = {
-          id,
-          name: 'Default',
-          data: { characters: [] },
-          updatedAt: Date.now()
-        };
-        state.activePresetId = id;
-        savePresets();
-        localStorage.setItem('activePresetId', id);
-      }
-    }
-
-    // UTC Clock
-    function startUTCClock() {
-      const el = document.getElementById('utcTime');
-      const tick = () => {
-        const d = new Date();
-        el.textContent = 'UTC — ' + d.toUTCString().split(' ')[4];
-      };
-      tick();
-      setInterval(tick, 1000);
-    }
-
-    // Theming
-    function applyTheme() {
-      document.body.className = state.theme;
-      localStorage.setItem('theme', state.theme);
-    }
-
-    function setupThemeSelector() {
-      const sel = document.getElementById('themeSelect');
-      sel.value = state.theme;
-      sel.addEventListener('change', () => { state.theme = sel.value; applyTheme(); });
-    }
-
-    // Presets UI
-    function renderPresetSelector() {
-      const sel = document.getElementById('presetSelect');
-      sel.innerHTML = '';
-      Object.values(state.presets).forEach(p => {
-        const opt = document.createElement('option');
-        opt.value = p.id; opt.textContent = p.name; sel.appendChild(opt);
-      });
-      sel.value = state.activePresetId;
-      sel.addEventListener('change', () => {
-        state.activePresetId = sel.value;
-        localStorage.setItem('activePresetId', state.activePresetId);
-        render();
-      }, { once: true });
-    }
-
-    function getActivePreset() { return state.presets[state.activePresetId]; }
-
-    function saveActivePreset(dataOverride) {
-      const p = getActivePreset();
-      if (!p) return;
-      p.data = dataOverride || p.data;
-      p.updatedAt = Date.now();
-      savePresets();
-      showToast('Preset saved');
-      renderPresetSelector();
-    }
-
-    function loadActivePreset() {
-      render();
-      showToast('Preset loaded');
-    }
-
-    function renameActivePreset() {
-      const p = getActivePreset();
-      if (!p) return;
-      const name = prompt('Preset name (max 12 chars):', p.name || 'Preset');
-      if (name == null) return;
-      const trimmed = name.trim();
-      if (!trimmed) { showToast('Enter a name'); return; }
-      if (trimmed.length > 12) { showToast('Limit 12 characters'); return; }
-      if (Object.values(state.presets).some(x => x.id !== p.id && x.name.toLowerCase() === trimmed.toLowerCase())) { showToast('Name already in use'); return; }
-      p.name = trimmed; p.updatedAt = Date.now(); savePresets(); renderPresetSelector(); showToast('Preset renamed');
-    }
-
-    // Cards
-    function render() {
-      ensureDefaultPreset();
-      applyTheme();
-      renderPresetSelector();
-
-      const root = document.getElementById('cards');
-      root.innerHTML = '';
-
-      const p = getActivePreset();
-      if (!p.data.characters) p.data.characters = [];
-
-      p.data.characters.forEach(card => root.appendChild(renderCard(card)));
-    }
-
-    function renderCard(card) {
-      const el = document.createElement('div');
-      el.className = 'card';
-      el.dataset.id = card.id;
-
-      // Row: avatar + upload + delete
-      const r1 = document.createElement('div'); r1.className = 'row';
-      const avatarCol = document.createElement('div'); avatarCol.className = 'avatar-col';
-      const img = document.createElement('img'); img.className = 'avatar'; img.alt = 'Character avatar'; img.loading = 'lazy';
-      img.src = card.uploadedAvatarUrl || card.imageUrl || '';
-      avatarCol.appendChild(img);
-
-      const upload = document.createElement('input'); upload.type = 'file'; upload.accept = 'image/*'; upload.className = 'upload'; upload.title = 'Upload Avatar'; upload.setAttribute('aria-label', 'Upload Avatar');
-      upload.addEventListener('change', e => {
-        const file = upload.files && upload.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          card.uploadedAvatarUrl = reader.result;
-          img.src = card.uploadedAvatarUrl;
-          saveActivePreset();
-        };
-        reader.readAsDataURL(file);
-      });
-      avatarCol.appendChild(upload);
-
-      const del = document.createElement('button'); del.className = 'btn'; del.textContent = 'Delete'; del.title = 'Delete character';
-      del.addEventListener('click', () => handleDelete(card));
-      avatarCol.appendChild(del);
-
-      r1.appendChild(avatarCol);
-
-      const nameCol = document.createElement('div'); nameCol.className = 'grow';
-      const nameWrap = document.createElement('div'); nameWrap.className = 'name-input-wrap';
-      const name = document.createElement('input'); name.type = 'text'; name.placeholder = 'Character Name'; name.value = card.name || ''; name.className = 'grow'; name.autocomplete = 'off'; name.maxLength = 20;
-
-      // Debounced lookup on input (paused when accents open)
-      name.addEventListener('input', () => {
-        card.name = name.value;
-        scheduleNameLookup(card, name);
-        saveActivePreset();
-      });
-
-      // Accents button next to name
-      const accentsBtn = document.createElement('button'); accentsBtn.className = 'accents-btn'; accentsBtn.title = 'Accents'; accentsBtn.setAttribute('aria-label', 'Accents'); accentsBtn.innerHTML = '<span class="glyph" aria-hidden="true">Á</span>';
-      accentsBtn.addEventListener('click', (e) => toggleAccentsPanel(e.currentTarget, name, card));
-
-      nameWrap.appendChild(name);
-      nameWrap.appendChild(accentsBtn);
-
-      // Meta pills
-      const meta = document.createElement('div'); meta.className = 'meta';
-      const jobP = pill('Job', card.job || '—');
-      const lvlP = pill('Level', (card.level ?? '—'));
-      const srvP = pill('Server', card.server || '—');
-      meta.append(jobP.el, lvlP.el, srvP.el);
-
-      nameCol.appendChild(nameWrap);
-      nameCol.appendChild(meta);
-      r1.appendChild(nameCol);
-
-      // Tasks
-      const r2 = document.createElement('div'); r2.className = 'tasks';
-      const ul = document.createElement('ul'); ul.className = 'task-list'; ul.setAttribute('role','listbox');
-      card.tasks = card.tasks || defaultTasks();
-      card.tasks.forEach((t, idx) => {
-        const li = document.createElement('li'); li.className = 'task-item'; li.tabIndex = 0; li.dataset.index = String(idx);
-        const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!t.done; cb.setAttribute('aria-label', t.text);
-        cb.addEventListener('change', () => { t.done = cb.checked; saveActivePreset(); });
-        const label = document.createElement('div'); label.className = 'task-text'; label.textContent = t.text;
-
-        li.appendChild(cb); li.appendChild(label);
-
-        // Keyboard navigation for tasks
-        li.addEventListener('keydown', (ev) => handleTaskKeydown(ev, ul));
-        ul.appendChild(li);
-      });
-      r2.appendChild(ul);
-
-      el.appendChild(r1);
-      el.appendChild(r2);
-
-      // Store refs for later updates
-      el._refs = { img, jobP, lvlP, nameInput: name };
-      return el;
-    }
-
-    function pill(labelText, valueText) {
-      const el = document.createElement('div'); el.className = 'pill';
-      const label = document.createElement('span'); label.className = 'label'; label.textContent = labelText + ':';
-      const value = document.createElement('span'); value.className = 'value'; value.textContent = valueText;
-      el.append(label, value);
-      return { el, value };
-    }
-
-    function defaultTasks() {
-      return [
-        { text: 'Daily Bosses', done: false },
-        { text: 'Commissions', done: false },
-        { text: 'Event Tasks', done: false },
-      ];
-    }
-
-    // Delete handling with popup-blocker notice
-    function handleDelete(card) {
-      let testWin = null;
-      try { testWin = window.open('', '', 'width=1,height=1'); } catch {}
-      if (!testWin) { showToast('This action requires pop ups. Please allow pop ups for this site and try again.'); return; }
-      testWin.close();
-      const ok = confirm(`Delete the character: ${card.name || 'Unnamed'}?`);
-      if (!ok) return;
-      const p = getActivePreset();
-      p.data.characters = p.data.characters.filter(c => c.id !== card.id);
-      saveActivePreset();
-      render();
-    }
-
-    // Task keyboard navigation
-    function handleTaskKeydown(ev, listEl) {
-      const items = $$('.task-item', listEl);
-      const idx = items.indexOf(ev.currentTarget);
-      if (ev.key === 'ArrowDown') { ev.preventDefault(); items[Math.min(idx+1, items.length-1)].focus(); }
-      else if (ev.key === 'ArrowUp') { ev.preventDefault(); items[Math.max(idx-1, 0)].focus(); }
-      else if (ev.key === ' ' || ev.key === 'Enter') {
-        // Enter currently toggles too; if you change this behavior later, adjust here
-        ev.preventDefault(); const cb = ev.currentTarget.querySelector('input[type="checkbox"]'); if (cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change', { bubbles: true })); }
-      }
-    }
-
-    // Name lookup with debounce, pause while accents open, ignore stale responses
-    function scheduleNameLookup(card, inputEl) {
-      if (state.pauseLookup) return; // paused while the panel is open
-      if (state.nameLookupDebounce) clearTimeout(state.nameLookupDebounce);
-      const version = ++state.nameLookupVersion;
-      state.nameLookupDebounce = setTimeout(async () => {
-        const name = (card.name || '').trim();
-        if (!name || name.length < 3) return;
-        const result = await fetchMapleRanks(name).catch(() => null);
-        if (version !== state.nameLookupVersion) return; // stale
-        const cardEl = document.querySelector(`.card[data-id="${card.id}"]`);
-        if (!cardEl) return;
-        const { img, jobP, lvlP } = cardEl._refs;
-
-        if (!result) {
-          jobP.value.textContent = 'Character not found on MapleRanks';
-          jobP.value.classList.add('soft-red');
-          return;
-        }
-        jobP.value.classList.remove('soft-red');
-        jobP.value.textContent = result.job || '—';
-        lvlP.value.textContent = result.level ?? '—';
-        if (!card.uploadedAvatarUrl && result.imageUrl && inputEl.value.trim() === name) {
-          card.imageUrl = result.imageUrl;
-          const tmp = new Image();
-          tmp.onload = () => { img.src = result.imageUrl; };
-          tmp.src = result.imageUrl;
-        }
-        saveActivePreset();
-      }, 500);
-    }
-
-    // Mock MapleRanks fetch — replace with real service
-    async function fetchMapleRanks(name) {
-      await new Promise(r => setTimeout(r, 350));
-      const lower = name.toLowerCase();
-      if (lower.includes('zzz') || lower.length < 3) return null;
-      return {
-        job: ['Adele','Night Lord','Hero','Bishop','Kanna','Mechanic'][Math.floor(Math.random()*6)],
-        level: 200 + Math.floor(Math.random()*100),
-        imageUrl: `https://api.dicebear.com/8.x/adventurer/svg?seed=${encodeURIComponent(name)}`,
-      };
-    }
-
-    // Accents keyboard
-    const BASES = {
-      'A': ['Á','À','Â','Ä','Ã','Å','Ā','Ă','Ą','á','à','â','ä','ã','å','ā','ă','ą'],
-      'C': ['Ç','Ć','Č','ç','ć','č'],
-      'E': ['É','È','Ê','Ë','Ē','Ė','Ę','é','è','ê','ë','ē','ė','ę'],
-      'I': ['Í','Ì','Î','Ï','Ī','Į','í','ì','î','ï','ī','į'],
-      'N': ['Ñ','Ń','Ň','ñ','ń','ň'],
-      'O': ['Ó','Ò','Ô','Ö','Õ','Ō','Ő','Ø','ó','ò','ô','ö','õ','ō','ő','ø'],
-      'U': ['Ú','Ù','Û','Ü','Ū','Ű','ú','ù','û','ü','ū','ű'],
-      'Y': ['Ý','Ÿ','ý','ÿ'],
-      'S': ['Ś','Š','Ş','ś','š','ş'],
-      'Z': ['Ź','Ž','Ż','ź','ž','ż'],
-      'L': ['Ł','ł']
-    };
-
-    function toggleAccentsPanel(buttonEl, inputEl, card) {
-      const openFor = state.accentsOpenFor;
-      const alreadyOpen = openFor === card.id;
-      if (alreadyOpen) { closeAccentsPanel(); return; }
-      openAccentsPanel(buttonEl, inputEl, card);
-    }
-
-    function openAccentsPanel(anchorBtn, inputEl, card) {
-      closeAccentsPanel();
-      state.pauseLookup = true; // pause lookups while the panel is open
-      state.accentsOpenFor = card.id;
-
-      const tpl = document.getElementById('accentsTemplate');
-      const panel = tpl.content.firstElementChild.cloneNode(true);
-      document.body.appendChild(panel);
-
-      const r = anchorBtn.getBoundingClientRect();
-      panel.style.top = `${r.bottom + window.scrollY + 6}px`;
-      panel.style.left = `${r.left + window.scrollX}px`;
-
-      const basesEl = panel.querySelector('[data-role="bases"]');
-      const variantsEl = panel.querySelector('[data-role="variants"]');
-      const hintEl = panel.querySelector('[data-role="hint"]');
-
-      Object.keys(BASES).forEach(base => {
-        const b = document.createElement('button');
-        b.className = 'accents-base';
-        b.type = 'button';
-        b.textContent = base;
-        b.addEventListener('click', () => {
-          variantsEl.innerHTML = '';
-          BASES[base].forEach(ch => {
-            const c = document.createElement('button'); c.className = 'accents-char'; c.type = 'button'; c.textContent = ch;
-            c.addEventListener('click', () => {
-              insertCharAtCursor(inputEl, ch);
-              closeAccentsPanel(true); // close after insertion
-            });
-            variantsEl.appendChild(c);
-          });
-          variantsEl.classList.add('open');
-          variantsEl.firstElementChild?.focus();
+  /* Export/Import */
+  $("#save-btn").addEventListener("click", ()=>{
+    const d=loadData(), chars=[];
+    for(let i=0;i<d.charCount;i++){
+      const ct=Math.max(1,d[`char_${i}_taskCount`]||1);
+      const tasks=[];
+      for(let t=0;t<ct;t++){
+        tasks.push({
+          text: d[`char_${i}_task_${t}`]||"",
+          done: (localStorage.getItem(dailyKey(i,t))==='true'),
+          priority: d[`char_${i}_taskp_${t}`]||"normal"
         });
-        basesEl.appendChild(b);
+      }
+      chars.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks});
+    }
+    const blob=new Blob([JSON.stringify({version:3,preset:currentPreset,characters:chars},null,2)],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="maplestory-dailies.json"; document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  $("#load-btn").addEventListener("click",()=>$("#import-file").click());
+  $("#import-file").addEventListener("change",(e)=>{
+    const f=e.target.files?.[0]; if(!f) return;
+    const r=new FileReader(); r.onload=()=>{
+      const obj=safeParse(r.result); if(!obj||!Array.isArray(obj.characters)){ alert("Invalid file."); return; }
+      const chars=obj.characters.slice(0,MAX_CHARACTERS); const d={charCount:chars.length};
+      for(let i=0;i<chars.length;i++){
+        const c=chars[i];
+        d[`char_${i}_name`]=c.name||""; d[`char_${i}_image`]=c.image||""; d[`char_${i}_level`]=c.level||""; d[`char_${i}_job`]=c.job||""; d[`char_${i}_userImage`]=!!c.userImage;
+        const tc=Math.max(1,Math.min(MAX_TASKS,(c.tasks||["",""]).length)); d[`char_${i}_taskCount`]=tc;
+        for(let t=0;t<tc;t++){
+          const task=c.tasks[t];
+          const text=(typeof task==="object" && task)? (task.text||"") : (task||"");
+          const pr=(typeof task==="object" && task && task.priority)? task.priority : "normal";
+          d[`char_${i}_task_${t}`]=text;
+          d[`char_${i}_taskp_${t}`]=pr;
+          const done=(typeof task==="object" && task && task.done===true);
+          if(done) localStorage.setItem(dailyKey(i,t),'true'); else localStorage.removeItem(dailyKey(i,t));
+        }
+      }
+      saveData(d); build();
+    }; r.readAsText(f); e.target.value="";
+  });
+
+  /* Build UI */
+  function build(){
+    const wrap=$("#checklists"); wrap.innerHTML="";
+    const d=loadData();
+    for(let i=0;i<d.charCount;i++) wrap.appendChild(buildCard(i,d));
+    initCardSortable();
+  }
+
+  function buildCard(i,d){
+    const card=document.createElement("div"); card.className="character"; card.dataset.index=i;
+
+    const left=document.createElement("div"); left.className="window-controls-left";
+    left.append(iconBtn("Move Up",arrowUpSVG(),()=>moveCard(i,i-1)), iconBtn("Move Down",arrowDownSVG(),()=>moveCard(i,i+1)));
+    card.appendChild(left);
+
+    const right=document.createElement("div"); right.className="window-controls-right";
+    right.append(iconBtn("Upload Avatar",uploadSVG(),()=>startUploadFor(i)), iconBtn("Duplicate",duplicateSVG(),()=>duplicateCharacter(i)), iconBtn("Delete","&times;",()=>confirmDelete(i)));
+    card.appendChild(right);
+
+    const dragHandle=document.createElement("div"); dragHandle.className="card-drag-handle"; card.appendChild(dragHandle);
+
+    const imgWrap=document.createElement("div"); imgWrap.className="char-image-wrap";
+    const imgSrc=(d[`char_${i}_image`]||"")||BASE_MODEL_URL;
+    imgWrap.innerHTML=`<img loading="lazy" decoding="async" alt="Character image" src="${imgSrc}">`;
+    card.appendChild(imgWrap);
+
+    const meta=document.createElement("div"); meta.className="char-meta"; meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
+
+    const msg=document.createElement("div"); msg.className="inline-msg"; msg.setAttribute("role","status"); msg.setAttribute("aria-live","polite"); card.appendChild(msg);
+
+    const nameRow=document.createElement("div"); nameRow.className="name-row";
+    const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
+    name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); lastEditedNameIndex=i; });
+    name.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); }});
+    name.addEventListener("blur",()=>{ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); });
+
+    const accBtn=document.createElement("button");
+    accBtn.className="accents-btn"; accBtn.type="button"; accBtn.title="Accents"; accBtn.setAttribute("aria-label","Accents");
+    accBtn.innerHTML='<span class="accents-icon" aria-hidden="true">Â</span>';
+    accBtn.addEventListener("mousedown",(e)=>e.preventDefault()); // keep focus in input
+    accBtn.addEventListener("click",()=>{
+      if(accOpen && accAnchorEl===name){ closeAccentsPanel(); return; }
+      openAccentsPanel(name,name);
+    });
+
+    nameRow.append(name,accBtn); card.appendChild(nameRow);
+
+    /* Priority chips (view only; don't change stored order) */
+    const chips=document.createElement("div"); chips.className="chips";
+    const chipFirst=document.createElement("button"); chipFirst.className="chip"; chipFirst.textContent="Show priority first";
+    const chipOnly=document.createElement("button"); chipOnly.className="chip"; chipOnly.textContent="Only priority";
+    chips.append(chipFirst,chipOnly); card.appendChild(chips);
+
+    // Load chip state (persist per card)
+    let chipStateFirst = (d[`char_${i}_chip_priorityFirst`] ?? null);
+    if(chipStateFirst === null){ chipStateFirst = DEFAULT_PRIORITY_FIRST; }
+    let chipStateOnly = !!d[`char_${i}_chip_onlyPriority`];
+    function syncChipClasses(){
+      chipFirst.classList.toggle("active", !!chipStateFirst);
+      chipOnly.classList.toggle("active", !!chipStateOnly);
+    }
+    syncChipClasses();
+    chipFirst.onclick=()=>{ const dd=loadData(); chipStateFirst=!chipStateFirst; dd[`char_${i}_chip_priorityFirst`]=chipStateFirst; saveData(dd); rebuildTasks(); };
+    chipOnly.onclick=()=>{ const dd=loadData(); chipStateOnly=!chipStateOnly; dd[`char_${i}_chip_onlyPriority`]=chipStateOnly; saveData(dd); rebuildTasks(); };
+
+    /* Tasks container */
+    const tasksWrap=document.createElement("div"); tasksWrap.className="tasks";
+    card.appendChild(tasksWrap);
+
+    /* Check All (label softer) */
+    const checkRow=document.createElement("div"); checkRow.className="check-all";
+    const checkAll=document.createElement("input"); checkAll.type="checkbox";
+    const checkLbl=document.createElement("label"); checkLbl.textContent="Check All";
+    checkRow.append(checkAll,checkLbl); card.appendChild(checkRow);
+
+    function refreshMaster(){
+      const boxes=Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
+      checkAll.checked=boxes.length>0 && boxes.every(b=>b.checked);
+    }
+    checkAll.addEventListener("change",()=>{
+      const boxes=Array.from(tasksWrap.querySelectorAll('.task input[type="checkbox"]'));
+      boxes.forEach(b=>{ const tIdx=+b.dataset.idx; b.checked=checkAll.checked; localStorage.setItem(dailyKey(i,tIdx), checkAll.checked?'true':'false'); });
+    });
+
+    /* Build tasks list with optional priority view */
+    function collectTasksData(){
+      const dd=loadData();
+      let count=dd[`char_${i}_taskCount`]; if(count==null) count=2; if(count<1) count=1; dd[`char_${i}_taskCount`]=count; saveData(dd);
+      const arr=[];
+      for(let t=0;t<count;t++){
+        arr.push({
+          idx: t,
+          text: dd[`char_${i}_task_${t}`]||"",
+          pr: dd[`char_${i}_taskp_${t}`]||"normal",
+          done: (localStorage.getItem(dailyKey(i,t))==='true')
+        });
+      }
+      return arr;
+    }
+    function viewSortFilter(list){
+      let out=[...list];
+      if(chipStateOnly){ out=out.filter(x=>x.pr!=="normal"); }
+      if(chipStateFirst){
+        const order={urgent:0,important:1,normal:2};
+        out.sort((a,b)=> (order[a.pr]-order[b.pr]) || (a.idx-b.idx)); // keep inner manual order
+      }
+      return out;
+    }
+
+    function rebuildTasks(){
+      tasksWrap.innerHTML="";
+      const data=collectTasksData();
+      const view=viewSortFilter(data);
+      view.forEach(item=> tasksWrap.appendChild(buildTaskRow(i,item.idx,data)));
+      setTimeout(refreshMaster,0);
+      attachTaskSortable(tasksWrap,i, /*enable*/ (!chipStateFirst && !chipStateOnly));
+    }
+
+    function cyclePriority(old){
+      if(old==="normal") return "important";
+      if(old==="important") return "urgent";
+      return "normal";
+    }
+
+    function buildTaskRow(cardIndex,tIdx,full){
+      const dd=loadData();
+      const row=document.createElement("div"); row.className="task"; row.dataset.idx=tIdx;
+      const pr=dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal";
+      row.classList.add(pr);
+
+      const leftBar=document.createElement("div"); leftBar.className="prio-bar"; row.appendChild(leftBar);
+
+      const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=tIdx; box.checked=(localStorage.getItem(dailyKey(cardIndex,tIdx))==='true');
+      box.onchange=()=> localStorage.setItem(dailyKey(cardIndex,tIdx), box.checked?'true':'false');
+
+      const input=document.createElement("input"); input.type="text"; input.className="task-text"; input.placeholder="Daily Task"; input.value=dd[`char_${cardIndex}_task_${tIdx}`]||"";
+      const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
+
+      const prBtn=document.createElement("button"); prBtn.className="prio-btn"; prBtn.title="Priority"; prBtn.setAttribute("aria-label","Task priority"); const ico=document.createElement("span"); ico.className="i"; prBtn.appendChild(ico);
+
+      function paintPriority(state, pulse=false){
+        row.classList.remove("normal","important","urgent");
+        row.classList.add(state);
+        ico.textContent = (state==="important") ? "★" : (state==="urgent" ? "!" : "•");
+        if(state==="urgent" && pulse){ leftBar.classList.add("glow"); leftBar.addEventListener("animationend",()=>leftBar.classList.remove("glow"),{once:true}); }
+        // polite announce
+        row.setAttribute("aria-live","polite");
+        row.setAttribute("aria-label",`Task priority ${state}`);
+      }
+      paintPriority(pr,false);
+
+      const handle=document.createElement("div"); handle.className="handle"; handle.textContent="⋮⋮";
+
+      /* events */
+      input.addEventListener("keydown",(e)=>{
+        if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(cardIndex,tIdx,-1); }
+        else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(cardIndex,tIdx,+1); }
+        else if(e.key==="Enter"){ e.preventDefault(); toggleRowCheckbox(cardIndex,tIdx); }
+        else if(e.key.toLowerCase()==="p" && !e.altKey && !e.metaKey && !e.ctrlKey){
+          e.preventDefault(); setPriority(cardIndex,tIdx, cyclePriority(dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal"), /*pulse*/true);
+        }
+        else if(e.key==="Tab" && !e.shiftKey){ e.preventDefault(); insertTaskAfter(cardIndex,tIdx); setTimeout(()=>focusNewTaskInput(cardIndex,tIdx+1),0); }
+      });
+      box.addEventListener("keydown",(e)=>{
+        if(e.key===" "||e.key==="Enter"){ e.preventDefault(); box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
+        else if(e.key==="ArrowUp"){ e.preventDefault(); moveFocus(cardIndex,tIdx,-1); }
+        else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(cardIndex,tIdx,+1); }
+        else if(e.key.toLowerCase()==="p" && !e.altKey && !e.metaKey && !e.ctrlKey){ e.preventDefault(); setPriority(cardIndex,tIdx, cyclePriority(dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal"), /*pulse*/true); }
       });
 
-      if (document.activeElement !== inputEl) hintEl.hidden = false;
+      input.addEventListener("input",()=>{
+        const d2=loadData();
+        if(input.value===""){
+          const ct=d2[`char_${cardIndex}_taskCount`]||1;
+          if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
+        }else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
+      });
 
-      setTimeout(() => {
-        const onKey = (e) => { if (e.key === 'Escape') closeAccentsPanel(); };
-        const onClickAway = (e) => { const panelEl = document.querySelector('.accents-panel'); if (panelEl && !panelEl.contains(e.target) && e.target !== anchorBtn) closeAccentsPanel(); };
-        document.addEventListener('keydown', onKey, { capture: true, once: true });
-        document.addEventListener('mousedown', onClickAway, { capture: true });
-        panel._cleanup = () => { document.removeEventListener('mousedown', onClickAway, { capture: true }); };
-      }, 0);
+      del.onclick=()=>{
+        const d2=loadData(); const ct=d2[`char_${cardIndex}_taskCount`]||1;
+        if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { input.value=""; d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
+        rebuildTasks();
+      };
 
-      panel._anchor = anchorBtn;
-      panel._input = inputEl;
-      panel.setAttribute('aria-modal', 'true');
-      anchorBtn.setAttribute('aria-expanded', 'true');
+      prBtn.onclick=()=>{
+        const next=cyclePriority(dd[`char_${cardIndex}_taskp_${tIdx}`]||"normal");
+        setPriority(cardIndex,tIdx,next, /*pulse*/ next==="urgent");
+      };
+
+      row.append(box,input,del,prBtn,handle);
+      return row;
     }
 
-    function closeAccentsPanel(fromInsert=false) {
-      const panel = document.querySelector('.accents-panel');
-      if (panel && panel._cleanup) panel._cleanup();
-      if (panel && panel._anchor) panel._anchor.setAttribute('aria-expanded', 'false');
-      panel?.remove();
-      state.accentsOpenFor = null;
-      setTimeout(() => { state.pauseLookup = false; }, fromInsert ? 250 : 0);
+    function setPriority(cardIndex,tIdx,state,pulse){
+      const dd=loadData(); dd[`char_${cardIndex}_taskp_${tIdx}`]=state; saveData(dd);
+      // announce via inline msg as well
+      const msg=card.querySelector(".inline-msg");
+      msg.style.display=""; msg.textContent = `Task marked ${state}.`;
+      setTimeout(()=>{ msg.style.display="none"; msg.textContent=""; }, 1200);
+      // Rebuild to apply chip view & visuals; pulse will show on urgent bar
+      rebuildTasks();
+      // If we want the glow immediately on the exact row, we could locate it after rebuild and add .glow:
+      const row=card.querySelector(`.task[data-idx="${tIdx}"] .prio-bar`);
+      if(row && state==="urgent"){ row.classList.add("glow"); row.addEventListener("animationend",()=>row.classList.remove("glow"),{once:true}); }
     }
 
-    function insertCharAtCursor(input, ch) {
-      const start = input.selectionStart ?? input.value.length;
-      const end = input.selectionEnd ?? input.value.length;
-      const before = input.value.slice(0, start);
-      const after = input.value.slice(end);
-      input.value = before + ch + after;
-      input.setSelectionRange(start + ch.length, start + ch.length);
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.focus();
-    }
+    rebuildTasks();
+    attachNameLookup(i,name,meta,msg,imgWrap.querySelector("img"));
+    return card;
+  }
 
-    // Global Alt+A shortcut to open panel for focused field
-    document.addEventListener('keydown', (e) => {
-      if (e.altKey && (e.key === 'a' || e.key === 'A')) {
-        const focused = document.activeElement;
-        if (!(focused instanceof HTMLInputElement) && !(focused instanceof HTMLTextAreaElement)) {
-          showToast('Click into a text box first');
-          return;
-        }
-        const card = focused.closest('.card');
-        if (!card) return;
-        const btn = card.querySelector('.accents-btn');
-        if (btn) { e.preventDefault(); openAccentsPanel(btn, focused, { id: card.dataset.id }); }
+  function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
+
+  /* Tasks (shared helpers) */
+  function focusNewTaskInput(i,tNew){
+    const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
+    const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
+    (inputs[tNew]||inputs[inputs.length-1])?.focus();
+  }
+  function moveFocus(cardIndex,currentIdx,dir){
+    const d=loadData(); const ct=Math.max(1,d[`char_${cardIndex}_taskCount`]||1);
+    const next=Math.max(0,Math.min(ct-1,currentIdx+dir)); const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
+    const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]')); (inputs[next]||inputs[0])?.focus();
+  }
+  function toggleRowCheckbox(cardIndex,tIdx){
+    const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
+    const row=card?.querySelector(`.tasks .task[data-idx="${tIdx}"]`); const box=row?.querySelector('input[type="checkbox"]');
+    if(box){ box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
+  }
+  function insertTaskAfter(i,t){
+    const d=loadData(); const ct=Math.max(1,d[`char_${i}_taskCount`]||1); if(ct>=MAX_TASKS) return;
+    for(let k=ct-1;k>t;k--){ d[`char_${i}_task_${k+1}`]=d[`char_${i}_task_${k}`]||""; d[`char_${i}_taskp_${k+1}`]=d[`char_${i}_taskp_${k}`]||"normal"; }
+    d[`char_${i}_task_${t+1}`]=""; d[`char_${i}_taskp_${t+1}`]="normal"; d[`char_${i}_taskCount`]=ct+1;
+
+    // shift checkbox states
+    for(let k=ct-1;k>t;k--){ const from=localStorage.getItem(dailyKey(i,k)); if(from!==null) localStorage.setItem(dailyKey(i,k+1),from); localStorage.removeItem(dailyKey(i,k)); }
+    localStorage.removeItem(dailyKey(i,t+1));
+    saveData(d); build();
+  }
+  function shiftDeleteTask(i,t,ct,dd){
+    dd[`char_${i}_task_${t}`]=""; dd[`char_${i}_taskp_${t}`]="normal";
+    for(let k=t+1;k<ct;k++){
+      dd[`char_${i}_task_${k-1}`]=dd[`char_${i}_task_${k}`]||"";
+      dd[`char_${i}_taskp_${k-1}`]=dd[`char_${i}_taskp_${k}`]||"normal";
+      const from=localStorage.getItem(dailyKey(i,k));
+      if(from!==null) localStorage.setItem(dailyKey(i,k-1),from);
+      localStorage.removeItem(dailyKey(i,k));
+    }
+    delete dd[`char_${i}_task_${ct-1}`]; delete dd[`char_${i}_taskp_${ct-1}`];
+    localStorage.removeItem(dailyKey(i,ct-1));
+    dd[`char_${i}_taskCount`]=ct-1; saveData(dd);
+  }
+
+  /* Sortable tasks (disabled when viewing priority-first or only-priority) */
+  function attachTaskSortable(tasksWrap,cardIndex,enable=true){
+    if(tasksWrap._sortable){ tasksWrap._sortable.destroy(); tasksWrap._sortable=null; }
+    if(!enable) return;
+    tasksWrap._sortable = Sortable.create(tasksWrap,{
+      animation:160, handle:".handle", draggable:".task", ghostClass:"dragging",
+      onEnd:()=>{
+        const d=loadData(); const ct=d[`char_${cardIndex}_taskCount`]||1;
+        const texts=[], checks=[], prios=[];
+        for(let t=0;t<ct;t++){ texts.push(d[`char_${cardIndex}_task_${t}`]||""); prios.push(d[`char_${cardIndex}_taskp_${t}`]||"normal"); checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true'); }
+        const order=Array.from(tasksWrap.querySelectorAll(".task")).map(r=>+r.dataset.idx);
+        for(let p=0;p<order.length;p++){ const tOld=order[p]; d[`char_${cardIndex}_task_${p}`]=texts[tOld]||""; d[`char_${cardIndex}_taskp_${p}`]=prios[tOld]||"normal"; }
+        for(let t=0;t<ct;t++) localStorage.removeItem(dailyKey(cardIndex,t));
+        for(let p=0;p<order.length;p++){ const tOld=order[p]; if(checks[tOld]) localStorage.setItem(dailyKey(cardIndex,p),'true'); }
+        saveData(d); build();
       }
     });
+  }
 
-    // Shortcuts button toggle
-    const scBtn = document.getElementById('shortcutsBtn');
-    const scPanel = document.getElementById('shortcutsPanel');
-    scBtn.addEventListener('click', () => {
-      scPanel.hidden = !scPanel.hidden;
+  /* Cards add/dup/delete/reorder */
+  $("#add-character-btn").addEventListener("click",()=>{
+    const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
+    const i=d.charCount; d.charCount=i+1; d[`char_${i}_name`]=""; d[`char_${i}_image`]=""; d[`char_${i}_level`] =""; d[`char_${i}_job`] =""; d[`char_${i}_userImage`]=false;
+    d[`char_${i}_taskCount`]=2; d[`char_${i}_task_0`]=""; d[`char_${i}_task_1`]=""; d[`char_${i}_taskp_${0}`]="normal"; d[`char_${i}_taskp_${1}`]="normal";
+    d[`char_${i}_chip_priorityFirst`]=DEFAULT_PRIORITY_FIRST; d[`char_${i}_chip_onlyPriority`]=false;
+    saveData(d); build();
+  });
+  function duplicateCharacter(i){
+    const d=loadData(); if(d.charCount>=MAX_CHARACTERS) return alert("Maximum of 20 characters reached.");
+    const ct=d[`char_${i}_taskCount`]||2; const tasks=[], prios=[];
+    for(let t=0;t<ct;t++){ tasks.push(d[`char_${i}_task_${t}`]||""); prios.push(d[`char_${i}_taskp_${t}`]||"normal"); }
+    const ins=d.charCount; d.charCount=ins+1;
+    d[`char_${ins}_name`]=d[`char_${i}_name`]||""; d[`char_${ins}_image`]=d[`char_${i}_image`]||""; d[`char_${ins}_level`]=d[`char_${i}_level`]||""; d[`char_${ins}_job`]=d[`char_${i}_job`]||""; d[`char_${ins}_userImage`]=!!d[`char_${i}_userImage`];
+    d[`char_${ins}_taskCount`]=ct; for(let t=0;t<ct;t++){ d[`char_${ins}_task_${t}`]=tasks[t]||""; d[`char_${ins}_taskp_${t}`]=prios[t]||"normal"; }
+    d[`char_${ins}_chip_priorityFirst`]=d[`char_${i}_chip_priorityFirst`]; d[`char_${ins}_chip_onlyPriority`]=d[`char_${i}_chip_onlyPriority`];
+    saveData(d); build();
+  }
+  function confirmDelete(i){
+    const d=loadData(); const nm=d[`char_${i}_name`]||"Untitled";
+    $("#confirm-msg").textContent=`Delete the character: ${nm}?`;
+    const overlay=$("#confirm-overlay");
+    overlay.classList.add("show"); overlay.setAttribute("aria-hidden","false");
+    $("#confirm-ok").onclick=()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); doDelete(i); };
+    $("#confirm-cancel").onclick=()=>{ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); };
+  }
+  function doDelete(i){
+    const d=loadData(); const n=d.charCount; if(n<=0) return;
+    const ctDel=d[`char_${i}_taskCount`]||0; for(let t=0;t<ctDel;t++) localStorage.removeItem(dailyKey(i,t));
+    for(let k=i;k<n-1;k++){
+      const ctNext=d[`char_${k+1}_taskCount`]||0;
+      for(let t=0;t<ctNext;t++){ const from=localStorage.getItem(dailyKey(k+1,t)); const toKey=dailyKey(k,t); if(from!==null) localStorage.setItem(toKey,from); localStorage.removeItem(dailyKey(k+1,t)); }
+      d[`char_${k}_name`]=d[`char_${k+1}_name`]||""; d[`char_${k}_image`]=d[`char_${k+1}_image`]||""; d[`char_${k}_level`]=d[`char_${k+1}_level`]||""; d[`char_${k}_job`]=d[`char_${k+1}_job`]||""; d[`char_${k}_userImage`]=!!d[`char_${k+1}_userImage`];
+      const ct=d[`char_${k+1}_taskCount`]||1; d[`char_${k}_taskCount`]=ct; for(let t=0;t<ct;t++){ d[`char_${k}_task_${t}`]=d[`char_${k+1}_task_${t}`]||""; d[`char_${k}_taskp_${t}`]=d[`char_${k+1}_taskp_${t}`]||"normal"; }
+      d[`char_${k}_chip_priorityFirst`]=d[`char_${k+1}_chip_priorityFirst`]; d[`char_${k}_chip_onlyPriority`]=d[`char_${k+1}_chip_onlyPriority`];
+    }
+    const last=n-1; const lastCt=d[`char_${last}_taskCount`]||0; for(let t=0;t<lastCt;t++) localStorage.removeItem(dailyKey(last,t));
+    delete d[`char_${last}_name`]; delete d[`char_${last}_image`]; delete d[`char_${last}_level`]; delete d[`char_${last}_job`]; delete d[`char_${last}_userImage`];
+    delete d[`char_${last}_taskCount`]; for(let t=0;t<lastCt;t++){ delete d[`char_${last}_task_${t}`]; delete d[`char_${last}_taskp_${t}`]; }
+    delete d[`char_${last}_chip_priorityFirst`]; delete d[`char_${last}_chip_onlyPriority`];
+    d.charCount=Math.max(0,n-1); saveData(d); build();
+  }
+
+  /* Sortable cards */
+  let sortableCards=null;
+  function initCardSortable(){
+    const cont=$("#checklists"); if(sortableCards){ sortableCards.destroy(); sortableCards=null; }
+    sortableCards=new Sortable(cont,{ animation:180, ghostClass:"dragging", draggable:".character", handle:".card-drag-handle",
+      onEnd:(evt)=>{ const from=evt.oldIndex,to=evt.newIndex; if(from==null||to==null||from===to) return; moveCard(from,to); }
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !scPanel.hidden) scPanel.hidden = true;
+  }
+  function moveCard(from,to){
+    const cont=$("#checklists"); const n=[...cont.querySelectorAll(".character")].length; if(from<0||from>=n) return; to=Math.max(0,Math.min(n-1,to)); if(from===to) return;
+    const d=loadData(), list=[]; for(let i=0;i<d.charCount;i++){ const ct=Math.max(1,d[`char_${i}_taskCount`]||1); const tasks=[]; for(let t=0;t<ct;t++) tasks.push(d[`char_${i}_task_${t}`]||"");
+      const prios=[]; for(let t=0;t<ct;t++) prios.push(d[`char_${i}_taskp_${t}`]||"normal");
+      list.push({name:d[`char_${i}_name`]||"", image:d[`char_${i}_image`]||"", level:d[`char_${i}_level`]||"", job:d[`char_${i}_job`]||"", userImage:!!d[`char_${i}_userImage`], tasks, prios,
+        chipFirst:d[`char_${i}_chip_priorityFirst`], chipOnly:d[`char_${i}_chip_onlyPriority`]}); }
+    const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
+    const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
+    const nd={charCount:list.length};
+    for(let i=0;i<list.length;i++){ const c=list[i]; nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
+      const tc=Math.max(1,Math.min(MAX_TASKS,c.tasks.length)); nd[`char_${i}_taskCount`]=tc; for(let t=0;t<tc;t++){ nd[`char_${i}_task_${t}`]=c.tasks[t]||""; nd[`char_${i}_taskp_${t}`]=c.prios[t]||"normal"; }
+      nd[`char_${i}_chip_priorityFirst`]=c.chipFirst; nd[`char_${i}_chip_onlyPriority`]=c.chipOnly;
+    }
+    for(let i=0;i<checks.length;i++){ for(let t=0;t<MAX_TASKS;t++) localStorage.removeItem(dailyKey(i,t)); for(let t=0;t<checks[i].length;t++) if(checks[i][t]) localStorage.setItem(dailyKey(i,t),'true'); }
+    saveData(nd); build();
+  }
+
+  /* Upload avatar (user override never auto-replaced) */
+  let uploadIndex=null;
+  function startUploadFor(i){ uploadIndex=i; $("#hidden-upload").click(); }
+  $("#hidden-upload").addEventListener("change",(e)=>{
+    const f=e.target.files?.[0]; if(!f) return; const reader=new FileReader();
+    reader.onload=()=>{ const d=loadData(); d[`char_${uploadIndex}_image`]=reader.result; d[`char_${uploadIndex}_userImage`]=true; saveData(d);
+      const card=document.querySelector(`#checklists .character[data-index="${uploadIndex}"]`); if(card) card.querySelector('.char-image-wrap img').src=reader.result; };
+    reader.readAsDataURL(f); e.target.value="";
+  });
+
+  /* Instructions toggle */
+  (function(){ const instr=$("#instructions"), btn=$("#instr-toggle"); function set(min){ instr.classList.toggle("minimized",min); btn.textContent=min?"Unhide":"Hide"; localStorage.setItem("mapleInstrMin",min?"1":"0"); }
+    btn.onclick=()=>set(!instr.classList.contains("minimized")); set(localStorage.getItem("mapleInstrMin")==="1"); })();
+
+  /* ===== Worker-backed Maple Ranks lookup (non-blocking + no “Phantom” fallback) ===== */
+  const nameTimers=new Map();          // cardIndex -> timeout id
+  const nameControllers=new Map();     // cardIndex -> AbortController
+  const nameCache=new Map();           // key(lower name) -> {ts,data}
+
+  function cacheGet(key){
+    const v=nameCache.get(key); if(!v) return null;
+    if(Date.now()-v.ts>CACHE_TTL_MS){ nameCache.delete(key); return null; }
+    return v.data;
+  }
+  function cacheSet(key,data){ nameCache.set(key,{ts:Date.now(),data}); }
+
+  function triggerLookupNow(cardIndex,nameInput,metaElem,msgElem,imgElem){
+    const q=nameInput.value.trim();
+    if(accOpen) return;
+    if(q.length<MIN_LOOKUP_LEN) return;
+    scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,0);
+  }
+
+  function scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,delay=DEBOUNCE_MS){
+    clearTimeout(nameTimers.get(cardIndex));
+    if(accOpen) return;
+    const q=nameInput.value.trim();
+    if(q.length<MIN_LOOKUP_LEN){ nameTimers.set(cardIndex, null); return; }
+    const t=setTimeout(()=> doLookup(cardIndex,q,nameInput,metaElem,msgElem,imgElem), delay);
+    nameTimers.set(cardIndex,t);
+  }
+
+  async function doLookup(cardIndex,query,nameInput,metaElem,msgElem,imgElem){
+    const prev=nameControllers.get(cardIndex);
+    if(prev){ try{ prev.abort(); }catch{} }
+
+    const cacheKey=query.toLowerCase();
+    const cached=cacheGet(cacheKey);
+    if(cached){
+      if(cached.ok===false){ renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem); return; }
+      applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,cached,true); return;
+    }
+
+    const controller=new AbortController(); nameControllers.set(cardIndex,controller);
+
+    try{
+      msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.body).getPropertyValue('--meta-fg')||"#6b7280";
+      msgElem.textContent="Searching…";
+
+      const url=`${WORKER_URL}?name=${encodeURIComponent(query)}`;
+      const res=await fetch(url,{signal:controller.signal,headers:{accept:"application/json"}});
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data=await res.json();
+      const noMatch=!data || data.ok!==true || (!data.job && !data.level && !data.avatar);
+
+      cacheSet(cacheKey, noMatch ? {ok:false} : data);
+
+      if(noMatch){ renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem); return; }
+      applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,data,false);
+    }catch(err){
+      if(err?.name==="AbortError") return;
+      renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem);
+    }finally{
+      nameControllers.delete(cardIndex);
+    }
+  }
+
+  function renderNotFoundIfCurrent(cardIndex, requestQuery, nameInput, metaElem, msgElem){
+    const current=nameInput.value.trim();
+    if(current.toLowerCase()!==requestQuery.toLowerCase()) return;
+    metaElem.textContent="Character not found on MapleRanks";
+    metaElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373";
+    msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373";
+    msgElem.textContent="Character not found on MapleRanks";
+    setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
+  }
+
+  function applyLookupResult(cardIndex, requestQuery, nameInput, metaElem, msgElem, imgElem, data, fromCache){
+    const current=nameInput.value.trim();
+    if(current.length<MIN_LOOKUP_LEN || current.toLowerCase()!==requestQuery.toLowerCase()) return;
+
+    metaElem.style.color="";
+
+    if(data.name && data.name.trim() && data.name.trim()!==current){
+      msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.body).getPropertyValue('--meta-fg')||"#6b7280";
+      msgElem.textContent=`Suggestion: ${data.name}`;
+      setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
+    }else{ msgElem.style.display="none"; msgElem.textContent=""; }
+
+    const d=loadData();
+    d[`char_${cardIndex}_name`]=current;
+    d[`char_${cardIndex}_level`]=data.level || d[`char_${cardIndex}_level`] || "";
+    d[`char_${cardIndex}_job`]=data.job || d[`char_${cardIndex}_job`] || "";
+
+    const userHasUpload=!!d[`char_${cardIndex}_userImage`];
+    if(!userHasUpload && data.avatar){
+      d[`char_${cardIndex}_image`]=data.avatar;
+    }
+    saveData(d);
+
+    metaElem.textContent=metaText(d[`char_${cardIndex}_level`], d[`char_${cardIndex}_job`]);
+
+    const newSrc=(d[`char_${cardIndex}_image`]||"")||BASE_MODEL_URL;
+    if(imgElem && imgElem.src!==newSrc){
+      const old=imgElem.src;
+      imgElem.loading="lazy"; imgElem.decoding="async";
+      imgElem.alt=`Avatar for ${current||"character"}`;
+      imgElem.onerror=()=>{ imgElem.onerror=null; imgElem.src=old; msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373"; msgElem.textContent="Image failed to load."; setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1500); };
+      imgElem.src=newSrc;
+    }
+  }
+
+  /* ===== Accented character keyboard (with pause/resume) ===== */
+  const ACCENTS={ a:['á','à','â','ä','ã','å','ā','ă','ą'], e:['é','è','ê','ë','ē','ĕ','ė','ę','ě'], i:['í','ì','î','ï','ī','ĭ','į','ı'], o:['ó','ò','ô','ö','õ','ō','ŏ','ő','ø'], u:['ú','ù','û','ü','ũ','ū','ŭ','ů','ű','ų'], c:['ç','ć','ĉ','ċ','č'], n:['ñ','ń','ņ','ň'], s:['ß','ś','ŝ','ş','š'], y:['ý','ÿ','ŷ'], z:['ź','ż','ž'], g:['ğ'], l:['ł'], r:['ř'], t:['ţ','ť'] };
+  const BASES=Object.keys(ACCENTS);
+
+  const accPop=$("#accents-popover"), accBase=$("#acc-base"), accVars=$("#acc-variants"), accVarLabel=$("#acc-var-label"), accHint=$("#acc-hint"), accClose=$("#acc-close"), accCaseBtn=$("#acc-case");
+  let accUpper=false, accAnchorEl=null, accTargetEl=null;
+
+  function isTextField(el){ return el && ((el.tagName==='INPUT' && (/^(text|search|email|url|tel|password)$/i).test(el.type))|| el.tagName==='TEXTAREA'); }
+  function buildBaseButtons(){ accBase.innerHTML=""; BASES.forEach((b)=>{ const label=accUpper?b.toUpperCase():b; const btn=document.createElement("button"); btn.type="button"; btn.className="acc-btn"; btn.textContent=label; btn.setAttribute("role","option"); btn.setAttribute("aria-label",`Base ${label}`);
+    btn.addEventListener("click",()=>showVariants(b));
+    btn.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); showVariants(b); (accVars.querySelector('button')||btn).focus(); }});
+    accBase.appendChild(btn);
+  });}
+  function showVariants(base){ const list=ACCENTS[base]||[]; const variants=accUpper?list.map(c=>c.toUpperCase()):list; accVars.innerHTML=""; accVarLabel.style.display=variants.length?"":"none";
+    variants.forEach((ch,idx)=>{ const vb=document.createElement("button"); vb.type="button"; vb.className="acc-btn"; vb.textContent=ch; vb.setAttribute("role","gridcell"); vb.setAttribute("aria-label",`Insert ${ch}`);
+      vb.addEventListener("click",()=>insertAccent(ch,true));
+      vb.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); insertAccent(ch,true); } else if(e.key==="ArrowLeft"){ e.preventDefault(); focusVariant(idx-1); } else if(e.key==="ArrowRight"){ e.preventDefault(); focusVariant(idx+1); }});
+      accVars.appendChild(vb);
     });
-
-    // Toast helper
-    let toastTimer = null;
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.style.display = 'block';
-      clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2200);
+  }
+  function focusVariant(idx){ const btns=[...accVars.querySelectorAll("button")]; if(!btns.length) return; if(idx<0) idx=0; if(idx>=btns.length) idx=btns.length-1; btns[idx].focus(); }
+  function positionPopover(anchor){ const rect=anchor.getBoundingClientRect(); accPop.style.left=Math.min(window.innerWidth-20,Math.max(8,rect.right-280))+"px"; accPop.style.top=(rect.bottom+8+window.scrollY)+"px"; }
+  function openAccentsPanel(targetEl,anchorEl){
+    accOpen=true; clearTimeout(nameTimers.get(lastEditedNameIndex||0));
+    accTargetEl=isTextField(document.activeElement)?document.activeElement:(isTextField(targetEl)?targetEl:null);
+    accAnchorEl=anchorEl||targetEl; buildBaseButtons(); accVars.innerHTML=""; accVarLabel.style.display="none"; positionPopover(accAnchorEl);
+    accHint.style.display=accTargetEl?"none":""; accPop.classList.add("show");
+  }
+  function closeAccentsPanel(){
+    accOpen=false; accPop.classList.remove("show");
+    if(lastEditedNameIndex!=null){
+      const card=document.querySelector(`.character[data-index="${lastEditedNameIndex}"]`);
+      const nameInput=card?.querySelector('.char-name'); const meta=card?.querySelector('.char-meta'); const msg=card?.querySelector('.inline-msg'); const img=card?.querySelector('.char-image-wrap img');
+      if(nameInput && meta && msg && img) scheduleLookup(lastEditedNameIndex,nameInput,meta,msg,img,300);
     }
+  }
+  function insertAccent(ch,closeAfter){
+    if(!accTargetEl || !isTextField(accTargetEl)){ accHint.style.display=""; setTimeout(()=>accHint.style.display="none",1500); return; }
+    const el=accTargetEl; const start=el.selectionStart??el.value.length; const end=el.selectionEnd??el.value.length; let insertText=ch;
+    const max=typeof el.maxLength==="number"?el.maxLength:-1; if(max>-1){ const remaining=max-el.value.length+(end-start); if(remaining<=0) return; if(insertText.length>remaining) insertText=insertText.slice(0,remaining); }
+    el.setRangeText(insertText,start,end,"end"); el.dispatchEvent(new InputEvent("input",{bubbles:true,data:insertText,inputType:"insertText"})); el.dispatchEvent(new Event("change",{bubbles:true})); el.focus();
+    if(closeAfter) closeAccentsPanel();
+  }
+  accClose.addEventListener("click",closeAccentsPanel);
+  accCaseBtn.addEventListener("click",()=>{ accUpper=!accUpper; accCaseBtn.setAttribute("aria-pressed", accUpper?"true":"false"); buildBaseButtons(); accVars.innerHTML=""; accVarLabel.style.display="none"; });
+  document.addEventListener("keydown",(e)=>{ if(e.altKey&&(e.key==="a"||e.key==="A")){ e.preventDefault(); const focusEl=document.activeElement; if(isTextField(focusEl)){ openAccentsPanel(focusEl,focusEl); } else { openAccentsPanel(null,$("#theme")); } } else if(e.key==="Escape" && accOpen){ closeAccentsPanel(); }});
+  document.addEventListener("mousedown",(e)=>{ if(accOpen && !accPop.contains(e.target) && !e.target.closest(".accents-btn")) closeAccentsPanel(); });
 
-    // Add character
-    function addCharacter() {
-      const p = getActivePreset();
-      p.data.characters.push({ id: uid(), name: '', job: '', level: '', imageUrl: '', uploadedAvatarUrl: '', tasks: defaultTasks() });
-      saveActivePreset();
-      render();
-    }
+  /* Name lookup attachment */
+  function attachNameLookup(cardIndex,nameInput,metaElem,msgElem,imgElem){
+    nameInput.addEventListener("input",()=>{ lastEditedNameIndex=cardIndex;
+      const prev=nameControllers.get(cardIndex); if(prev){ try{ prev.abort(); }catch{} }
+      scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,DEBOUNCE_MS);
+    });
+  }
 
-    // Wire up top-level controls
-    function setupTopControls() {
-      document.getElementById('addCharacter').addEventListener('click', addCharacter);
-      document.getElementById('savePreset').addEventListener('click', () => saveActivePreset(getActivePreset().data));
-      document.getElementById('loadPreset').addEventListener('click', () => loadActivePreset());
-      document.getElementById('renamePreset').addEventListener('click', renameActivePreset);
-      document.getElementById('presetSelect').addEventListener('change', (e) => {
-        state.activePresetId = e.target.value; localStorage.setItem('activePresetId', state.activePresetId); render();
-      });
-    }
+  /* Icons */
+  function iconBtn(title,svgOrHtml,onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
+  function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
+  function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
+  function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
+  function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
-    // Init
-    ensureDefaultPreset();
-    startUTCClock();
-    setupThemeSelector();
-    setupTopControls();
-    render();
-  </script>
-</body>
+  /* Init */
+  build();
+  
+
+// Shortcuts modal open/close
+const shortcutsBtn=document.getElementById('shortcuts-btn');
+const shortcutsOverlay=document.getElementById('shortcuts-overlay');
+const shortcutsClose=document.getElementById('shortcuts-close');
+function openShortcuts(){shortcutsOverlay?.classList.add('show');shortcutsOverlay?.setAttribute('aria-hidden','false');}
+function closeShortcuts(){shortcutsOverlay?.classList.remove('show');shortcutsOverlay?.setAttribute('aria-hidden','true');}
+shortcutsBtn?.addEventListener('click',e=>{e.preventDefault(); (shortcutsOverlay?.classList.contains('show')?closeShortcuts():openShortcuts());});
+shortcutsClose?.addEventListener('click',()=>closeShortcuts());
+shortcutsOverlay?.addEventListener('click',e=>{if(e.target===shortcutsOverlay) closeShortcuts();});
+document.addEventListener('keydown',e=>{
+  const a=document.activeElement, isField=a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.isContentEditable);
+  if((e.key==='?'||(e.shiftKey&&e.key==='/'))&&!isField){e.preventDefault();openShortcuts();}
+  if(e.key==='Escape') closeShortcuts();
+});
+</script>
+</input><div aria-hidden="true" class="modal-overlay" id="shortcuts-overlay"><div aria-labelledby="shortcuts-title" aria-modal="true" class="modal" role="dialog"><h3 id="shortcuts-title">Keyboard Shortcuts</h3><ul style="margin:6px 0 0 18px;padding:0;"><li>Up / Down — Move between tasks</li><li>Enter or Space — Toggle task</li><li>Tab — Add a new task below</li><li>P — Cycle task priority</li><li>Alt + A — Open Accents</li><li>Esc — Close panels</li></ul><div class="actions"><button class="btn" id="shortcuts-close" type="button">Close</button></div></div></div></body>
 </html>
