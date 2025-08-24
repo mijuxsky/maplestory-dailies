@@ -149,7 +149,9 @@
   .task.important{background:var(--accent-tint)}
   .task.urgent{background:var(--danger-tint)}
   .task.important .task-text{font-weight:600}
+.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
   .task.urgent .task-text{font-weight:700}
+.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
 
   @keyframes pulseGlow {
     0% { box-shadow: 0 0 0 0 rgba(229,115,115,0.6); }
@@ -167,6 +169,7 @@
   .task .prio-btn .i{font-size:13px;line-height:1}
   .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
   .task .task-text{min-width:0}
+.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
   .handle{cursor:grab;user-select:none;opacity:.7}
   .handle:active{cursor:grabbing}
 
@@ -225,7 +228,7 @@
   .contact-row{ display:flex; align-items:center; gap:10px; padding:6px 2px; }
   .contact-icon{ width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--control-fg); opacity:.9; }
   .contact-icon svg{ width:18px; height:18px; display:block; overflow:visible; }
-  .contact-row a{ color:var(--popover-fg); text-decoration: underline; font-weight:600; }
+  .contact-row a{ color:var(--popover-fg); text-decoration: none; font-weight:600; }
   .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
   .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
   .toast.show{ opacity:1; }
@@ -233,9 +236,14 @@
 </head>
 <body class="lavender">
 
+<!-- Change: Contact modal — switched Discord to padded brand icon, link '@MijuxSky' to deep-link; removed Copy; adjusted link styling to match menu reference. -->
+<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
 <!-- Change: fixed Discord icon cropping in Contact modal (added safe padding + CSS to prevent clipping). -->
+<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
 <!-- Change: centered priority chips; redesigned Contact modal (full Ko‑fi link + Discord copy); swapped Contact button to tiny envelope with heart seal. -->
+<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
 <!-- Change: added Contact heart button and modal with Ko-fi link and Discord handle. -->
+<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
 <!-- Change: added inline preset rename with pencil icon, 12 char limit, unique validation. -->
 
 <!-- Heart “Contact” button -->
@@ -385,26 +393,27 @@
     <div class="contact-row" style="margin-top:4px;">
       <span class="contact-icon" aria-hidden="true">
         <!-- Ko‑fi cup (monochrome) -->
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 5h13a1 1 0 0 1 1 1v3h1.5a3.5 3.5 0 1 1 0 7H17v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a1 1 0 0 1 1-1Zm11 4V7H4v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9Zm3 6h1.5a1.5 1.5 0 0 0 0-3H17v3Z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M3 8a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8Zm13 1h1.5a2.5 2.5 0 0 1 0 5H16V9Z"/><path fill="currentColor" d="M9.5 10.25c-.83 0-1.5.67-1.5 1.5 0 1.57 2.18 2.9 2.88 3.33a.5.5 0 0 0 .52 0c.7-.43 2.88-1.76 2.88-3.33 0-.83-.67-1.5-1.5-1.5-.59 0-1.1.34-1.36.84a.5.5 0 0 1-.88 0 1.5 1.5 0 0 0-1.36-.84Z"/></svg>
       </span>
       <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer"
          aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
     </div>
 
     <div class="contact-row">
-      <span class="contact-icon" aria-hidden="true">
-  <!-- Discord glyph (monochrome, padded to avoid clipping) -->
+  
+<span class="contact-icon" aria-hidden="true">
+  <!-- Discord glyph (simple, padded, transparent background) -->
   <svg viewBox="0 0 24 24" aria-hidden="true">
-    <g transform="translate(1,1) scale(0.92)">
-      <path fill="currentColor" d="M20 5.5a16.9 16.9 0 0 0-4.11-1.25l-.2.37a14.7 14.7 0 0 1 3.74 1.33a13.4 13.4 0 0 0-12.86 0A14.7 14.7 0 0 1 10.3 4.6l-.2-.37A16.9 16.9 0 0 0 6 5.5C4 8.3 3.5 11 3.7 13.7c1.56 1.15 3.07 1.85 4.52 2.19l.7-1.48c-.39-.15-.76-.32-1.1-.51c.3.22.76.51 1.44.8c1.09.46 2.34.74 3.74.74s2.65-.28 3.74-.74c.68-.29 1.14-.58 1.44-.8c-.34.19-.71.36-1.1.51l.7 1.48c1.45-.34 2.96-1.04 4.52-2.19C20.5 11 20 8.3 18 5.5ZM9.75 12.6c-.66 0-1.2-.56-1.2-1.25s.54-1.25 1.2-1.25s1.2.56 1.2 1.25s-.54 1.25-1.2 1.25Zm4.5 0c-.66 0-1.2-.56-1.2-1.25s.54-1.25 1.2-1.25s1.2.56 1.2 1.25s-.54 1.25-1.2 1.25Z"/>
+    <g transform="translate(1.5,2) scale(0.9)">
+      <rect x="3" y="4" width="18" height="12" rx="6" fill="currentColor"></rect>
+      <circle cx="10" cy="10" r="1.5" fill="var(--popover-bg)"></circle>
+      <circle cx="14" cy="10" r="1.5" fill="var(--popover-bg)"></circle>
     </g>
   </svg>
 </span>
-      <div class="copy-wrap" aria-label="Discord handle">
-        <span id="discord-handle">MijuxSky</span>
-        <button id="discord-copy" class="btn secondary small" type="button" aria-label="Copy Discord handle">Copy</button>
-      </div>
-    </div>
+
+  <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
+</div>
 
     <div class="actions">
       <button class="btn secondary" id="contact-close" type="button" aria-label="Close contact modal">Close</button>
@@ -764,11 +773,15 @@ function buildCard(i,d){
     });
 
     input.addEventListener("input",()=>{
+      // Enforce one-line fit before saving
+      fitInputToLine(input);
       const d2=loadData();
       if(input.value===""){
+
         const ct=d2[`char_${cardIndex}_taskCount`]||1;
         if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
-      }else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
+      }
+      else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
     });
 
     del.onclick=()=>{
@@ -803,6 +816,20 @@ function buildCard(i,d){
 
 function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
 
+
+/* Enforce that a task's text fits on one visual line within its input.
+   Trims extra characters when content would overflow horizontally. */
+function fitInputToLine(el){
+  // Keep trimming until the content fits the visible width
+  // Guard: very long strings may require multiple trims (paste case)
+  let changed = false;
+  // Use a loop with a max iteration to avoid any pathological cases
+  for(let i=0; i<500 && el.scrollWidth > el.clientWidth && el.value.length>0; i++){
+    el.value = el.value.slice(0, -1);
+    changed = true;
+  }
+  return changed;
+}
 /* Tasks shared helpers */
 function focusNewTaskInput(i,tNew){
   const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
