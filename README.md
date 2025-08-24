@@ -90,8 +90,7 @@ Close with Esc or the X in the top right. Clicking outside the popup also closes
 ## Contact and support
 Click the envelope button in the top bar.
 
-* Discord: @MijuxSky  
-  Link: https://discordapp.com/users/262661842902450176  
+* Discord: @MijuxSky   
 * Support me on Ko Fi: https://ko-fi.com/mijuxsky
 
 When one popup opens the other closes. Opening Contact closes Keyboard Shortcuts. Opening Keyboard Shortcuts closes Contact.
