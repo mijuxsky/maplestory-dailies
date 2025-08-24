@@ -1,12 +1,6 @@
-# MapleStory Dailies
+# Maplestory Dailies
 
 A single‑file, theme‑aware, keyboard‑friendly daily checklist for MapleStory characters. Everything lives in `index.html`—no build step required.
-
-## Quick start
-1. Download or clone this project.
-2. Open **index.html** in any modern browser (Chrome, Edge, Firefox, Safari).
-3. Pick a theme, add characters, and start tracking tasks.
-4. Use **Save** to export your data (JSON) and **Load** to import it later.
 
 > **Storage:** All changes are saved to your browser’s `localStorage` per preset. No backend.
 
@@ -52,13 +46,6 @@ A single‑file, theme‑aware, keyboard‑friendly daily checklist for MapleSto
 - **Alt + A** – Open **Accents** panel for the focused text input
 - **Esc** – Close panels/modals
 
-## Data & persistence (overview)
-- Theme: `mapleTheme`
-- Current preset: `maplePreset`
-- Preset names: `maplePresetNames_v1` (object with keys `1`,`2`,`3`)
-- Per‑preset data: `mapleData_v2_preset{N}` stores character/task state
-- Daily checkbox state: stored separately per date/preset/character/task (keys derived like `check_YYYY-MM-DD_preset{N}_c{i}_t{t}`)
-
 > Tip: To “reset” the day, you can clear today’s `check_…` keys from DevTools > Application > Local Storage.
 
 ## Customization
@@ -66,11 +53,6 @@ A single‑file, theme‑aware, keyboard‑friendly daily checklist for MapleSto
 - **Contact modal:** Update the Ko‑fi URL or Discord handle in the modal markup.
 - **Icons:** Inline SVGs inherit `currentColor`; swap paths to change pictograms.
 - **Accents:** The small accents helper can be extended in `renderAccents()`.
-
-## Troubleshooting
-- **No layout shift, but a control looks off in one theme** – check theme tokens for border/background contrast.
-- **Discord icon looks clipped** – the modal uses `overflow:visible` on the icon SVG and a small internal transform to avoid clipping; clear cache if you still see it.
-- **Auto‑lookup is slow** – results are cached; give it a moment, or enter at least 4 characters before hitting Enter to force a lookup.
 
 ## What changed recently
 - Centered the **Character Name** row with a left spacer to mirror the Accents button.
@@ -85,9 +67,6 @@ A single‑file, theme‑aware, keyboard‑friendly daily checklist for MapleSto
 - Pure client‑side HTML/CSS/JS; uses **SortableJS** (CDN) for drag‑and‑drop.
 - Fonts: Google Fonts **Quicksand**.
 - No build tools, no framework—open `index.html` directly.
-
-## License
-Add your preferred license here (e.g., MIT).
 
 ---
 
