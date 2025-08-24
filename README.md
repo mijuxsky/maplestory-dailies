@@ -1,45 +1,165 @@
 # MapleStory Dailies
 
-A minimal tracker for your dailies in MapleStory.
+A minimal tracker for your dailies in MapleStory. Runs fully in the browser and stores data locally per preset.
+
+---
 
 ## Features
 
-- **Themes**: Choose from Light, Cloud (Light), Lavender (Light), Matcha (Light), Dark, and Evergreen (Dark). Theme is saved locally.
-- **UTC clock**: Live UTC time in `MM/DD/YYYY HH:MM:SS` format.
-- **Presets**: Three independent presets (1–3). Each stores its own characters, tasks, and theme.
-- **Save / Load**: Export your data to a JSON file and import it later — no servers required.
-- **Characters**: Up to 20 character cards. Cards start with 2 tasks (minimum 1, maximum 10).
-- **Add / Duplicate / Delete**: Add new cards, duplicate existing ones, or delete with confirmation.
-- **Delete prompt**: “Delete the character: \<Character Name\>?” with **Yes** then **No**.
-- **Upload avatar**: Set a custom image per character from your device.
-- **Tasks**: Up to 10 tasks per character. Enter/Tab inserts a task under the current one.
-- **Reorder tasks**: Drag by the ⋮⋮ handle; checkbox state is preserved.
-- **Reorder cards**: Drag from the invisible strip above the name or use the Up/Down arrows. Smooth animation.
-- **Check All**: Bold “Check All” line at the bottom of each card toggles all tasks for that card.
-- **Daily reset**: All task checkboxes reset automatically at 00:00 UTC.
-- **Local-only**: Everything runs entirely in your browser with `localStorage`. No accounts or servers.
+- **UTC clock**  
+  Shows current UTC time in `MM/DD/YYYY HH:MM:SS`.
 
-## How to Use
+- **Daily reset**  
+  Task completion is keyed by UTC date so checkmarks reset each day automatically.
 
-- **Pick theme**: Use the Theme dropdown at the top-left.
-- **Choose preset**: Under the How to Use box, select Preset 1–3.
-- **Save / Load**: Use the 💾 Save to export JSON; 📂 Load to import JSON.
-- **Add character**: Click **+ Add Character** (left side of the toolbar).
-- **Type name**: Click the name line to edit your character’s name.
-- **Upload avatar**: Click the upload icon on a card to set an image.
-- **Add tasks**: Press Enter or Tab in a task line to insert another below it.
-- **Reorder tasks**: Drag the ⋮⋮ handle to rearrange; state is preserved.
-- **Reorder cards**: Drag from the invisible strip above the name, or use the Up/Down arrows.
-- **Check All**: Use the bold “Check All” at the bottom of a card to toggle all tasks.
-- **Delete card**: Click × then confirm “Yes” in the prompt.
+- **Themes**  
+  Light themes first, then dark. All UI elements follow tokens for backgrounds, text, borders, focus rings, buttons, dialogs, tooltips, and panels.  
+  Light: Cloud, Lavender, Light Mode, Matcha, Milk Tea  
+  Dark: Dark Mode, Evergreen, Midnight Blue, Mocha, Nightshade
 
-### Auto-fill (Maple Ranks)
-- **What**: When you type a Character Name, the app calls a Cloudflare Worker that fetches your Maple Ranks profile and extracts **Level**, **Job**, and **Avatar**.
-- **When images change**: If you have **not** uploaded a custom avatar, the fetched avatar is applied automatically. If you **have** uploaded an avatar, the auto-image will **not** replace it.
-- **Storage**: Avatar URLs and the “user uploaded” flag are saved in your preset data. Save/Load includes both.
+- **Presets**  
+  Three starter presets selectable from the toolbar. All data is saved per preset.
 
-### Quick tests
-- **Image fetch**: Type a known character name, pause ~0.5s → Level/Job appear; avatar shows automatically if no user image.
-- **Precedence**: Upload an avatar, then change the name → Level/Job update but your uploaded image remains.
-- **Save/Load**: Save JSON, refresh page, Load the same file → characters, tasks, Level/Job, and avatar all restore.
-- **Errors**: Type a random name → brief “Not found” message; existing fields unchanged; no console errors.
+- **Save and Load**  
+  Save exports a JSON file. Load imports a JSON file. Works offline and keeps data per preset.
+
+- **Characters**  
+  Add, duplicate, delete with confirmation. Drag and drop cards to reorder. Use Up and Down arrows on each card as an alternative.
+
+- **Accents**  
+  Per card Accents button next to Character Name. Insert accented letters without losing focus. Alt + A opens accents for the focused field.
+
+- **Maple Ranks lookup**  
+  Type a Character Name and the app looks up Job and Level via the Worker proxy. If available and no uploaded avatar exists, the image is set automatically. If no match is found the Job shows “Character not found on MapleRanks” in a soft red. Level and image are not changed.
+
+- **Avatars**  
+  Upload a custom character image. User uploads are never overwritten by auto lookups.
+
+- **Tasks**  
+  Each card starts with two lines. Enter inserts a new task below the current line. Tab toggles the checkbox on the focused row. Up and Down move between rows.
+
+- **Priority**  
+  Click the small Priority button on a row to cycle Normal, Important, Urgent. Important uses the theme accent. Urgent uses the theme soft red and a brief glow on the left bar. Chips above the list let you show priority first or only priority. P is not used as a shortcut to avoid interrupting typing.
+
+- **Reorder tasks**  
+  Drag by the vertical handle at the end of the row. Reordering stays within the card and preserves state.
+
+- **Check All**  
+  A Check All control at the bottom of each card toggles all tasks in that card. The label uses a theme muted color distinct from task text.
+
+- **Keyboard shortcuts**  
+  A “?” button opens a centered modal with keyboard help and a Quickstart. Press “?” globally to open. Esc closes. Focus returns to the opener.
+
+---
+
+## Quickstart
+
+1) **Choose preset**  
+   Use Preset on the toolbar.
+
+2) **Enter name**  
+   Type Character Name. Use Accents if needed.
+
+3) **Wait or upload**  
+   After a short pause Job and Level update. Upload an avatar if you prefer.
+
+4) **Review tasks**  
+   Check items and set priorities if useful.
+
+5) **Save**  
+   Click Save to export a backup JSON.
+
+6) **Load or manage**  
+   Load another preset file or switch presets.
+
+---
+
+## Keyboard
+
+- **Open help**  
+  Click “?” or press “?” to open the Shortcuts modal. Esc closes.
+
+- **Move between tasks**  
+  Up and Down arrows.
+
+- **Toggle a task**  
+  Space or Tab on the focused row.
+
+- **Insert below**  
+  Enter creates a new task directly under the current row.
+
+- **Accents**  
+  Alt + A opens Accents for the focused input.
+
+Typing in task fields is never intercepted by global shortcuts.
+
+---
+
+## Data and storage
+
+- **Local storage**  
+  All data is stored in the browser per preset and per UTC day for checkmarks.
+
+- **Export and import**  
+  Save exports JSON. Load imports JSON. No servers are used.
+
+- **Daily reset**  
+  Checkmarks reset with the new UTC date. Task text and ordering persist.
+
+---
+
+## Maple Ranks lookup
+
+- **Source**  
+  Queries Maple Ranks through a Cloudflare Worker proxy.
+
+- **Fields**  
+  Updates Job and Level. If no user avatar exists and an image URL is returned, the avatar is set automatically.
+
+- **On failure**  
+  Job shows “Character not found on MapleRanks” in a soft red. Level and image are unchanged.
+
+- **Uploads win**  
+  User uploaded avatars are never overwritten by lookups.
+
+---
+
+## Tips
+
+- **Reorder cards**  
+  Drag a card by the invisible strip above the Character Image or use the Up and Down arrows on the card.
+
+- **Reorder tasks**  
+  Drag by the vertical handle on each row.
+
+- **Insert quickly**  
+  Press Enter on a task to insert a new one right below.
+
+- **Check all**  
+  Use the Check All control at the bottom of the card.
+
+---
+
+## Theming
+
+All themes define tokens for background, panel, card, border, text, text weak, accent and tint, soft red, focus ring, and tooltip or dialog surfaces. The app applies these tokens to cards, buttons, inputs, selects, icons, dialogs, tooltips, accents panel, and the Shortcuts modal. Focus rings meet contrast guidelines.
+
+---
+
+## Troubleshooting
+
+- **UTC shows dashes**  
+  Wait a moment or refresh. The clock updates once per second.
+
+- **No image after typing a name**  
+  Either Maple Ranks had no avatar or the Worker returned no image. Upload your own or try again later.
+
+- **Import fails**  
+  Make sure you load a JSON file exported by the app.
+
+- **Nothing saves**  
+  Check that your browser allows local storage.
+
+---
+
+#
