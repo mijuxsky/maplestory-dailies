@@ -109,7 +109,6 @@
   .btn{padding:8px 12px;border-radius:10px;background:var(--button-bg);color:var(--button-fg);border:1px solid var(--button-border);font-weight:600;font-family:inherit;font-size:var(--ui);cursor:pointer}
   .btn:hover{filter:brightness(1.02)}
   .btn:active{transform:translateY(1px)}
-  .btn.small{padding:4px 8px;font-size:12px;border-radius:8px}
 
   .icon-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);transition:.15s;font-family:inherit}
   .icon-btn:hover{background:var(--icon-hover)}
@@ -139,6 +138,7 @@
   .chips{display:flex;gap:6px;align-items:center;margin:4px 0 2px}
   .chip{padding:4px 8px;border-radius:999px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
   .chip.active{background:var(--button-bg);}
+
   .tasks{margin-top:2px}
   .task{position:relative;display:grid;grid-template-columns:12px 1fr auto auto 14px;gap:8px;align-items:center;margin:6px 0}
   .task .prio-bar{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px}
@@ -180,7 +180,6 @@
     padding:16px 16px 14px; min-width:320px; max-width:560px; width:min(560px,92vw);
     box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit
   }
-  .modal--contact{ padding:14px 14px 12px; max-width:480px; width:min(480px,92vw); }
   .modal h3{margin:0 0 12px;font-size:18px;font-weight:700}
   .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
   .btn.secondary{background:var(--control-bg);color:var(--control-fg);border-color:var(--control-border)}
@@ -210,34 +209,10 @@
 
   /* Keep select borders steady on focus/active */
   select:focus, select:active { border-color: var(--control-border) !important; box-shadow:none !important; outline:none; }
-
-  /* Preset rename UI */
-  .preset-rename{ display:none; flex-direction:column; gap:4px; }
-  .preset-rename.show{ display:flex; }
-  .preset-rename .row{ display:flex; align-items:center; gap:6px; }
-  .preset-rename input[type="text"]{ padding:6px 8px; border-radius:8px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); font-family:inherit; font-size:var(--ui); width:140px; }
-  .preset-rename input[type="text"]:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; }
-  .preset-rename .inline-msg{ display:block; margin:0; text-align:left; color:var(--danger); }
-  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-
-  /* Contact modal rows and toast */
-  .contact-row{ display:flex; align-items:center; gap:10px; padding:6px 2px; }
-  .contact-icon{ width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--control-fg); opacity:.9; }
-  .contact-row a{ color:var(--popover-fg); text-decoration: underline; font-weight:600; }
-  .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
-  .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
-  .toast.show{ opacity:1; }
 </style>
 </head>
+<!-- Change: swapped Contact button icon to a tiny envelope with a small heart for clear, cute support semantics. -->
 <body class="lavender">
-
-<!-- Change: added Contact heart button and modal with Ko-fi link and Discord handle. -->
-<!-- Change: added inline preset rename with pencil icon, 12 char limit, unique validation. -->
-
-<!-- Heart “Contact” button -->
-<button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact" style="position:fixed;top:12px;right:48px;z-index:1200;">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.1 8.64l-.1.1l-.11-.11C10.14 6.9 7.39 6.9 5.64 8.64c-1.75 1.75-1.75 4.5 0 6.25l5.67 5.67c.39.39 1.02.39 1.41 0l5.67-5.67c1.75-1.75 1.75-4.5 0-6.25c-1.75-1.75-4.5-1.75-6.25 0z"/></svg>
-</button>
 
 <!-- Top-right “?” button -->
 <button aria-label="Keyboard shortcuts" class="icon-btn" id="shortcuts-btn" style="position:fixed;top:12px;right:12px;z-index:1200;" title="Keyboard shortcuts">?</button>
@@ -272,24 +247,12 @@
   </div>
   <div class="right">
     <label for="preset">Preset:</label>
-    <div class="select-wrap" id="preset-select-wrap">
+    <div class="select-wrap">
       <select id="preset">
         <option value="1">Preset 1</option>
         <option value="2">Preset 2</option>
         <option value="3">Preset 3</option>
       </select>
-    </div>
-    <button id="preset-rename-btn" class="icon-btn" aria-label="Rename preset." title="Rename preset.">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-    </button>
-    <div id="preset-rename" class="preset-rename" aria-live="polite">
-      <div class="row">
-        <input id="preset-rename-input" type="text" placeholder="Preset name" maxlength="12" aria-label="Preset name">
-        <button id="preset-rename-save" class="btn" type="button">Save</button>
-        <button id="preset-rename-cancel" class="btn secondary" type="button">Cancel</button>
-      </div>
-      <div id="preset-rename-error" class="inline-msg" role="status" aria-live="assertive"></div>
-      <div id="preset-rename-announce" class="sr-only" aria-live="polite"></div>
     </div>
     <button aria-label="Save" class="icon-btn" id="save-btn" title="Save">
       <svg viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4ZM5 5h10v4H5V5Zm7 14H6v-6h6v6Z" fill="currentColor"/></svg>
@@ -363,39 +326,7 @@
   </div>
 </div>
 
-<!-- Contact Modal -->
-<div class="modal-overlay" id="contact-overlay" aria-hidden="true">
-  <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
-    <h3 id="contact-title">Contact &amp; Support</h3>
-
-    <div class="contact-row">
-      <span class="contact-icon" aria-hidden="true">
-        <!-- Monochrome Ko-fi cup -->
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 5h13a1 1 0 0 1 1 1v3h1.5a3.5 3.5 0 1 1 0 7H17v1a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a1 1 0 0 1 1-1Zm11 4V7H4v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V9Zm3 6h1.5a1.5 1.5 0 0 0 0-3H17v3Z"/></svg>
-      </span>
-      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Ko-fi profile link to mijuxsky">mijuxsky</a>
-    </div>
-
-    <div class="contact-row">
-      <span class="contact-icon" aria-hidden="true">
-        <!-- Minimal Discord glyph -->
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 5.5a16.9 16.9 0 0 0-4.11-1.25l-.2.37a14.7 14.7 0 0 1 3.74 1.33a13.4 13.4 0 0 0-12.86 0A14.7 14.7 0 0 1 10.3 4.6l-.2-.37A16.9 16.9 0 0 0 6 5.5C4 8.3 3.5 11 3.7 13.7c1.56 1.15 3.07 1.85 4.52 2.19l.7-1.48c-.39-.15-.76-.32-1.1-.51c.3.22.76.51 1.44.8c1.09.46 2.34.74 3.74.74s2.65-.28 3.74-.74c.68-.29 1.14-.58 1.44-.8c-.34.19-.71.36-1.1.51l.7 1.48c1.45-.34 2.96-1.04 4.52-2.19C20.5 11 20 8.3 18 5.5ZM9.75 12.6c-.66 0-1.2-.56-1.2-1.25s.54-1.25 1.2-1.25s1.2.56 1.2 1.25s-.54 1.25-1.2 1.25Zm4.5 0c-.66 0-1.2-.56-1.2-1.25s.54-1.25 1.2-1.25s1.2.56 1.2 1.25s-.54 1.25-1.2 1.25Z"/></svg>
-      </span>
-      <div class="copy-wrap" aria-label="Discord handle">
-        <span id="discord-handle">MijuxSky</span>
-        <button id="discord-copy" class="btn secondary small" type="button" aria-label="Copy Discord handle">Copy</button>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="btn" id="contact-close" type="button" aria-label="Close contact modal">Close</button>
-    </div>
-  </div>
-</div>
-
 <input id="hidden-upload" type="file" accept="image/*" style="display:none"/>
-
-<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>Discord handle copied</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
@@ -426,106 +357,6 @@ themeSel.addEventListener("change",()=>{ document.body.className=themeSel.value;
 let currentPreset=parseInt(localStorage.getItem("maplePreset")||"1",10);
 const presetSel=$("#preset"); presetSel.value=String(currentPreset);
 presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset",String(currentPreset)); build(); });
-/* Preset names (rename only) */
-const PRESET_NAME_KEY = "maplePresetNames_v1";
-function getPresetNames(){
-  const raw = localStorage.getItem(PRESET_NAME_KEY);
-  const obj = raw ? safeParse(raw) : null;
-  const dflt = {1: "Preset 1", 2: "Preset 2", 3: "Preset 3"};
-  if(!obj || typeof obj !== "object") return {...dflt};
-  for(const id of [1,2,3]) if(!obj[id]) obj[id] = dflt[id];
-  return obj;
-}
-function savePresetNames(obj){ localStorage.setItem(PRESET_NAME_KEY, JSON.stringify(obj)); }
-function applyPresetNames(){
-  const names = getPresetNames();
-  [...presetSel.options].forEach(opt => {
-    const id = Number(opt.value);
-    opt.textContent = names[id] || `Preset ${id}`;
-  });
-}
-applyPresetNames();
-
-const presetSelectWrap = $("#preset-select-wrap");
-const renameBtn = $("#preset-rename-btn");
-const renameWrap = $("#preset-rename");
-const renameInput = $("#preset-rename-input");
-const renameSave = $("#preset-rename-save");
-const renameCancel = $("#preset-rename-cancel");
-const renameError = $("#preset-rename-error");
-const renameAnnounce = $("#preset-rename-announce");
-let renameOpen = false;
-let clickAwayHandler = null;
-
-function openRename(){
-  if(renameOpen) return;
-  const names = getPresetNames();
-  const currentName = names[currentPreset] || `Preset ${currentPreset}`;
-  renameInput.value = currentName;
-  presetSelectWrap.style.display = "none";
-  renameBtn.style.display = "none";
-  renameWrap.classList.add("show");
-  renameError.textContent = "";
-  renameOpen = true;
-  // Announce
-  renameAnnounce.textContent = "Editing preset name. Press Enter to save, or Escape to cancel.";
-  // Focus
-  setTimeout(()=>{ renameInput.focus(); renameInput.select(); }, 0);
-  // Clicking away cancels
-  clickAwayHandler = (e)=>{
-    if(renameOpen && !renameWrap.contains(e.target) && e.target !== renameBtn){
-      cancelRename();
-    }
-  };
-  document.addEventListener("mousedown", clickAwayHandler, true);
-}
-function closeRename(focusTarget="button"){
-  if(!renameOpen) return;
-  renameOpen = false;
-  renameWrap.classList.remove("show");
-  presetSelectWrap.style.display = "";
-  renameBtn.style.display = "";
-  renameError.textContent = "";
-  if(clickAwayHandler){ document.removeEventListener("mousedown", clickAwayHandler, true); clickAwayHandler = null; }
-  if(focusTarget === "select"){ presetSel.focus(); } else { renameBtn.focus(); }
-}
-function validatePresetName(raw){
-  const name = raw.trim();
-  if(!name) return "Name is required.";
-  if(name.length > 12) return "Max 12 characters.";
-  const names = getPresetNames();
-  const lower = name.toLowerCase();
-  for(const id of [1,2,3]){
-    const other = (names[id] || `Preset ${id}`).trim().toLowerCase();
-    if(id !== currentPreset && other === lower) return "Name must be unique.";
-  }
-  return null;
-}
-function saveRename(){
-  const val = renameInput.value;
-  const err = validatePresetName(val);
-  if(err){
-    renameError.textContent = err;
-    return;
-  }
-  const names = getPresetNames();
-  names[currentPreset] = val.trim();
-  savePresetNames(names);
-  applyPresetNames();
-  closeRename("select");
-}
-function cancelRename(){ closeRename("button"); }
-
-// Hook up events
-renameBtn?.addEventListener("click", openRename);
-renameSave?.addEventListener("click", saveRename);
-renameCancel?.addEventListener("click", ()=> closeRename("button"));
-renameInput?.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter"){ e.preventDefault(); saveRename(); }
-  else if(e.key === "Escape"){ e.preventDefault(); closeRename("button"); }
-});
-// When switching presets, ensure names apply
-presetSel.addEventListener("change", ()=>{ applyPresetNames(); });
 
 function todayUTC(){ const n=new Date(); return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`; }
 function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
@@ -898,7 +729,7 @@ function moveCard(from,to){
   }
   const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
   const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
-  const nd={charCount=list.length};
+  const nd={charCount:list.length};
   for(let i=0;i<list.length;i++){
     const c=list[i];
     nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
@@ -1082,118 +913,59 @@ function attachNameLookup(cardIndex,nameInput,metaElem,msgElem,imgElem){
 /* Icons */
 function iconBtn(title,svgOrHtml,onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
 function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
-function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6a2 2 0 0 1 2-2h6l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path fill="currentColor" d="M8 4v4h4"/></svg>'; }
+function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
 function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
 function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
+/* ===== Shortcuts modal & Quickstart ===== */
+const shortcutsBtn=$("#shortcuts-btn");
+const shortcutsOverlay=$("#shortcuts-overlay");
+const shortcutsClose=$("#shortcuts-close");
+let shortcutsOpener=null;
+
+function focusableWithin(el){ return Array.from(el.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(x=>!x.hasAttribute('disabled') && x.offsetParent!==null); }
+
+function openShortcuts(){
+  shortcutsOpener=document.activeElement;
+  shortcutsOverlay.classList.add('show'); shortcutsOverlay.setAttribute('aria-hidden','false');
+  // Focus trap
+  const f=focusableWithin(shortcutsOverlay); (f[0]||shortcutsOverlay).focus();
+  document.addEventListener('keydown',trapTab);
+}
+function closeShortcuts(){
+  shortcutsOverlay.classList.remove('show'); shortcutsOverlay.setAttribute('aria-hidden','true');
+  document.removeEventListener('keydown',trapTab);
+  if(shortcutsOpener) shortcutsOpener.focus();
+}
+function trapTab(e){
+  if(e.key!=='Tab') return;
+  const f=focusableWithin(shortcutsOverlay); if(!f.length) return;
+  const first=f[0], last=f[f.length-1];
+  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}
+shortcutsBtn?.addEventListener('click',e=>{ e.preventDefault(); (shortcutsOverlay.classList.contains('show')?closeShortcuts():openShortcuts()); });
+shortcutsClose?.addEventListener('click',()=>closeShortcuts());
+shortcutsOverlay?.addEventListener('click',e=>{ if(e.target===shortcutsOverlay) closeShortcuts(); });
+document.addEventListener('keydown',e=>{
+  const a=document.activeElement, isField=a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.isContentEditable);
+  if((e.key==='?'||(e.shiftKey&&e.key==='/'))&&!isField){ e.preventDefault(); openShortcuts(); }
+  if(e.key==='Escape'){ if(accOpen) closeAccentsPanel(); if(shortcutsOverlay.classList.contains('show')) closeShortcuts(); }
+});
+
+/* Quickstart show/hide (stored like before) */
+const quickstartToggle=$("#quickstart-toggle");
+const quickstartList=$("#quickstart-list");
+function setQuickstartHidden(hidden){
+  quickstartList.style.display = hidden ? "none" : "";
+  quickstartToggle.textContent = hidden ? "Show" : "Hide";
+  localStorage.setItem("mapleInstrMin", hidden ? "1" : "0");
+}
+setQuickstartHidden(localStorage.getItem("mapleInstrMin")==="1");
+quickstartToggle.addEventListener("click",()=> setQuickstartHidden(quickstartList.style.display!=="none"));
+
+/* Init */
 build();
-
-/* ===== Keyboard Shortcuts & Quickstart modal ===== */
-const shortcutsBtn=$("#shortcuts-btn"), shortcutsOverlay=$("#shortcuts-overlay"), shortcutsClose=$("#shortcuts-close"), quickstartToggle=$("#quickstart-toggle"), quickstartList=$("#quickstart-list");
-shortcutsBtn.addEventListener("click",()=>{ shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
-shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
-document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});
-quickstartToggle.addEventListener("click",()=>{
-  const hidden=quickstartList.style.display==="none";
-  quickstartList.style.display=hidden?"":"none";
-  quickstartToggle.textContent = hidden ? "Hide" : "Show";
-});
-
-/* ===== Contact (Heart) modal: focus trap, copy-to-clipboard, theming ===== */
-const contactBtn=$("#contact-btn");
-const contactOverlay=$("#contact-overlay");
-const contactClose=$("#contact-close");
-const kofiLink=$("#kofi-link");
-const discordCopy=$("#discord-copy");
-const discordHandle=$("#discord-handle");
-const toastEl=$("#toast");
-let lastFocusBeforeContact=null;
-
-function isOverlayOpen(overlay){ return overlay.classList.contains("show"); }
-
-function openContact(){
-  if(isOverlayOpen(contactOverlay)){ closeContact(); return; }
-  lastFocusBeforeContact = document.activeElement;
-  contactOverlay.classList.add("show");
-  contactOverlay.setAttribute("aria-hidden","false");
-  trapFocus(contactOverlay);
-  // focus first focusable in modal
-  setTimeout(()=>{
-    (kofiLink || contactClose || contactBtn).focus();
-  }, 0);
-}
-function closeContact(){
-  releaseTrap(contactOverlay);
-  contactOverlay.classList.remove("show");
-  contactOverlay.setAttribute("aria-hidden","true");
-  // return focus to opener
-  setTimeout(()=>{ (lastFocusBeforeContact || contactBtn).focus(); }, 0);
-}
-
-contactBtn.addEventListener("click", openContact);
-contactClose.addEventListener("click", closeContact);
-// backdrop click to close
-contactOverlay.addEventListener("mousedown",(e)=>{ if(e.target===contactOverlay) closeContact(); });
-// Esc also closes (handled in trapFocus as well)
-document.addEventListener("keydown",(e)=>{
-  if(e.key==="Escape" && isOverlayOpen(contactOverlay)) closeContact();
-});
-
-// Focus trap utilities
-function getFocusableIn(el){
-  return Array.from(el.querySelectorAll(
-    'a[href],button:not([disabled]),input,textarea,select,[tabindex]:not([tabindex="-1"])'
-  )).filter(n=>n.offsetParent!==null || n===document.activeElement);
-}
-function trapFocus(overlay){
-  const modal = overlay.querySelector(".modal");
-  const onKey = (e)=>{
-    if(!isOverlayOpen(overlay)) return;
-    if(e.key === "Tab"){
-      const f = getFocusableIn(modal);
-      if(f.length===0){ e.preventDefault(); modal.focus(); return; }
-      const first=f[0], last=f[f.length-1];
-      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-    }
-  };
-  overlay._trapHandler = onKey;
-  document.addEventListener("keydown", onKey);
-}
-function releaseTrap(overlay){
-  if(overlay._trapHandler){ document.removeEventListener("keydown", overlay._trapHandler); overlay._trapHandler=null; }
-}
-
-// Copy Discord handle
-discordCopy.addEventListener("click", async ()=>{
-  const text = (discordHandle?.textContent || "MijuxSky").trim();
-  let ok=false;
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    try{ await navigator.clipboard.writeText(text); ok=true; }catch{}
-  }
-  if(!ok){
-    // fallback
-    const ta=document.createElement("textarea");
-    ta.value=text; ta.style.position="fixed"; ta.style.left="-9999px";
-    document.body.appendChild(ta); ta.select();
-    try{ ok=document.execCommand("copy"); }catch{ ok=false; }
-    ta.remove();
-  }
-  showToast(ok ? "Discord handle copied" : "Copy failed");
-});
-
-let toastTimer=null;
-function showToast(msg){
-  toastEl.textContent=msg;
-  toastEl.hidden=false;
-  toastEl.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>{
-    toastEl.classList.remove("show");
-    // hide after transition
-    setTimeout(()=>{ toastEl.hidden=true; }, 200);
-  }, 1400);
-}
 </script>
 </body>
 </html>
