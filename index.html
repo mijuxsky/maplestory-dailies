@@ -137,7 +137,7 @@
   .accents-btn:hover{background:var(--icon-hover)}
   .accents-btn .accents-icon{font-weight:700;font-size:14px;line-height:1;font-family:inherit}
 
-  .chips{display:flex;gap:6px;align-items:center;justify-content:center;margin:4px 0 2px}
+  .chips{display:flex;gap:6px;align-items:center;margin:4px 0 2px;justify-content:center}
   .chip{padding:4px 8px;border-radius:999px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
   .chip.active{background:var(--button-bg);}
   .tasks{margin-top:2px}
@@ -149,9 +149,7 @@
   .task.important{background:var(--accent-tint)}
   .task.urgent{background:var(--danger-tint)}
   .task.important .task-text{font-weight:600}
-.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
   .task.urgent .task-text{font-weight:700}
-.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
 
   @keyframes pulseGlow {
     0% { box-shadow: 0 0 0 0 rgba(229,115,115,0.6); }
@@ -169,7 +167,6 @@
   .task .prio-btn .i{font-size:13px;line-height:1}
   .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
   .task .task-text{min-width:0}
-.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
   .handle{cursor:grab;user-select:none;opacity:.7}
   .handle:active{cursor:grabbing}
 
@@ -184,7 +181,6 @@
     padding:16px 16px 14px; min-width:320px; max-width:560px; width:min(560px,92vw);
     box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit
   }
-  .modal--contact{ padding:14px 14px 12px; max-width:480px; width:min(480px,92vw); }
   .modal h3{margin:0 0 12px;font-size:18px;font-weight:700}
   .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
   .btn.secondary{background:var(--control-bg);color:var(--control-fg);border-color:var(--control-border)}
@@ -226,48 +222,21 @@
 
   /* Contact modal rows and toast */
   .contact-row{ display:flex; align-items:center; gap:10px; padding:6px 2px; }
-  
-  .contact-row a{ color:var(--popover-fg); text-decoration: none; font-weight:600; }
+  .contact-icon{ width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; color:var(--control-fg); opacity:.9; }
+  .contact-row a{ color:var(--popover-fg); text-decoration: underline; font-weight:600; }
   .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
   .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
   .toast.show{ opacity:1; }
-
-  .modal { position: relative; }
-  .modal-x{
-    position:absolute; top:8px; right:10px;
-    background:transparent; border:none; color:var(--popover-fg);
-    font-size:18px; line-height:1; padding:2px; cursor:pointer;
-  }
-  .modal-x:hover{ transform:scale(1.06); }
-  .modal-x:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; border-radius:6px; }
-
 </style>
 </head>
 <body class="lavender">
 
-<!-- Change: Contact modal — switched Discord to padded brand icon, link '@MijuxSky' to deep-link; removed Copy; adjusted link styling to match menu reference. -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
-<!-- Change: fixed Discord icon cropping in Contact modal (added safe padding + CSS to prevent clipping). -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
-<!-- Change: centered priority chips; redesigned Contact modal (full Ko‑fi link + Discord copy); swapped Contact button to tiny envelope with heart seal. -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
 <!-- Change: added Contact heart button and modal with Ko-fi link and Discord handle. -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
 <!-- Change: added inline preset rename with pencil icon, 12 char limit, unique validation. -->
 
 <!-- Heart “Contact” button -->
-<button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact / Support" style="position:fixed;top:12px;right:48px;z-index:1200;">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <!-- Envelope outline (monochrome, inherits currentColor) -->
-    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3.5" y="7" width="17" height="11" rx="2"/>
-      <path d="M4 7.5l8 6l8-6"/>
-    </g>
-    <!-- Tiny heart "seal" above-right of flap -->
-    <g transform="translate(15,-1.5) scale(0.45)">
-      <path fill="currentColor" d="M12.1 8.64l-.1.1l-.11-.11C10.14 6.9 7.39 6.9 5.64 8.64c-1.75 1.75-1.75 4.5 0 6.25l5.67 5.67c.39.39 1.02.39 1.41 0l5.67-5.67c1.75-1.75 1.75-4.5 0-6.25c-1.75-1.75-4.5-1.75-6.25 0z"/>
-    </g>
-  </svg>
+<button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact" style="position:fixed;top:12px;right:48px;z-index:1200;">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.1 8.64l-.1.1l-.11-.11C10.14 6.9 7.39 6.9 5.64 8.64c-1.75 1.75-1.75 4.5 0 6.25l5.67 5.67c.39.39 1.02.39 1.41 0l5.67-5.67c1.75-1.75 1.75-4.5 0-6.25c-1.75-1.75-4.5-1.75-6.25 0z"/></svg>
 </button>
 
 <!-- Top-right “?” button -->
@@ -366,19 +335,19 @@
 <!-- Shortcuts & Quickstart Modal -->
 <div class="modal-overlay" id="shortcuts-overlay" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title">
-    <button class="modal-x" id="shortcuts-x" type="button" aria-label="Close">×</button>
     <h3 id="shortcuts-title">Keyboard Shortcuts</h3>
     <ul style="margin:6px 0 12px 18px;padding:0;">
-      <li>Up / Down - Move between tasks</li>
-      <li>Enter - Insert a new task below</li>
-      <li>Tab - Toggle the checkbox on the focused task</li>
-      <li>Space - Toggle the checkbox (when the checkbox or row is focused)</li>
-      <li>Alt + A - Open Accents for the focused field</li>
-      <li>Esc - Close panels</li>
+      <li>Up / Down — Move between tasks</li>
+      <li>Enter — Insert a new task below</li>
+      <li>Tab — Toggle the checkbox on the focused task</li>
+      <li>Space — Toggle the checkbox (when the checkbox or row is focused)</li>
+      <li>Alt + A — Open Accents for the focused field</li>
+      <li>Esc — Close panels</li>
     </ul>
     <hr style="border:none;border-top:1px solid var(--popover-border);margin:10px 0 12px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
       <strong>Quickstart</strong>
+      <button id="quickstart-toggle" class="btn secondary" type="button" style="padding:4px 8px;font-size:12px;">Hide</button>
     </div>
     <ol id="quickstart-list" style="margin:4px 0 0 18px;padding:0;">
       <li>Choose an existing preset or create a new one</li>
@@ -388,42 +357,36 @@
       <li>Save your changes to the current preset</li>
       <li>Load a different preset or manage presets to rename, duplicate, or delete</li>
     </ol>
-    <div style="margin-top:10px;">
-      <strong>Key features</strong>
-      <ul style="margin:6px 0 0 18px;padding:0;">
-        <li>Daily checkboxes reset at 00:00 UTC (midnight UTC).</li>
-        <li>Priority view: use "Show priority first" or "Only priority".</li>
-        <li>Rename presets (3 total). IDs stay the same for saved data.</li>
-        <li>Drag-and-drop to reorder tasks and characters.</li>
-        <li>Accents helper (Â button) for names and tasks.</li>
-        <li>Save/Load presets as JSON.</li>
-      </ul>
+    <div class="actions">
+      <button class="btn" id="shortcuts-close" type="button">Close</button>
     </div>
   </div>
 </div>
 
 <!-- Contact Modal -->
-<div class="modal-overlay" id="contact-overlay" aria-hidden="true" inert>
-  <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
-    <button class="modal-x" id="contact-x" type="button" aria-label="Close">×</button>
+<div class="modal-overlay" id="contact-overlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+    <button id="contact-close" class="acc-close" type="button" aria-label="Close" style="position:absolute;right:10px;top:10px;">×</button>
     <h3 id="contact-title">Contact &amp; Support</h3>
-    <div class="contact-row" style="margin-top:4px;">
-      <span style="opacity:.8">Discord:</span>
-      <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
-    </div>
+
     <div class="contact-row">
-      <span style="opacity:.8">Donate:</span>
-      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
+      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Ko-fi Donate Link">Donate</a>
+    </div>
+
+    <div class="contact-row">
+      <span>Discord:</span> 
+      <a id="discord-link" href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer">@MijuxSky</a>
     </div>
   </div>
+</div>
 
+</div>
 
 <input id="hidden-upload" type="file" accept="image/*" style="display:none"/>
 
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>Discord handle copied</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-
 <script>
 /* ===== Config & helpers ===== */
 const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
@@ -496,7 +459,7 @@ function openRename(){
   // Announce
   renameAnnounce.textContent = "Editing preset name. Press Enter to save, or Escape to cancel.";
   // Focus
-  setTimeout(()=>{ renameInput.focus(); renameInput.select(); 
+  setTimeout(()=>{ renameInput.focus(); renameInput.select(); }, 0);
   // Clicking away cancels
   clickAwayHandler = (e)=>{
     if(renameOpen && !renameWrap.contains(e.target) && e.target !== renameBtn){
@@ -732,7 +695,7 @@ function buildCard(i,d){
     const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=tIdx; box.checked=(localStorage.getItem(dailyKey(cardIndex,tIdx))==='true');
     box.onchange=()=> localStorage.setItem(dailyKey(cardIndex,tIdx), box.checked?'true':'false');
 
-    const input=document.createElement("input"); input.type="text"; input.className="task-text"; input.maxLength=32; input.placeholder="Daily Task"; input.value=dd[`char_${cardIndex}_task_${tIdx}`]||"";
+    const input=document.createElement("input"); input.type="text"; input.className="task-text"; input.placeholder="Daily Task"; input.value=dd[`char_${cardIndex}_task_${tIdx}`]||"";
 
     const del=document.createElement("button"); del.className="task-delete"; del.title="Delete Task"; del.textContent="×";
 
@@ -764,16 +727,12 @@ function buildCard(i,d){
       else if(e.key==="ArrowDown"){ e.preventDefault(); moveFocus(cardIndex,tIdx,+1); }
     });
 
-    input.addEventListener("input",()=>{ if(input.value.length>32) input.value = input.value.slice(0,32);
-// Enforce one-line fit before saving
-      fitInputToLine(input);
+    input.addEventListener("input",()=>{
       const d2=loadData();
       if(input.value===""){
-
         const ct=d2[`char_${cardIndex}_taskCount`]||1;
         if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
-      }
-      else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
+      }else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
     });
 
     del.onclick=()=>{
@@ -808,20 +767,6 @@ function buildCard(i,d){
 
 function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
 
-
-/* Enforce that a task's text fits on one visual line within its input.
-   Trims extra characters when content would overflow horizontally. */
-function fitInputToLine(el){
-  // Keep trimming until the content fits the visible width
-  // Guard: very long strings may require multiple trims (paste case)
-  let changed = false;
-  // Use a loop with a max iteration to avoid any pathological cases
-  for(let i=0; i<500 && el.scrollWidth > el.clientWidth && el.value.length>0; i++){
-    el.value = el.value.slice(0, -1);
-    changed = true;
-  }
-  return changed;
-}
 /* Tasks shared helpers */
 function focusNewTaskInput(i,tNew){
   const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
@@ -1133,3 +1078,111 @@ function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentCol
 build();
 
 /* ===== Keyboard Shortcuts & Quickstart modal ===== */
+const shortcutsBtn=$("#shortcuts-btn"), shortcutsOverlay=$("#shortcuts-overlay"), shortcutsClose=$("#shortcuts-close"), quickstartToggle=$("#quickstart-toggle"), quickstartList=$("#quickstart-list");
+shortcutsBtn.addEventListener("click",()=>{ shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
+shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});
+quickstartToggle.addEventListener("click",()=>{
+  const hidden=quickstartList.style.display==="none";
+  quickstartList.style.display=hidden?"":"none";
+  quickstartToggle.textContent = hidden ? "Hide" : "Show";
+});
+
+/* ===== Contact (Heart) modal: focus trap, copy-to-clipboard, theming ===== */
+const contactBtn=$("#contact-btn");
+const contactOverlay=$("#contact-overlay");
+const contactClose=$("#contact-close");
+const kofiLink=$("#kofi-link");
+const discordCopy=$("#discord-copy");
+const discordHandle=$("#discord-handle");
+const toastEl=$("#toast");
+let lastFocusBeforeContact=null;
+
+function isOverlayOpen(overlay){ return overlay.classList.contains("show"); }
+
+function openContact(){
+  if(isOverlayOpen(contactOverlay)){ closeContact(); return; }
+  lastFocusBeforeContact = document.activeElement;
+  contactOverlay.classList.add("show");
+  contactOverlay.setAttribute("aria-hidden","false");
+  trapFocus(contactOverlay);
+  // focus first focusable in modal
+  setTimeout(()=>{
+    (kofiLink || contactClose || contactBtn).focus();
+  }, 0);
+}
+function closeContact(){
+  releaseTrap(contactOverlay);
+  contactOverlay.classList.remove("show");
+  contactOverlay.setAttribute("aria-hidden","true");
+  // return focus to opener
+  setTimeout(()=>{ (lastFocusBeforeContact || contactBtn).focus(); }, 0);
+}
+
+contactBtn.addEventListener("click", openContact);
+contactClose.addEventListener("click", closeContact);
+// backdrop click to close
+contactOverlay.addEventListener("mousedown",(e)=>{ if(e.target===contactOverlay) closeContact(); });
+// Esc also closes (handled in trapFocus as well)
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="Escape" && isOverlayOpen(contactOverlay)) closeContact();
+});
+
+// Focus trap utilities
+function getFocusableIn(el){
+  return Array.from(el.querySelectorAll(
+    'a[href],button:not([disabled]),input,textarea,select,[tabindex]:not([tabindex="-1"])'
+  )).filter(n=>n.offsetParent!==null || n===document.activeElement);
+}
+function trapFocus(overlay){
+  const modal = overlay.querySelector(".modal");
+  const onKey = (e)=>{
+    if(!isOverlayOpen(overlay)) return;
+    if(e.key === "Tab"){
+      const f = getFocusableIn(modal);
+      if(f.length===0){ e.preventDefault(); modal.focus(); return; }
+      const first=f[0], last=f[f.length-1];
+      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    }
+  };
+  overlay._trapHandler = onKey;
+  document.addEventListener("keydown", onKey);
+}
+function releaseTrap(overlay){
+  if(overlay._trapHandler){ document.removeEventListener("keydown", overlay._trapHandler); overlay._trapHandler=null; }
+}
+
+// Copy Discord handle
+if (discordCopy) discordCopy.addEventListener("click", async ()=>{
+  const text = (discordHandle?.textContent || "MijuxSky").trim();
+  let ok=false;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    try{ await navigator.clipboard.writeText(text); ok=true; }catch{}
+  }
+  if(!ok){
+    // fallback
+    const ta=document.createElement("textarea");
+    ta.value=text; ta.style.position="fixed"; ta.style.left="-9999px";
+    document.body.appendChild(ta); ta.select();
+    try{ ok=document.execCommand("copy"); }catch{ ok=false; }
+    ta.remove();
+  }
+  showToast(ok ? "Discord handle copied" : "Copy failed");
+});
+
+let toastTimer=null;
+function showToast(msg){
+  toastEl.textContent=msg;
+  toastEl.hidden=false;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{
+    toastEl.classList.remove("show");
+    // hide after transition
+    setTimeout(()=>{ toastEl.hidden=true; }, 200);
+  }, 1400);
+}
+</script>
+</body>
+</html>
