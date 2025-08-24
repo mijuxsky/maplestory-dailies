@@ -231,6 +231,18 @@
   .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
   .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
   .toast.show{ opacity:1; }
+
+  .modal { position: relative; }
+  .modal-x{
+    position:absolute; top:8px; right:8px;
+    width:28px; height:28px; line-height:28px; text-align:center;
+    border-radius:8px; border:1px solid var(--control-border);
+    background:var(--control-bg); color:var(--control-fg);
+    font-weight:700; font-size:16px; cursor:pointer; font-family:inherit;
+  }
+  .modal-x:hover{ background:var(--icon-hover); }
+  .modal-x:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; }
+
 </style>
 </head>
 <body class="lavender">
@@ -334,9 +346,8 @@
       <button class="btn" id="confirm-ok" type="button">Yes</button>
       <button class="btn secondary" id="confirm-cancel" type="button">No</button>
     </div>
-  </div>
 </div>
-
+</div>
 <!-- Accents popover -->
 <div class="acc-pop" id="accents-popover" role="dialog" aria-modal="false" aria-label="Accented characters">
   <div class="acc-head">
@@ -355,7 +366,9 @@
 
 <!-- Shortcuts & Quickstart Modal -->
 <div class="modal-overlay" id="shortcuts-overlay" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title">
+  <div class="modal" role="dialog"
+     aria-modal="true" aria-labelledby="shortcuts-title">
+    <button class="modal-x" id="shortcuts-x" type="button" aria-label="Close">×</button>
     <h3 id="shortcuts-title">Keyboard Shortcuts</h3>
     <ul style="margin:6px 0 12px 18px;padding:0;">
       <li>Up / Down - Move between tasks</li>
@@ -386,32 +399,21 @@
         <li>Save/Load presets as JSON.</li>
       </ul>
     </div>
-    <div class="actions">
-      <button class="btn" id="shortcuts-close" type="button">Close</button>
-    </div>
-  </div>
 </div>
-
 <!-- Contact Modal -->
-<div class="modal-overlay" id="contact-overlay" aria-hidden="true" inert inert>
+<div class="modal-overlay" id="contact-overlay" aria-hidden="true" inert>
   <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+    <button class="modal-x" id="contact-x" type="button" aria-label="Close">×</button>
     <h3 id="contact-title">Contact &amp; Support</h3>
-<div class="contact-row" style="margin-top:4px;">
-  <span style="opacity:.8">Discord:</span>
-  <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
-</div>
-<div class="contact-row">
-  <span style="opacity:.8">Donate:</span>
-  <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
-</div>
-</div>
-  </div>
-</div>
+    <div class="contact-row" style="margin-top:4px;">
+      <span style="opacity:.8">Discord:</span>
+      <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
     </div>
-
-    <div class="actions">
-      <button class="btn" id="contact-close" type="button" aria-label="Close contact modal">Close</button>
+    <div class="contact-row">
+      <span style="opacity:.8">Donate:</span>
+      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer" aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
     </div>
+</div>
   </div>
 </div>
 
@@ -420,25 +422,7 @@
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>Discord handle copied</div>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
-<script>}, 0);
-    document.addEventListener('keydown', onKey, true);
-  }
-  function closeContact(){
-    document.removeEventListener('keydown', onKey, true);
-    try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay?.classList.remove('show');
-    overlay?.setAttribute('aria-hidden','true');
-    overlay?.setAttribute('inert','');
-  }
-  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
 
-  btn?.addEventListener('click', ()=>{
-    if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
-  });
-  closeBtn?.addEventListener('click', closeContact);
-  overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
-})();
-</script>
 <script>
 /* ===== Config & helpers ===== */
 const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
@@ -1175,18 +1159,38 @@ quickstartToggle.addEventListener("click",()=>{
   btn?.addEventListener('click', ()=>{
     if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
   });
-  closeBtn?.addEventListener('click', closeContact);
+
   overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
 })();
 
-// Contact modal controls (text-only; no explicit close button)
+}, 0);
+    document.addEventListener('keydown', onKey, true);
+  }
+  function closeContact(){
+    document.removeEventListener('keydown', onKey, true);
+    try{ (opener || btn || document.body).focus(); }catch(e){}
+    overlay && overlay.classList.remove('show');
+    overlay && overlay.setAttribute('aria-hidden','true');
+    overlay && overlay.setAttribute('inert','');
+  }
+  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
+
+  btn && btn.addEventListener('click', ()=>{
+    if(overlay && overlay.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
+  });
+  overlay && overlay.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
+})();
+
+
+// Contact modal controls (X button, ESC, and backdrop)
 (function(){
   const overlay = document.getElementById('contact-overlay');
   const btn = document.getElementById('contact-btn');
+  const x = document.getElementById('contact-x');
   let opener = null;
 
   function firstFocusable(root){
-    return root && root.querySelector('a, button, [tabindex]:not([tabindex="-1"])');
+    return root && root.querySelector('button, a, [tabindex]:not([tabindex="-1"])');
   }
   function openContact(){
     opener = document.activeElement;
@@ -1211,8 +1215,44 @@ quickstartToggle.addEventListener("click",()=>{
   btn && btn.addEventListener('click', ()=>{
     if(overlay && overlay.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
   });
+  x && x.addEventListener('click', closeContact);
   overlay && overlay.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
 })();
-</script>
+
+
+// Shortcuts modal controls (X button, ESC, and backdrop)
+(function(){
+  const overlay = document.getElementById('shortcuts-overlay');
+  const btn = document.getElementById('shortcuts-btn');
+  const x = document.getElementById('shortcuts-x');
+  let opener = null;
+
+  function firstFocusable(root){
+    return root && root.querySelector('button, a, [tabindex]:not([tabindex="-1"])');
+  }
+  function openM(){
+    opener = document.activeElement;
+    overlay && overlay.classList.add('show');
+    overlay && overlay.setAttribute('aria-hidden','false');
+    setTimeout(()=>{
+      const f = firstFocusable(overlay);
+      (f || overlay)?.focus();
+    }, 0);
+    document.addEventListener('keydown', onKey, true);
+  }
+  function closeM(){
+    document.removeEventListener('keydown', onKey, true);
+    try{ (opener || btn || document.body).focus(); }catch(e){}
+    overlay && overlay.classList.remove('show');
+    overlay && overlay.setAttribute('aria-hidden','true');
+  }
+  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeM(); } }
+
+  btn && btn.addEventListener('click', ()=>{
+    if(overlay && overlay.getAttribute('aria-hidden') === 'true'){ openM(); } else { closeM(); }
+  });
+  x && x.addEventListener('click', closeM);
+  overlay && overlay.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeM(); } });
+})();</script>
 </body>
 </html>
