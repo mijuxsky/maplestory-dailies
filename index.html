@@ -109,7 +109,6 @@
   .btn{padding:8px 12px;border-radius:10px;background:var(--button-bg);color:var(--button-fg);border:1px solid var(--button-border);font-weight:600;font-family:inherit;font-size:var(--ui);cursor:pointer}
   .btn:hover{filter:brightness(1.02)}
   .btn:active{transform:translateY(1px)}
-  .btn.small{padding:4px 8px;font-size:12px;border-radius:8px}
 
   .icon-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);transition:.15s;font-family:inherit}
   .icon-btn:hover{background:var(--icon-hover)}
@@ -129,17 +128,17 @@
   .char-meta{text-align:center;font-size:12px;color:var(--checkall-fg);margin:0 0 2px;font-family:inherit;min-height:16px}
   .inline-msg{text-align:center;font-size:12px;margin:2px 0 0;color:var(--danger);display:none}
 
-  .name-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
-  .name-row::before{ content:""; width:28px; height:28px; border:1px solid transparent; border-radius:8px;}
+  .name-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
   .char-name{width:100%;border:none;background:transparent;border-bottom:var(--name-underline);text-align:center;font-weight:600;margin:0 0 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
   .char-name:focus{outline:none;box-shadow:none;border-bottom:var(--name-underline)}
   .accents-btn{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid var(--control-border);background:var(--control-bg);color:var(--icon);cursor:pointer;font-family:inherit}
   .accents-btn:hover{background:var(--icon-hover)}
   .accents-btn .accents-icon{font-weight:700;font-size:14px;line-height:1;font-family:inherit}
 
-  .chips{display:flex;gap:6px;align-items:center;justify-content:center;margin:4px 0 2px}
+  .chips{display:flex;gap:6px;align-items:center;margin:4px 0 2px}
   .chip{padding:4px 8px;border-radius:999px;border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
   .chip.active{background:var(--button-bg);}
+
   .tasks{margin-top:2px}
   .task{position:relative;display:grid;grid-template-columns:12px 1fr auto auto 14px;gap:8px;align-items:center;margin:6px 0}
   .task .prio-bar{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px}
@@ -149,9 +148,7 @@
   .task.important{background:var(--accent-tint)}
   .task.urgent{background:var(--danger-tint)}
   .task.important .task-text{font-weight:600}
-.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
   .task.urgent .task-text{font-weight:700}
-.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
 
   @keyframes pulseGlow {
     0% { box-shadow: 0 0 0 0 rgba(229,115,115,0.6); }
@@ -169,7 +166,6 @@
   .task .prio-btn .i{font-size:13px;line-height:1}
   .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
   .task .task-text{min-width:0}
-.task .task-text{white-space:nowrap; overflow:hidden; text-overflow:clip;}
   .handle{cursor:grab;user-select:none;opacity:.7}
   .handle:active{cursor:grabbing}
 
@@ -184,7 +180,6 @@
     padding:16px 16px 14px; min-width:320px; max-width:560px; width:min(560px,92vw);
     box-shadow:0 10px 28px rgba(0,0,0,.22); font-family:inherit
   }
-  .modal--contact{ padding:14px 14px 12px; max-width:480px; width:min(480px,92vw); }
   .modal h3{margin:0 0 12px;font-size:18px;font-weight:700}
   .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
   .btn.secondary{background:var(--control-bg);color:var(--control-fg);border-color:var(--control-border)}
@@ -214,51 +209,9 @@
 
   /* Keep select borders steady on focus/active */
   select:focus, select:active { border-color: var(--control-border) !important; box-shadow:none !important; outline:none; }
-
-  /* Preset rename UI */
-  .preset-rename{ display:none; flex-direction:column; gap:4px; }
-  .preset-rename.show{ display:flex; }
-  .preset-rename .row{ display:flex; align-items:center; gap:6px; }
-  .preset-rename input[type="text"]{ padding:6px 8px; border-radius:8px; border:1px solid var(--control-border); background:var(--control-bg); color:var(--control-fg); font-family:inherit; font-size:var(--ui); width:140px; }
-  .preset-rename input[type="text"]:focus-visible{ outline:2px solid var(--kbd-focus); outline-offset:2px; }
-  .preset-rename .inline-msg{ display:block; margin:0; text-align:left; color:var(--danger); }
-  .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-
-  /* Contact modal rows and toast */
-  .contact-row{ display:flex; align-items:center; gap:10px; padding:6px 2px; }
-  
-  .contact-row a{ color:var(--popover-fg); text-decoration: none; font-weight:600; }
-  .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
-  .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
-  .toast.show{ opacity:1; }
 </style>
 </head>
 <body class="lavender">
-
-<!-- Change: Contact modal — switched Discord to padded brand icon, link '@MijuxSky' to deep-link; removed Copy; adjusted link styling to match menu reference. -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
-<!-- Change: fixed Discord icon cropping in Contact modal (added safe padding + CSS to prevent clipping). -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
-<!-- Change: centered priority chips; redesigned Contact modal (full Ko‑fi link + Discord copy); swapped Contact button to tiny envelope with heart seal. -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
-<!-- Change: added Contact heart button and modal with Ko-fi link and Discord handle. -->
-<!-- Change: swapped to proper Discord brand icon (Bootstrap Icons), improved Ko‑fi cup+heart icon; uniform icon sizing; enforce daily task text to fit one line by trimming overflow. Also preserves previous changes. -->
-<!-- Change: added inline preset rename with pencil icon, 12 char limit, unique validation. -->
-
-<!-- Heart “Contact” button -->
-<button aria-label="Contact" class="icon-btn" id="contact-btn" title="Contact / Support" style="position:fixed;top:12px;right:48px;z-index:1200;">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <!-- Envelope outline (monochrome, inherits currentColor) -->
-    <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3.5" y="7" width="17" height="11" rx="2"/>
-      <path d="M4 7.5l8 6l8-6"/>
-    </g>
-    <!-- Tiny heart "seal" above-right of flap -->
-    <g transform="translate(15,-1.5) scale(0.45)">
-      <path fill="currentColor" d="M12.1 8.64l-.1.1l-.11-.11C10.14 6.9 7.39 6.9 5.64 8.64c-1.75 1.75-1.75 4.5 0 6.25l5.67 5.67c.39.39 1.02.39 1.41 0l5.67-5.67c1.75-1.75 1.75-4.5 0-6.25c-1.75-1.75-4.5-1.75-6.25 0z"/>
-    </g>
-  </svg>
-</button>
 
 <!-- Top-right “?” button -->
 <button aria-label="Keyboard shortcuts" class="icon-btn" id="shortcuts-btn" style="position:fixed;top:12px;right:12px;z-index:1200;" title="Keyboard shortcuts">?</button>
@@ -293,24 +246,12 @@
   </div>
   <div class="right">
     <label for="preset">Preset:</label>
-    <div class="select-wrap" id="preset-select-wrap">
+    <div class="select-wrap">
       <select id="preset">
         <option value="1">Preset 1</option>
         <option value="2">Preset 2</option>
         <option value="3">Preset 3</option>
       </select>
-    </div>
-    <button id="preset-rename-btn" class="icon-btn" aria-label="Rename preset." title="Rename preset.">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-    </button>
-    <div id="preset-rename" class="preset-rename" aria-live="polite">
-      <div class="row">
-        <input id="preset-rename-input" type="text" placeholder="Preset name" maxlength="12" aria-label="Preset name">
-        <button id="preset-rename-save" class="btn" type="button">Save</button>
-        <button id="preset-rename-cancel" class="btn secondary" type="button">Cancel</button>
-      </div>
-      <div id="preset-rename-error" class="inline-msg" role="status" aria-live="assertive"></div>
-      <div id="preset-rename-announce" class="sr-only" aria-live="polite"></div>
     </div>
     <button aria-label="Save" class="icon-btn" id="save-btn" title="Save">
       <svg viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4ZM5 5h10v4H5V5Zm7 14H6v-6h6v6Z" fill="currentColor"/></svg>
@@ -384,62 +325,9 @@
   </div>
 </div>
 
-<!-- Contact Modal -->
-<div class="modal-overlay" id="contact-overlay" aria-hidden="true" inert>
-  <div class="modal modal--contact" role="dialog" aria-modal="true" aria-labelledby="contact-title">
-    <h3 id="contact-title">Contact</h3>
-    <div class="contact-row" style="margin-top:4px;">
-      <a id="kofi-link" href="https://ko-fi.com/mijuxsky" target="_blank" rel="noopener noreferrer"
-         aria-label="Open Ko-fi profile: https://ko-fi.com/mijuxsky">https://ko-fi.com/mijuxsky</a>
-    </div>
-    <div class="contact-row">
-  <a href="https://discordapp.com/users/262661842902450176" target="_blank" rel="noopener noreferrer" aria-label="Open Discord profile for @MijuxSky">@MijuxSky</a>
-</div>
-  </div>
-</div>
-    </div>
-
-    <div class="actions">
-      <button class="btn" id="contact-close" type="button" aria-label="Close contact modal">Close</button>
-    </div>
-  </div>
-</div>
-
 <input id="hidden-upload" type="file" accept="image/*" style="display:none"/>
 
-<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden>Discord handle copied</div>
-
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js">// Contact modal controls (icons removed; text-only rows)
-(function(){
-  const overlay = document.getElementById('contact-overlay');
-  const btn = document.getElementById('contact-btn');
-  const closeBtn = document.getElementById('contact-close');
-  let opener = null;
-
-  function openContact(){
-    opener = document.activeElement;
-    overlay?.removeAttribute('inert');
-    overlay?.classList.add('show');
-    overlay?.setAttribute('aria-hidden','false');
-    setTimeout(()=>{ (closeBtn || overlay)?.focus(); }, 0);
-    document.addEventListener('keydown', onKey, true);
-  }
-  function closeContact(){
-    document.removeEventListener('keydown', onKey, true);
-    try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay?.classList.remove('show');
-    overlay?.setAttribute('aria-hidden','true');
-    overlay?.setAttribute('inert','');
-  }
-  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
-
-  btn?.addEventListener('click', ()=>{
-    if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
-  });
-  closeBtn?.addEventListener('click', closeContact);
-  overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
-})();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
 /* ===== Config & helpers ===== */
 const WORKER_URL = "https://ms-avatar-proxy.meehoowee.workers.dev/mapleranks";
@@ -468,106 +356,6 @@ themeSel.addEventListener("change",()=>{ document.body.className=themeSel.value;
 let currentPreset=parseInt(localStorage.getItem("maplePreset")||"1",10);
 const presetSel=$("#preset"); presetSel.value=String(currentPreset);
 presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset",String(currentPreset)); build(); });
-/* Preset names (rename only) */
-const PRESET_NAME_KEY = "maplePresetNames_v1";
-function getPresetNames(){
-  const raw = localStorage.getItem(PRESET_NAME_KEY);
-  const obj = raw ? safeParse(raw) : null;
-  const dflt = {1: "Preset 1", 2: "Preset 2", 3: "Preset 3"};
-  if(!obj || typeof obj !== "object") return {...dflt};
-  for(const id of [1,2,3]) if(!obj[id]) obj[id] = dflt[id];
-  return obj;
-}
-function savePresetNames(obj){ localStorage.setItem(PRESET_NAME_KEY, JSON.stringify(obj)); }
-function applyPresetNames(){
-  const names = getPresetNames();
-  [...presetSel.options].forEach(opt => {
-    const id = Number(opt.value);
-    opt.textContent = names[id] || `Preset ${id}`;
-  });
-}
-applyPresetNames();
-
-const presetSelectWrap = $("#preset-select-wrap");
-const renameBtn = $("#preset-rename-btn");
-const renameWrap = $("#preset-rename");
-const renameInput = $("#preset-rename-input");
-const renameSave = $("#preset-rename-save");
-const renameCancel = $("#preset-rename-cancel");
-const renameError = $("#preset-rename-error");
-const renameAnnounce = $("#preset-rename-announce");
-let renameOpen = false;
-let clickAwayHandler = null;
-
-function openRename(){
-  if(renameOpen) return;
-  const names = getPresetNames();
-  const currentName = names[currentPreset] || `Preset ${currentPreset}`;
-  renameInput.value = currentName;
-  presetSelectWrap.style.display = "none";
-  renameBtn.style.display = "none";
-  renameWrap.classList.add("show");
-  renameError.textContent = "";
-  renameOpen = true;
-  // Announce
-  renameAnnounce.textContent = "Editing preset name. Press Enter to save, or Escape to cancel.";
-  // Focus
-  setTimeout(()=>{ renameInput.focus(); renameInput.select(); }, 0);
-  // Clicking away cancels
-  clickAwayHandler = (e)=>{
-    if(renameOpen && !renameWrap.contains(e.target) && e.target !== renameBtn){
-      cancelRename();
-    }
-  };
-  document.addEventListener("mousedown", clickAwayHandler, true);
-}
-function closeRename(focusTarget="button"){
-  if(!renameOpen) return;
-  renameOpen = false;
-  renameWrap.classList.remove("show");
-  presetSelectWrap.style.display = "";
-  renameBtn.style.display = "";
-  renameError.textContent = "";
-  if(clickAwayHandler){ document.removeEventListener("mousedown", clickAwayHandler, true); clickAwayHandler = null; }
-  if(focusTarget === "select"){ presetSel.focus(); } else { renameBtn.focus(); }
-}
-function validatePresetName(raw){
-  const name = raw.trim();
-  if(!name) return "Name is required.";
-  if(name.length > 12) return "Max 12 characters.";
-  const names = getPresetNames();
-  const lower = name.toLowerCase();
-  for(const id of [1,2,3]){
-    const other = (names[id] || `Preset ${id}`).trim().toLowerCase();
-    if(id !== currentPreset && other === lower) return "Name must be unique.";
-  }
-  return null;
-}
-function saveRename(){
-  const val = renameInput.value;
-  const err = validatePresetName(val);
-  if(err){
-    renameError.textContent = err;
-    return;
-  }
-  const names = getPresetNames();
-  names[currentPreset] = val.trim();
-  savePresetNames(names);
-  applyPresetNames();
-  closeRename("select");
-}
-function cancelRename(){ closeRename("button"); }
-
-// Hook up events
-renameBtn?.addEventListener("click", openRename);
-renameSave?.addEventListener("click", saveRename);
-renameCancel?.addEventListener("click", ()=> closeRename("button"));
-renameInput?.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter"){ e.preventDefault(); saveRename(); }
-  else if(e.key === "Escape"){ e.preventDefault(); closeRename("button"); }
-});
-// When switching presets, ensure names apply
-presetSel.addEventListener("change", ()=>{ applyPresetNames(); });
 
 function todayUTC(){ const n=new Date(); return `${n.getUTCFullYear()}-${String(n.getUTCMonth()+1).padStart(2,'0')}-${String(n.getUTCDate()).padStart(2,'0')}`; }
 function dataKey(){ return `mapleData_v2_preset${currentPreset}`; }
@@ -781,15 +569,11 @@ function buildCard(i,d){
     });
 
     input.addEventListener("input",()=>{
-      // Enforce one-line fit before saving
-      fitInputToLine(input);
       const d2=loadData();
       if(input.value===""){
-
         const ct=d2[`char_${cardIndex}_taskCount`]||1;
         if(ct>1){ shiftDeleteTask(cardIndex,tIdx,ct,d2); } else { d2[`char_${cardIndex}_task_${tIdx}`]=""; saveData(d2); }
-      }
-      else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
+      }else{ d2[`char_${cardIndex}_task_${tIdx}`]=input.value; saveData(d2); }
     });
 
     del.onclick=()=>{
@@ -824,20 +608,6 @@ function buildCard(i,d){
 
 function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
 
-
-/* Enforce that a task's text fits on one visual line within its input.
-   Trims extra characters when content would overflow horizontally. */
-function fitInputToLine(el){
-  // Keep trimming until the content fits the visible width
-  // Guard: very long strings may require multiple trims (paste case)
-  let changed = false;
-  // Use a loop with a max iteration to avoid any pathological cases
-  for(let i=0; i<500 && el.scrollWidth > el.clientWidth && el.value.length>0; i++){
-    el.value = el.value.slice(0, -1);
-    changed = true;
-  }
-  return changed;
-}
 /* Tasks shared helpers */
 function focusNewTaskInput(i,tNew){
   const card=document.querySelector(`#checklists .character[data-index="${i}"]`);
@@ -958,7 +728,7 @@ function moveCard(from,to){
   }
   const checks=list.map((c,idx)=>{ const a=[]; for(let t=0;t<c.tasks.length;t++) a.push(localStorage.getItem(dailyKey(idx,t))==='true'); return a; });
   const moved=list.splice(from,1)[0], movedChecks=checks.splice(from,1)[0]; list.splice(to,0,moved); checks.splice(to,0,movedChecks);
-  const nd={charCount: list.length};
+  const nd={charCount:list.length};
   for(let i=0;i<list.length;i++){
     const c=list[i];
     nd[`char_${i}_name`]=c.name; nd[`char_${i}_image`]=c.image; nd[`char_${i}_level`]=c.level; nd[`char_${i}_job`]=c.job; nd[`char_${i}_userImage`]=!!c.userImage;
@@ -1142,54 +912,59 @@ function attachNameLookup(cardIndex,nameInput,metaElem,msgElem,imgElem){
 /* Icons */
 function iconBtn(title,svgOrHtml,onClick){ const b=document.createElement("button"); b.className="icon-btn small"; b.title=title; b.innerHTML=svgOrHtml; b.onclick=onClick; return b; }
 function uploadSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14a2 2 0 0 0 2-2v-5h-2v5H5V6h5V4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Zm7-14l4 4h-3v4h-2v-4H8l4-4Z"/></svg>'; }
-function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M4 6a2 2 0 0 1 2-2h6l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path fill="currentColor" d="M8 4v4h4"/></svg>'; }
+function duplicateSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M16 1H6a2 2 0 0 0-2 2v10h2V3h10V1zm-4 4h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm0 2v10h8V7h-8z"/></svg>'; }
 function arrowUpSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5l5 5H7z"/></svg>'; }
 function arrowDownSVG(){ return '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5l5-5H7z"/></svg>'; }
 
-build();
+/* ===== Shortcuts modal & Quickstart ===== */
+const shortcutsBtn=$("#shortcuts-btn");
+const shortcutsOverlay=$("#shortcuts-overlay");
+const shortcutsClose=$("#shortcuts-close");
+let shortcutsOpener=null;
 
-/* ===== Keyboard Shortcuts & Quickstart modal ===== */
-const shortcutsBtn=$("#shortcuts-btn"), shortcutsOverlay=$("#shortcuts-overlay"), shortcutsClose=$("#shortcuts-close"), quickstartToggle=$("#quickstart-toggle"), quickstartList=$("#quickstart-list");
-shortcutsBtn.addEventListener("click",()=>{ shortcutsOverlay.classList.add("show"); shortcutsOverlay.setAttribute("aria-hidden","false"); });
-shortcutsClose.addEventListener("click",()=>{ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); });
-document.addEventListener("keydown",(e)=>{ if(e.key==="Escape" && shortcutsOverlay.classList.contains("show")){ shortcutsOverlay.classList.remove("show"); shortcutsOverlay.setAttribute("aria-hidden","true"); }});
-quickstartToggle.addEventListener("click",()=>{
-  const hidden=quickstartList.style.display==="none";
-  quickstartList.style.display=hidden?"":"none";
-  quickstartToggle.textContent = hidden ? "Hide" : "Show";
+function focusableWithin(el){ return Array.from(el.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(x=>!x.hasAttribute('disabled') && x.offsetParent!==null); }
+
+function openShortcuts(){
+  shortcutsOpener=document.activeElement;
+  shortcutsOverlay.classList.add('show'); shortcutsOverlay.setAttribute('aria-hidden','false');
+  // Focus trap
+  const f=focusableWithin(shortcutsOverlay); (f[0]||shortcutsOverlay).focus();
+  document.addEventListener('keydown',trapTab);
+}
+function closeShortcuts(){
+  shortcutsOverlay.classList.remove('show'); shortcutsOverlay.setAttribute('aria-hidden','true');
+  document.removeEventListener('keydown',trapTab);
+  if(shortcutsOpener) shortcutsOpener.focus();
+}
+function trapTab(e){
+  if(e.key!=='Tab') return;
+  const f=focusableWithin(shortcutsOverlay); if(!f.length) return;
+  const first=f[0], last=f[f.length-1];
+  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}
+shortcutsBtn?.addEventListener('click',e=>{ e.preventDefault(); (shortcutsOverlay.classList.contains('show')?closeShortcuts():openShortcuts()); });
+shortcutsClose?.addEventListener('click',()=>closeShortcuts());
+shortcutsOverlay?.addEventListener('click',e=>{ if(e.target===shortcutsOverlay) closeShortcuts(); });
+document.addEventListener('keydown',e=>{
+  const a=document.activeElement, isField=a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.isContentEditable);
+  if((e.key==='?'||(e.shiftKey&&e.key==='/'))&&!isField){ e.preventDefault(); openShortcuts(); }
+  if(e.key==='Escape'){ if(accOpen) closeAccentsPanel(); if(shortcutsOverlay.classList.contains('show')) closeShortcuts(); }
 });
 
-/* Contact modal logic moved to consolidated IIFE at end of file. */
-// Contact modal controls (icons removed; text-only rows)
-(function(){
-  const overlay = document.getElementById('contact-overlay');
-  const btn = document.getElementById('contact-btn');
-  const closeBtn = document.getElementById('contact-close');
-  let opener = null;
+/* Quickstart show/hide (stored like before) */
+const quickstartToggle=$("#quickstart-toggle");
+const quickstartList=$("#quickstart-list");
+function setQuickstartHidden(hidden){
+  quickstartList.style.display = hidden ? "none" : "";
+  quickstartToggle.textContent = hidden ? "Show" : "Hide";
+  localStorage.setItem("mapleInstrMin", hidden ? "1" : "0");
+}
+setQuickstartHidden(localStorage.getItem("mapleInstrMin")==="1");
+quickstartToggle.addEventListener("click",()=> setQuickstartHidden(quickstartList.style.display!=="none"));
 
-  function openContact(){
-    opener = document.activeElement;
-    overlay?.removeAttribute('inert');
-    overlay?.classList.add('show');
-    overlay?.setAttribute('aria-hidden','false');
-    setTimeout(()=>{ (closeBtn || overlay)?.focus(); }, 0);
-    document.addEventListener('keydown', onKey, true);
-  }
-  function closeContact(){
-    document.removeEventListener('keydown', onKey, true);
-    try{ (opener || btn || document.body).focus(); }catch(e){}
-    overlay?.classList.remove('show');
-    overlay?.setAttribute('aria-hidden','true');
-    overlay?.setAttribute('inert','');
-  }
-  function onKey(e){ if(e.key === 'Escape'){ e.preventDefault(); closeContact(); } }
-
-  btn?.addEventListener('click', ()=>{
-    if(overlay?.getAttribute('aria-hidden') === 'true'){ openContact(); } else { closeContact(); }
-  });
-  closeBtn?.addEventListener('click', closeContact);
-  overlay?.addEventListener('mousedown', (e)=>{ if(e.target === overlay){ closeContact(); } });
-})();
+/* Init */
+build();
 </script>
 </body>
 </html>
