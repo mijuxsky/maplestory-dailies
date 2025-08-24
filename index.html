@@ -19,14 +19,15 @@
     --meta-fg:#6b7280; --handle-fg: var(--meta-fg);
     --popover-bg:var(--card-bg); --popover-fg:var(--fg); --popover-border:var(--card-border);
     --kbd-focus: var(--icon);
+    --danger:#E57373; /* soft themed error */
     --line-height:1.45; --letter-spacing:normal;
   }
-  body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#fff; --card-border:#e7e7ea; --control-bg:#fff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; }
-  body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#fff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; }
-  body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#fff; --card-border:#e6def6; --control-bg:#fff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; }
-  body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; }
-  body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; }
-  body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; }
+  body.light{ --bg:#f7f7f8; --fg:#333; --card-bg:#fff; --card-border:#e7e7ea; --control-bg:#fff; --control-fg:#222; --control-border:#d8d8dc; --button-bg:#ededf1; --button-fg:#222; --button-border:#d8d8dc; --icon:#555; --icon-hover:rgba(0,0,0,.07); --meta-fg:#6b7280; --handle-fg:#7b8190; --danger:#D46B6B; }
+  body.cloud{ --bg:#eaf4ff; --fg:#2f4152; --card-bg:#fff; --card-border:#d6e7f7; --control-bg:#f6fbff; --control-fg:#2f4152; --control-border:#c7def2; --button-bg:#dcebfb; --button-fg:#213444; --button-border:#c4dcf5; --icon:#5a86b5; --icon-hover:rgba(90,134,181,.14); --meta-fg:#6b7280; --handle-fg:#5a86b5; --danger:#D36A6A; }
+  body.lavender{ --bg:#f4f0fa; --fg:#4b3b60; --card-bg:#fff; --card-border:#e6def6; --control-bg:#fff; --control-fg:#4b3b60; --control-border:#cfc4ea; --button-bg:#e7def7; --button-fg:#3c2e54; --button-border:#cfc4ea; --icon:#7c5db0; --icon-hover:rgba(124,93,176,.14); --meta-fg:#6b7280; --handle-fg:#7c5db0; --danger:#E57373; }
+  body.matcha{ --bg:#f0faf2; --fg:#2f3b2f; --card-bg:#e8f7ea; --card-border:#cfead4; --control-bg:#f7fdf8; --control-fg:#2f3b2f; --control-border:#cfead4; --button-bg:#d9f0de; --button-fg:#243224; --button-border:#c6e4cc; --icon:#4a8c4a; --icon-hover:rgba(74,140,74,.14); --meta-fg:#64748b; --handle-fg:#4a8c4a; --danger:#D06E6E; }
+  body.dark{ --bg:#12131a; --fg:#e6e7eb; --card-bg:#1f2230; --card-border:#2c3144; --control-bg:#171925; --control-fg:#e6e7eb; --control-border:#2c3144; --button-bg:#2a2e42; --button-fg:#e6e7eb; --button-border:#3a4161; --icon:#cfd3df; --icon-hover:rgba(255,255,255,.09); --meta-fg:#cbd5e1; --handle-fg:#cfd3df; --popover-bg:#1c2030; --popover-fg:#e6e7eb; --popover-border:#2c3144; --kbd-focus:#8bcf9b; --danger:#FF8A80; }
+  body.evergreen{ --bg:#0e1a11; --fg:#d9f2de; --card-bg:#1a2b1f; --card-border:#25402d; --control-bg:#132417; --control-fg:#d9f2de; --control-border:#284833; --button-bg:#23402c; --button-fg:#d9f2de; --button-border:#2e5640; --icon:#8bcf9b; --icon-hover:rgba(139,207,155,.15); --meta-fg:#d1d5db; --handle-fg:#8bcf9b; --popover-bg:#15261b; --popover-fg:#d9f2de; --popover-border:#2e5640; --kbd-focus:#8bcf9b; --danger:#FF9A8D; }
 
   *{box-sizing:border-box}
   body{font-family:Quicksand,system-ui,sans-serif;margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;font-size:var(--ui);background:var(--bg);color:var(--fg);transition:.25s background,.25s color;line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
@@ -69,7 +70,7 @@
   .char-image-wrap{text-align:center;margin:2px auto 2px;min-height:24px}
   .char-image-wrap img{max-width:150px;max-height:110px;border-radius:8px;display:inline-block}
   .char-meta{text-align:center;font-size:12px;color:var(--meta-fg);margin:0 0 2px;font-family:inherit;min-height:16px}
-  .inline-msg{text-align:center;font-size:12px;margin:2px 0 0;color:#a94442;display:none}
+  .inline-msg{text-align:center;font-size:12px;margin:2px 0 0;color:var(--danger);display:none}
 
   .name-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
   .char-name{width:100%;border:none;background:transparent;border-bottom:var(--name-underline);text-align:center;font-weight:600;margin:0 0 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
@@ -81,6 +82,9 @@
   .tasks{margin-top:2px}
   .task{display:grid;grid-template-columns:12px 1fr auto 14px;gap:8px;align-items:center;margin:6px 0}
   .task input[type="text"]{border:none;border-bottom:var(--task-underline);background:transparent;padding:2px 2px;font-size:var(--ui);color:var(--fg);font-family:inherit}
+  /* Remove any focus border/outline from the Daily Task text field only */
+  .task input[type="text"]:focus,
+  .task input[type="text"]:focus-visible{outline:none !important; box-shadow:none !important;}
   .task .task-delete{background:transparent;border:none;font-size:16px;opacity:.7;color:var(--icon);width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:inherit;cursor:pointer}
   .task input[type="checkbox"]{width:12px;height:12px;vertical-align:middle}
   .handle{cursor:grab;user-select:none;opacity:.7}
@@ -94,7 +98,7 @@
   .modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
   .btn.secondary{background:#f5f5f5;color:#111;border-color:#e5e5e5}
 
-  .task input[type="text"]:focus-visible,
+  /* Accessible focus rings for everything EXCEPT the task text inputs (removed above) */
   .task input[type="checkbox"]:focus-visible,
   .check-all input:focus-visible,
   .accents-btn:focus-visible,
@@ -102,6 +106,7 @@
   select:focus-visible,
   .btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
 
+  /* Accents popover */
   .acc-pop{position:absolute;z-index:2000;min-width:260px;max-width:min(92vw,420px);background:var(--popover-bg);color:var(--popover-fg);border:1px solid var(--popover-border);border-radius:12px;box-shadow:var(--shadow);padding:10px;display:none;font-family:inherit;font-size:var(--ui);line-height:var(--line-height);letter-spacing:var(--letter-spacing)}
   .acc-pop.show{display:block}
   .acc-head{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:6px}
@@ -112,7 +117,7 @@
   .acc-base,.acc-variants{display:flex;flex-wrap:wrap;gap:6px}
   .acc-btn{border:1px solid var(--control-border);background:var(--control-bg);color:var(--control-fg);border-radius:8px;padding:6px 8px;font-weight:600;cursor:pointer;font-family:inherit}
   .acc-btn:focus-visible{outline:2px solid var(--kbd-focus);outline-offset:2px}
-  .acc-hint{font-size:12px;color:#a94442;margin-top:6px;font-family:inherit}
+  .acc-hint{font-size:12px;color:var(--danger);margin-top:6px;font-family:inherit}
 </style>
 </head>
 <body class="lavender">
@@ -214,7 +219,7 @@
   const MIN_LOOKUP_LEN=4, DEBOUNCE_MS=500, CACHE_TTL_MS=5*60*1000;
   const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 
-  /* Global accents open flag so lookups pause while panel is open */
+  /* Accents open flag keeps lookups paused while panel is open */
   let accOpen=false;
   let lastEditedNameIndex=null;
 
@@ -232,7 +237,7 @@
   document.body.className=lastTheme; themeSel.value=lastTheme;
   themeSel.addEventListener("change",()=>{ document.body.className=themeSel.value; localStorage.setItem("mapleTheme",themeSel.value); });
 
-  /* Presets, storage */
+  /* Presets & storage */
   let currentPreset=parseInt(localStorage.getItem("maplePreset")||"1",10);
   const presetSel=$("#preset"); presetSel.value=String(currentPreset);
   presetSel.addEventListener("change",()=>{ currentPreset=parseInt(presetSel.value,10); localStorage.setItem("maplePreset",String(currentPreset)); build(); });
@@ -299,7 +304,8 @@
     card.appendChild(imgWrap);
 
     const meta=document.createElement("div"); meta.className="char-meta"; meta.textContent=metaText(d[`char_${i}_level`], d[`char_${i}_job`]); card.appendChild(meta);
-    const msg=document.createElement("div"); msg.className="inline-msg"; card.appendChild(msg);
+
+    const msg=document.createElement("div"); msg.className="inline-msg"; msg.setAttribute("role","status"); msg.setAttribute("aria-live","polite"); card.appendChild(msg);
 
     const nameRow=document.createElement("div"); nameRow.className="name-row";
     const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
@@ -344,7 +350,7 @@
 
   function metaText(level,job){ const parts=[]; if(level) parts.push(`Lv. ${level}`); if(job) parts.push(job); return parts.join(" "); }
 
-  /* Tasks (unchanged core behaviors) */
+  /* Tasks */
   function buildTask(i,t,d){
     const row=document.createElement("div"); row.className="task"; row.dataset.idx=t;
     const box=document.createElement("input"); box.type="checkbox"; box.dataset.idx=t; box.checked=(localStorage.getItem(dailyKey(i,t))==='true');
@@ -497,7 +503,7 @@
   (function(){ const instr=$("#instructions"), btn=$("#instr-toggle"); function set(min){ instr.classList.toggle("minimized",min); btn.textContent=min?"Unhide":"Hide"; localStorage.setItem("mapleInstrMin",min?"1":"0"); }
     btn.onclick=()=>set(!instr.classList.contains("minimized")); set(localStorage.getItem("mapleInstrMin")==="1"); })();
 
-  /* ===== Worker-backed Maple Ranks lookup (non-blocking) ===== */
+  /* ===== Worker-backed Maple Ranks lookup (non-blocking + no “Phantom” fallback) ===== */
   const nameTimers=new Map();          // cardIndex -> timeout id
   const nameControllers=new Map();     // cardIndex -> AbortController
   const nameCache=new Map();           // key(lower name) -> {ts,data}
@@ -529,71 +535,84 @@
     // Abort previous
     const prev=nameControllers.get(cardIndex);
     if(prev){ try{ prev.abort(); }catch{} }
-    // Use cache first
+
+    // Cache first
     const cacheKey=query.toLowerCase();
     const cached=cacheGet(cacheKey);
-    if(cached){ applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,cached,true); return; }
+    if(cached){
+      if(cached.ok===false){ renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem); return; }
+      applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,cached,true); return;
+    }
 
     const controller=new AbortController(); nameControllers.set(cardIndex,controller);
+
     try{
-      msgElem.style.display=""; msgElem.style.color="#6b7280"; msgElem.textContent="Searching…";
+      msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.body).getPropertyValue('--meta-fg')||"#6b7280";
+      msgElem.textContent="Searching…";
+
       const url=`${WORKER_URL}?name=${encodeURIComponent(query)}`;
       const res=await fetch(url,{signal:controller.signal,headers:{accept:"application/json"}});
       if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data=await res.json();
-      if(!data || data.ok!==true) throw new Error(data?.error||"Not found");
 
-      cacheSet(cacheKey,data);
+      const data=await res.json();
+      const noMatch=!data || data.ok!==true || (!data.job && !data.level && !data.avatar);
+
+      cacheSet(cacheKey, noMatch ? {ok:false} : data);
+
+      if(noMatch){ renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem); return; }
       applyLookupResult(cardIndex,query,nameInput,metaElem,msgElem,imgElem,data,false);
     }catch(err){
-      if(err?.name==="AbortError") return; // ignore aborted
-      msgElem.style.display=""; msgElem.style.color="#a94442"; msgElem.textContent="Not found (or blocked).";
-      setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1800);
+      if(err?.name==="AbortError") return; // ignore stale
+      renderNotFoundIfCurrent(cardIndex,query,nameInput,metaElem,msgElem);
     }finally{
       nameControllers.delete(cardIndex);
     }
   }
 
-  function applyLookupResult(cardIndex,requestQuery,nameInput,metaElem,msgElem,imgElem,data,fromCache){
+  function renderNotFoundIfCurrent(cardIndex, requestQuery, nameInput, metaElem, msgElem){
+    const current=nameInput.value.trim();
+    if(current.toLowerCase()!==requestQuery.toLowerCase()) return; // stale; ignore
+    metaElem.textContent="Character not found on MapleRanks";
+    metaElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373";
+    msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373";
+    msgElem.textContent="Character not found on MapleRanks";
+    setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
+  }
+
+  function applyLookupResult(cardIndex, requestQuery, nameInput, metaElem, msgElem, imgElem, data, fromCache){
     // Ignore stale responses
     const current=nameInput.value.trim();
     if(current.length<MIN_LOOKUP_LEN || current.toLowerCase()!==requestQuery.toLowerCase()) return;
 
-    // Never overwrite the typed value; show suggestion if canonical differs
+    // Reset any prior error styling
+    metaElem.style.color="";
+
+    // Suggest canonical without overwriting
     if(data.name && data.name.trim() && data.name.trim()!==current){
-      msgElem.style.display=""; msgElem.style.color="#6b7280";
+      msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.body).getPropertyValue('--meta-fg')||"#6b7280";
       msgElem.textContent=`Suggestion: ${data.name}`;
       setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 2500);
-    }else{
-      msgElem.style.display="none"; msgElem.textContent="";
-    }
+    }else{ msgElem.style.display="none"; msgElem.textContent=""; }
 
     const d=loadData();
-    // Keep user's typed name in storage
-    d[`char_${cardIndex}_name`]=current;
-
-    // Job/Level always update when response matches current input
+    d[`char_${cardIndex}_name`]=current; // keep user text
     d[`char_${cardIndex}_level`]=data.level || d[`char_${cardIndex}_level`] || "";
     d[`char_${cardIndex}_job`]=data.job || d[`char_${cardIndex}_job`] || "";
 
-    // Avatar: only if user has NOT uploaded one
     const userHasUpload=!!d[`char_${cardIndex}_userImage`];
     if(!userHasUpload && data.avatar){
       d[`char_${cardIndex}_image`]=data.avatar;
     }
-
     saveData(d);
 
-    // Meta update
     metaElem.textContent=metaText(d[`char_${cardIndex}_level`], d[`char_${cardIndex}_job`]);
 
-    // Image update (lazy, no layout shift)
     const newSrc=(d[`char_${cardIndex}_image`]||"")||BASE_MODEL_URL;
     if(imgElem && imgElem.src!==newSrc){
       const old=imgElem.src;
       imgElem.loading="lazy"; imgElem.decoding="async";
       imgElem.alt=`Avatar for ${current||"character"}`;
-      imgElem.onerror=()=>{ imgElem.onerror=null; imgElem.src=old; msgElem.style.display=""; msgElem.style.color="#a94442"; msgElem.textContent="Image failed to load."; setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1500); };
+      imgElem.onerror=()=>{ imgElem.onerror=null; imgElem.src=old; msgElem.style.display=""; msgElem.style.color=getComputedStyle(document.documentElement).getPropertyValue('--danger')||"#E57373"; msgElem.textContent="Image failed to load."; setTimeout(()=>{ msgElem.style.display="none"; msgElem.textContent=""; }, 1500); };
       imgElem.src=newSrc;
     }
   }
@@ -621,7 +640,6 @@
   function focusVariant(idx){ const btns=[...accVars.querySelectorAll("button")]; if(!btns.length) return; if(idx<0) idx=0; if(idx>=btns.length) idx=btns.length-1; btns[idx].focus(); }
   function positionPopover(anchor){ const rect=anchor.getBoundingClientRect(); accPop.style.left=Math.min(window.innerWidth-20,Math.max(8,rect.right-280))+"px"; accPop.style.top=(rect.bottom+8+window.scrollY)+"px"; }
   function openAccentsPanel(targetEl,anchorEl){
-    // Pause any pending lookups
     accOpen=true; clearTimeout(nameTimers.get(lastEditedNameIndex||0));
     accTargetEl=isTextField(document.activeElement)?document.activeElement:(isTextField(targetEl)?targetEl:null);
     accAnchorEl=anchorEl||targetEl; buildBaseButtons(); accVars.innerHTML=""; accVarLabel.style.display="none"; positionPopover(accAnchorEl);
@@ -629,7 +647,6 @@
   }
   function closeAccentsPanel(){
     accOpen=false; accPop.classList.remove("show");
-    // Resume debounce shortly after closing to coalesce multiple inserts
     if(lastEditedNameIndex!=null){
       const card=document.querySelector(`.character[data-index="${lastEditedNameIndex}"]`);
       const nameInput=card?.querySelector('.char-name'); const meta=card?.querySelector('.char-meta'); const msg=card?.querySelector('.inline-msg'); const img=card?.querySelector('.char-image-wrap img');
@@ -648,9 +665,9 @@
   document.addEventListener("keydown",(e)=>{ if(e.altKey&&(e.key==="a"||e.key==="A")){ e.preventDefault(); const focusEl=document.activeElement; if(isTextField(focusEl)){ openAccentsPanel(focusEl,focusEl); } else { openAccentsPanel(null,$("#theme")); } } else if(e.key==="Escape" && accOpen){ closeAccentsPanel(); }});
   document.addEventListener("mousedown",(e)=>{ if(accOpen && !accPop.contains(e.target) && !e.target.closest(".accents-btn")) closeAccentsPanel(); });
 
-  /* Name lookup attachment (uses pause/resume rules) */
+  /* Name lookup attachment */
   function attachNameLookup(cardIndex,nameInput,metaElem,msgElem,imgElem){
-    nameInput.addEventListener("input",()=>{ lastEditedNameIndex=cardIndex; // abort any in-flight request immediately
+    nameInput.addEventListener("input",()=>{ lastEditedNameIndex=cardIndex;
       const prev=nameControllers.get(cardIndex); if(prev){ try{ prev.abort(); }catch{} }
       scheduleLookup(cardIndex,nameInput,metaElem,msgElem,imgElem,DEBOUNCE_MS);
     });
