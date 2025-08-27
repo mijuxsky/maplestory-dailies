@@ -227,6 +227,10 @@
   .contact-row .copy-wrap{ display:flex; align-items:center; gap:8px; }
   .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:16px; background:var(--popover-bg); color:var(--popover-fg); border:1px solid var(--popover-border); border-radius:10px; padding:8px 12px; box-shadow:var(--shadow); z-index:2000; opacity:0; pointer-events:none; transition:opacity .18s ease; }
   .toast.show{ opacity:1; }
+
+  /* Priority group wrappers (no visual changes) */
+  .prio-group{display:block}
+  .prio-group .group-list{display:block}
 </style>
 </head>
 <body class="lavender">
@@ -446,9 +450,9 @@ function applyPresetNames(){
   [...presetSel.options].forEach(opt => {
     const id = Number(opt.value);
     opt.textContent = names[id] || `Preset ${id}`;
-  }`;
   });
-}
+  }
+
 applyPresetNames();
 
 const presetSelectWrap = $("#preset-select-wrap");
@@ -645,6 +649,8 @@ function buildCard(i,d){
   /* Tasks list */
   const tasksWrap=document.createElement("div"); tasksWrap.className="tasks";
   card.appendChild(tasksWrap);
+  const liveAnnounce=document.createElement("div"); liveAnnounce.className="sr-only"; liveAnnounce.setAttribute("aria-live","polite"); card.appendChild(liveAnnounce);
+
 
   /* Check All */
   const checkRow=document.createElement("div"); checkRow.className="check-all";
@@ -677,7 +683,7 @@ function buildCard(i,d){
   }
   function viewSortFilter(list){
     let out=[...list];
-    if(chipStateOnly){ out=out.filter(x=>x.pr!=="normal""); }
+    if(chipStateOnly){ out=out.filter(x=>x.pr!=="normal"); }
     if(chipStateFirst){
       const order={urgent:0,important:1,normal:2};
       out.sort((a,b)=> (order[a.pr]-order[b.pr]) || (a.idx-b.idx));
@@ -685,15 +691,58 @@ function buildCard(i,d){
     return out;
   }
 
+  
   function rebuildTasks(){
     tasksWrap.innerHTML="";
     const data=collectTasksData();
-    const view=viewSortFilter(data);
-    view.forEach(item=> tasksWrap.appendChild(buildTaskRow(i,item.idx,data)));
-    setTimeout(refreshMaster,0);
-    attachTaskSortable(tasksWrap,i, (!chipStateFirst && !chipStateOnly));
-  }
 
+    // Decide grouping
+    const grouping = (!!chipStateFirst || !!chipStateOnly);
+
+    if(!grouping){
+      // Original flat list rendering
+      const view = (function(){
+        let out=[...data];
+        return out;
+      })();
+      view.forEach(item=> tasksWrap.appendChild(buildTaskRow(i,item.idx,data)));
+      setTimeout(refreshMaster,0);
+      attachTaskSortable(tasksWrap,i,true);
+      return;
+    }
+
+    // Grouped rendering: urgent, important, (normal if not Only)
+    const urgentWrap=document.createElement("div"); urgentWrap.className="prio-group urgent";
+    const urgentList=document.createElement("div"); urgentList.className="group-list"; urgentWrap.appendChild(urgentList);
+
+    const importantWrap=document.createElement("div"); importantWrap.className="prio-group important";
+    const importantList=document.createElement("div"); importantList.className="group-list"; importantWrap.appendChild(importantList);
+
+    const normalWrap=document.createElement("div"); normalWrap.className="prio-group normal";
+    const normalList=document.createElement("div"); normalList.className="group-list"; normalWrap.appendChild(normalList);
+
+    // Append groups to tasksWrap in priority-first order
+    tasksWrap.appendChild(urgentWrap);
+    tasksWrap.appendChild(importantWrap);
+    if(!chipStateOnly){ tasksWrap.appendChild(normalWrap); }
+
+    // Build rows into their respective group
+    for(const item of data){
+      const row=buildTaskRow(i,item.idx,data);
+      const pr=(item.pr||"normal");
+      if(pr==="urgent") urgentList.appendChild(row);
+      else if(pr==="important") importantList.appendChild(row);
+      else if(!chipStateOnly) normalList.appendChild(row); // skip normal rows entirely when "Only priority"
+    }
+
+    setTimeout(refreshMaster,0);
+    // Priority-aware sortables (intra-group only)
+    attachPriorityGroupedSortables({
+      urgent: urgentList,
+      important: importantList,
+      normal: (!chipStateOnly ? normalList : null)
+    }, i, chipStateFirst, chipStateOnly, liveAnnounce);
+  }
   function cyclePriority(old){
     if(old==="normal") return "important";
     if(old==="important") return "urgent";
@@ -852,6 +901,70 @@ function attachTaskSortable(tasksWrap,cardIndex,enable=true){
     }
   });
 }
+/* Priority-grouped Sortables: enforce intra-group ordering and persist order */
+function attachPriorityGroupedSortables(groups, cardIndex, chipStateFirst, chipStateOnly, liveEl){
+  // Destroy any existing sortables on lists
+  const lists = [groups.urgent, groups.important, groups.normal].filter(Boolean);
+  lists.forEach(l => { if(l && l._sortable){ try{ l._sortable.destroy(); }catch{} l._sortable=null; } });
+
+  function saveGroupedOrder(movedText){
+    const d=loadData(); const ct=d[`char_${cardIndex}_taskCount`]||1;
+    const texts=[], checks=[], prios=[];
+    for(let t=0;t<ct;t++){ texts.push(d[`char_${cardIndex}_task_${t}`]||""); prios.push(d[`char_${cardIndex}_taskp_${t}`]||"normal"); checks.push(localStorage.getItem(dailyKey(cardIndex,t))==='true'); }
+
+    // Gather visible order by priority groups (urgent -> important -> normal)
+    const groupOrder=[];
+    const u = Array.from((groups.urgent||document.createElement('div')).querySelectorAll(".task")).map(r=>+r.dataset.idx);
+    const im = Array.from((groups.important||document.createElement('div')).querySelectorAll(".task")).map(r=>+r.dataset.idx);
+    const no = groups.normal ? Array.from(groups.normal.querySelectorAll(".task")).map(r=>+r.dataset.idx) : [];
+    groupOrder.push(...u, ...im);
+    if(!chipStateOnly) groupOrder.push(...no);
+
+    // Build finalOrder, appending any hidden normals (Only mode) in original relative order
+    let finalOrder = groupOrder.slice();
+    if(chipStateOnly){
+      const visSet=new Set(groupOrder);
+      for(let t=0;t<ct;t++){ if(!visSet.has(t)){ finalOrder.push(t); } }
+    }
+
+    // Rewrite arrays in the new order
+    for(let p=0;p<finalOrder.length;p++){
+      const tOld=finalOrder[p];
+      d[`char_${cardIndex}_task_${p}`]=texts[tOld]||"";
+      d[`char_${cardIndex}_taskp_${p}`]=prios[tOld]||"normal";
+    }
+    // Remap checkbox states
+    for(let t=0;t<ct;t++) localStorage.removeItem(dailyKey(cardIndex,t));
+    for(let p=0;p<finalOrder.length;p++){ const tOld=finalOrder[p]; if(checks[tOld]) localStorage.setItem(dailyKey(cardIndex,p),'true'); }
+
+    saveData(d);
+    build();
+
+    // Announce for screen readers
+    if(liveEl && movedText){
+      const grpName = (chipStateOnly || chipStateFirst) ? "priority group" : "list";
+      liveEl.textContent = `Moved ${movedText} within its ${grpName}.`;
+    }
+  }
+
+  function makeSortable(listEl){
+    if(!listEl) return;
+    listEl._sortable = Sortable.create(listEl,{
+      animation:160, handle:".handle", draggable:".task", ghostClass:"dragging",
+      group:{ name:`card-${cardIndex}-tasks`, pull:false, put:false },
+      onEnd:(evt)=>{
+        // Grab the task text for announcement (first input in the row)
+        const txt = evt.item?.querySelector('input.task-text')?.value || "task";
+        saveGroupedOrder(txt);
+      }
+    });
+  }
+
+  makeSortable(groups.urgent);
+  makeSortable(groups.important);
+  if(groups.normal) makeSortable(groups.normal);
+}
+
 
 /* Cards add/dup/delete/reorder */
 $("#add-character-btn").addEventListener("click",()=>{
