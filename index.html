@@ -233,7 +233,7 @@
   .prio-group .group-list{display:block}
 </style>
 </head>
-<body class="lavender">
+<body class="light">
 
 <!-- Change: added Contact heart button and modal with Ko-fi link and Discord handle. -->
 <!-- Change: added inline preset rename with pencil icon, 12 char limit, unique validation. -->
@@ -418,7 +418,7 @@ setInterval(tickUTC,1000); tickUTC();
 
 /* Theme */
 const themeSel=$("#theme");
-const lastTheme=localStorage.getItem("mapleTheme")||"lavender";
+const lastTheme = localStorage.getItem("mapleTheme") || "light";
 document.body.className=lastTheme; themeSel.value=lastTheme;
 themeSel.addEventListener("change",()=>{ document.body.className=themeSel.value; localStorage.setItem("mapleTheme",themeSel.value); });
 
