@@ -807,7 +807,7 @@ function focusNewTaskInput(i,tNew){
 }
 
 function moveFocus(cardIndex, currentIdx, dir){
-  const card = document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
+// removed stray duplicate 'card' line
   const inputs = Array.from(card.querySelectorAll('.tasks .task input[type="text"]'));
   // Prefer the currently focused element's position, since DOM order may be different when sorted.
   let pos = inputs.indexOf(document.activeElement);
@@ -820,12 +820,8 @@ function moveFocus(cardIndex, currentIdx, dir){
   const next = Math.max(0, Math.min(inputs.length - 1, pos + dir));
   inputs[next]?.focus();
 }
-const ct = d[`char_${cardIndex}_taskCount`] || 1;
-  const next=Math.max(0,Math.min(ct-1,currentIdx+dir)); const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
-  const inputs=Array.from(card.querySelectorAll('.tasks .task input[type="text"]')); (inputs[next]||inputs[0])?.focus();
-}
 function toggleRowCheckbox(cardIndex,tIdx){
-  const card=document.querySelector(`#checklists .character[data-index="${cardIndex}"]`);
+// removed stray duplicate 'card' line
   const row=card?.querySelector(`.tasks .task[data-idx="${tIdx}"]`); const box=row?.querySelector('input[type="checkbox"]');
   if(box){ box.checked=!box.checked; box.dispatchEvent(new Event('change',{bubbles:true})); }
 }
