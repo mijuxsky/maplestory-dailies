@@ -341,15 +341,14 @@
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-title"><button id="shortcuts-close" class="acc-close" type="button" aria-label="Close" style="position:absolute;right:10px;top:10px;">×</button>
     <h3 id="shortcuts-title">Keyboard Shortcuts</h3>
     <ul style="margin:6px 0 12px 18px;padding:0;">
-      <li>Up / Down - Move between tasks</li>
-      <li>Enter - Insert a new task below</li>
-      <li>Tab - Toggle the checkbox on the focused task</li>
-      <li>Space - Toggle the checkbox (when the checkbox or row is focused)</li>
-      <li>Alt + A - Open Accents for the focused field</li>
-      <li>Esc - Close panels</li>
+      <li>Up / Down: Move between tasks</li>
+      <li>Enter: Insert a new task below</li>
+      <li>Tab: Toggle the checkbox on the focused task</li>
+      <li>Alt + A: Open Accents for the focused field</li>
+      <li>Esc: Close panels</li>
     </ul>
     <hr style="border:none;border-top:1px solid var(--popover-border);margin:10px 0 12px;">
-    <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:6px;"><strong>Quickstart</strong></div>
+    <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:6px;"><h3 class="section-title">Quick Start</h3></div>
     <ol id="quickstart-list" style="margin:4px 0 0 18px;padding:0;">
       <li>Choose an existing preset or create a new one</li>
       <li>Enter Character Name. Use the Accents button if needed</li>
@@ -361,24 +360,17 @@
   
     <hr style="border:none;border-top:1px solid var(--popover-border);margin:12px 0;">
     <div style="margin:6px 0 6px;">
-      <strong>Features (Most → Least Important)</strong>
+      <h3 class="section-title">Key Features</h3>
     </div>
     <ol style="margin:4px 0 0 18px;padding:0;">
-      <li>Checkboxes reset daily at 0:00 UTC (midnight UTC).</li>
-      <li>Mark tasks as Important or Urgent; filter with “Show priority first” and “Only priority”.</li>
-      <li>Keyboard-friendly editing: Tab toggles a task, Enter inserts a new task, Up/Down move between tasks.</li>
-      <li>Save and Load Presets (with rename).</li>
-      <li>Export / Import all data as JSON (no server needed).</li>
-      <li>Per-character “Check All” to mark or clear all tasks at once.</li>
-      <li>Drag-and-drop to reorder tasks (when priority sorting is off).</li>
-      <li>Automatic character lookup (name → avatar, level, job) from Maple Ranks.</li>
-      <li>Theme support (light and dark themes).</li>
-      <li>Help and Contact popups with Esc or × to close.</li>
-      <li>Daily task inputs limited to 32 characters.</li>
-      <li>Priority-first and Only-priority modes apply across characters.</li>
-      <li>Persistent storage in your browser (tasks and settings retained).</li>
-      <li>Character images: user upload plus remote avatar fallback.</li>
-      <li>Accessible focus trap inside modals; click outside to close.</li>
+        <li>Daily reset at 0:00 UTC for all checkboxes.</li>
+        <li>Mark tasks as Important/Urgent, with priority-first and only-priority views.</li>
+        <li>Drag-and-drop reordering within priority groups; cross-group drops snap back.</li>
+        <li>Keyboard-friendly editing (Up/Down, Enter, Tab, Esc).</li>
+        <li>Save/Load presets (rename), plus Import/Export JSON; data stored locally.</li>
+        <li>Automatic character lookup (name → avatar, level, job) and optional avatar upload.</li>
+        <li>Per-character “Check All” control to quickly mark/clear tasks.</li>
+        <li>Theme support (multiple light & dark themes).</li>
     </ol>
 </div>
 </div>
@@ -616,10 +608,48 @@ function buildCard(i,d){
   const msg=document.createElement("div"); msg.className="inline-msg"; msg.setAttribute("role","status"); msg.setAttribute("aria-live","polite"); card.appendChild(msg);
 
   const nameRow=document.createElement("div"); nameRow.className="name-row";
-  const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||"";
-  name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); lastEditedNameIndex=i; scheduleLookup(i,name,meta,msg,imgWrap.querySelector("img"),DEBOUNCE_MS); });
+  const name=document.createElement("input"); name.className="char-name"; name.placeholder="Character Name"; name.value=d[`char_${i}_name`]||""; name.maxLength = 12;
+
+  //name.addEventListener("input",()=>{ const dd=loadData(); dd[`char_${i}_name`]=name.value; saveData(dd); lastEditedNameIndex=i; scheduleLookup(i,name,meta,msg,imgWrap.querySelector("img"),DEBOUNCE_MS); });
+
+  name.addEventListener("input",()=>{
+  const dd=loadData();
+  dd[`char_${i}_name`]=name.value;
+  saveData(dd);
+
+  // validation: show error if fewer than 4 characters
+  const len = name.value.trim().length;
+  if(len < 4){
+    msg.style.display="";
+    msg.textContent="There must be at least 4 characters at minimum";
+    name.setAttribute("aria-invalid","true");
+  }else{
+    msg.style.display="none";
+    msg.textContent="";
+    name.removeAttribute("aria-invalid");
+  }
+
+  lastEditedNameIndex=i;
+  scheduleLookup(i,name,meta,msg,imgWrap.querySelector("img"),DEBOUNCE_MS);
+});
+
   name.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); }});
-  name.addEventListener("blur",()=>{ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); });
+
+  //name.addEventListener("blur",()=>{ triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img")); });
+
+  name.addEventListener("blur",()=>{
+  const len = name.value.trim().length;
+  if(len < 4){
+    msg.style.display="";
+    msg.textContent="There must be at least 4 characters at minimum";
+    name.setAttribute("aria-invalid","true");
+  }else{
+    msg.style.display="none";
+    msg.textContent="";
+    name.removeAttribute("aria-invalid");
+  }
+  triggerLookupNow(i,name,meta,msg,imgWrap.querySelector("img"));
+  });
 
   const accBtn=document.createElement("button");
   accBtn.className="accents-btn"; accBtn.type="button"; accBtn.title="Accents"; accBtn.setAttribute("aria-label","Accents");
