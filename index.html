@@ -254,16 +254,16 @@
   <label for="theme">Theme:</label>
   <div class="select-wrap">
     <select id="theme">
-      <!-- Light first (alphabetical), then dark (alphabetical) -->
+      <!-- Lights, then darks-->
+      <option value="light" selected>Light Mode (Light)</option>
       <option value="cloud">Cloud (Light)</option>
-      <option value="lavender" selected>Lavender (Light)</option>
-      <option value="light">Light Mode (Light)</option>
+      <option value="lavender">Lavender (Light)</option>
       <option value="matcha">Matcha (Light)</option>
       <option value="milktea">Milk Tea (Light)</option>
       <option value="dark">Dark Mode (Dark)</option>
+      <option value="midnight">Midnight Blue (Dark)</option>
       <option value="darkpurple">Nightshade (Dark)</option>
       <option value="evergreen">Evergreen (Dark)</option>
-      <option value="midnight">Midnight Blue (Dark)</option>
       <option value="mocha">Mocha (Dark)</option>
     </select>
   </div>
@@ -1018,58 +1018,78 @@ function initCardSortable(){
   });
 }
 
+
 function moveCard(from,to){
   const cont = $("#checklists");
   const n = Array.from(cont.querySelectorAll(".character")).length;
   if(from==null || to==null) return;
   if(from<0 || from>=n || to<0 || to>=n) return;
-  to = Math.max(0, Math.min(n-1, to));
   if(from === to) return;
+
   const d = loadData();
-  // Build array of characters
+  const total = d.charCount || 0;
+  if(total <= 0) return;
+
+  // Snapshot all character records into a structured array
   const chars = [];
-  for(let i=0;i<d.charCount;i++){
-    const ct = Math.max(1, d[`char_${i}_taskCount`]||1);
-    const tasks = [], prios = [];
+  for(let i=0;i<total;i++){
+    const ct = Math.max(1, d[`char_${i}_taskCount`] || 1);
+    const tasks = [];
+    const prios = [];
+    const checks = [];
     for(let t=0;t<ct;t++){
-      tasks.push(d[`char_${i}_task_${t}`]||"");
-      prios.push(d[`char_${i}_taskp_${t}`]||"normal");
+      tasks.push(d[`char_${i}_task_${t}`] || "");
+      prios.push(d[`char_${i}_taskp_${t}`] || "normal");
+      checks.push(localStorage.getItem(dailyKey(i,t)) === 'true');
     }
     chars.push({
-      name: d[`char_${i}_name`]|"",
-      image: d[`char_${i}_image`]|"",
-      level: d[`char_${i}_level`]|"",
-      job: d[`char_${i}_job`]|"",
+      name: d[`char_${i}_name`] || "",
+      image: d[`char_${i}_image`] || "",
+      level: d[`char_${i}_level`] || "",
+      job:   d[`char_${i}_job`]   || "",
       userImage: !!d[`char_${i}_userImage`],
-      tasks, prios, ct,
-      chipFirst: d[`char_${i}_chip_priorityFirst`],
-      chipOnly: d[`char_${i}_chip_onlyPriority`],
+      chipFirst: (d[`char_${i}_chip_priorityFirst`] ?? null),
+      chipOnly:  !!d[`char_${i}_chip_onlyPriority`],
+      ct, tasks, prios, checks
     });
   }
-  // Move
-  const item = chars.splice(from,1)[0];
-  chars.splice(to,0,item);
+
+  // Move the selected entry
+  const item = chars.splice(from, 1)[0];
+  chars.splice(to, 0, item);
+
+  // Clear prior checkbox keys and rewrite everything in new order
+  for(let i=0;i<total;i++){
+    const oldCt = Math.max(1, d[`char_${i}_taskCount`] || 1);
+    for(let t=0;t<oldCt;t++){
+      localStorage.removeItem(dailyKey(i,t));
+    }
+  }
 
   // Write back
   d.charCount = chars.length;
   for(let i=0;i<chars.length;i++){
     const c = chars[i];
-    d[`char_${i}_name`] = c.name||"";
-    d[`char_${i}_image`] = c.image||"";
-    d[`char_${i}_level`] = c.level||"";
-    d[`char_${i}_job`] = c.job||"";
+    d[`char_${i}_name`] = c.name || "";
+    d[`char_${i}_image`] = c.image || "";
+    d[`char_${i}_level`] = c.level || "";
+    d[`char_${i}_job`] = c.job || "";
     d[`char_${i}_userImage`] = !!c.userImage;
+    d[`char_${i}_chip_priorityFirst`] = (c.chipFirst ?? null);
+    d[`char_${i}_chip_onlyPriority`]  = !!c.chipOnly;
+
     d[`char_${i}_taskCount`] = c.ct;
     for(let t=0;t<c.ct;t++){
-      d[`char_${i}_task_${t}`] = c.tasks[t]||"";
-      d[`char_${i}_taskp_${t}`] = c.prios[t]||"normal";
+      d[`char_${i}_task_${t}`] = c.tasks[t] || "";
+      d[`char_${i}_taskp_${t}`] = c.prios[t] || "normal";
+      if(c.checks[t]) localStorage.setItem(dailyKey(i,t), 'true');
     }
-    d[`char_${i}_chip_priorityFirst`] = c.chipFirst;
-    d[`char_${i}_chip_onlyPriority`] = c.chipOnly;
   }
+
   saveData(d);
   build();
 }
+
 
 
 /* Upload avatar (user override never auto-replaced) */
